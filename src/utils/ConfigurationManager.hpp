@@ -15,15 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ConfigurationManager.hpp"
+#ifndef CONFIGURATIONMANAGER_HPP
+#define CONFIGURATIONMANAGER_HPP
+
+#include <memory>
+#include <QSettings>
+
+class QQmlEngine;
+class QJSEngine;
 
 namespace capy {
-ConfigurationManager* ConfigurationManager::_singleton = new
-    ConfigurationManager();
+class ConfigurationManager : public QObject {
+  Q_OBJECT
 
-ConfigurationManager* ConfigurationManager::accessInstance(
-    [[maybe_unused]] QQmlEngine* engine,
-    [[maybe_unused]] QJSEngine* jsEngine) {
-  return _singleton;
-}
+public:
+  ConfigurationManager(ConfigurationManager&) = delete;
+  void operator=(const ConfigurationManager&) = delete;
+
+  static ConfigurationManager* accessInstance(QQmlEngine* engine = nullptr,
+                                              QJSEngine* jsEngine = nullptr);
+
+protected:
+  ConfigurationManager() = default;
+
+private:
+  static ConfigurationManager* _singleton;
+  QSettings _settings{};
+};
 } // capy
+
+#endif //CONFIGURATIONMANAGER_HPP

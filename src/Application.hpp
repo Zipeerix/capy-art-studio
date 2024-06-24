@@ -15,15 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ConfigurationManager.hpp"
+#ifndef APPLICATION_HPP
+#define APPLICATION_HPP
+
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
 namespace capy {
-ConfigurationManager* ConfigurationManager::_singleton = new
-    ConfigurationManager();
+class Application {
+public:
+  Application(int argc, char** argv);
 
-ConfigurationManager* ConfigurationManager::accessInstance(
-    [[maybe_unused]] QQmlEngine* engine,
-    [[maybe_unused]] QJSEngine* jsEngine) {
-  return _singleton;
-}
+  [[nodiscard]] int start();
+
+private:
+  QGuiApplication _guiApplication;
+  QQmlApplicationEngine _guiEngine;
+
+  static void registerMetadata();
+  static void registerTypes();
+};
 } // capy
+
+#endif //APPLICATION_HPP
