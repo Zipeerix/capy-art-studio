@@ -15,20 +15,9 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include "Application.hpp"
 
 int main(int argc, char* argv[]) {
-  QGuiApplication app(argc, argv);
-
-  QQmlApplicationEngine engine;
-  QObject::connect(
-      &engine,
-      &QQmlApplicationEngine::objectCreationFailed,
-      &app,
-      []() { QCoreApplication::exit(-1); },
-      Qt::QueuedConnection);
-  engine.loadFromModule("CapyArtStudio", "Main");
-
-  return app.exec();
+  capy::Application application{argc, argv};
+  return application.start();
 }

@@ -3,7 +3,11 @@ cmake_minimum_required(VERSION 3.16)
 project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 
 set(APPLICATION_SOURCE_FILES
-        src/utils/TomlWrapper.h
+        src/Application.cpp
+        src/Application.hpp
+        src/utils/TomlWrapper.hpp
+        src/utils/ConfigurationManager.hpp
+        src/utils/ConfigurationManager.cpp
 )
 
 set(APPLICATION_UI_FILES
@@ -20,6 +24,8 @@ set(LIBS_TO_LINK
         fmt::fmt
         tomlplusplus::tomlplusplus
 )
+
+set(Qt6_DIR /opt/homebrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)

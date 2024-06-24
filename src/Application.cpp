@@ -15,15 +15,39 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ConfigurationManager.hpp"
+#include "utils/ConfigurationManager.hpp"
+#include "Application.hpp"
 
 namespace capy {
-ConfigurationManager* ConfigurationManager::_singleton = new
-    ConfigurationManager();
+Application::Application(int argc, char** argv) :
+  _guiApplication(argc, argv), _guiEngine({}) {
+}
 
-ConfigurationManager* ConfigurationManager::accessInstance(
-    [[maybe_unused]] QQmlEngine* engine,
-    [[maybe_unused]] QJSEngine* jsEngine) {
-  return _singleton;
+int Application::start() {
+  registerMetadata();
+  registerTypes();
+
+  QObject::connect(
+      &_guiEngine,
+      &QQmlApplicationEngine::objectCreationFailed,
+      &_guiApplication,
+      [] { QCoreApplication::exit(-1); },
+      Qt::QueuedConnection);
+  _guiEngine.loadFromModule("CapyArtStudio", "Main");
+
+  return _guiApplication.exec();
+}
+
+void Application::registerMetadata() {
+  QCoreApplication::setOrganizationName("Zipeerix");
+  QCoreApplication::setOrganizationDomain(
+      "https://github.com/Zipeerix/capy-art-studio");
+  QCoreApplication::setApplicationName("CapyArt Studio");
+}
+
+void Application::registerTypes() {
+  qmlRegisterSingletonType<ConfigurationManager>(
+      "Capy.ConfigurationManager", 1, 0, "ConfigurationManager",
+      &ConfigurationManager::accessInstance);
 }
 } // capy
