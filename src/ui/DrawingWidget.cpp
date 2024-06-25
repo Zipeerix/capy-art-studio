@@ -40,6 +40,8 @@ void DrawingWidget::startNewDrawing(int width, int height) {
 }
 
 void DrawingWidget::redraw() {
+  _scene->clear();
+
   const int pixelRatio = _settings->getPixelRatio();
   const int width = _drawing.getWidth();
   const int height = _drawing.getHeight();
