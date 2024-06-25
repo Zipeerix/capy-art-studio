@@ -29,7 +29,9 @@ public:
   [[nodiscard]] int getWidth() const;
   [[nodiscard]] int getHeight() const;
 
-  QPixmap convergeLayersIntoPixmap() const;
+  [[nodiscard]] QPixmap convergeLayersIntoPixmap() const;
+
+  // TODO: Methods to add and remove layers, remember that there has to be at least one layer
 
 private:
   std::vector<Layer> _layers;
@@ -38,7 +40,7 @@ private:
   int _width;
   int _height;
 
-  QColor calculateConvergedPixelColor(int x, int y) const;
+  [[nodiscard]] QColor calculateConvergedPixelColor(int x, int y) const;
 };
 } // capy
 

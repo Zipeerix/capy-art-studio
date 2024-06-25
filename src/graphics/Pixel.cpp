@@ -18,8 +18,8 @@
 #include "Pixel.hpp"
 
 namespace capy {
-Pixel::Pixel() :
-  Pixel(0, 0, 0, 255) {
+Pixel::Pixel(uint8_t alpha) :
+  Pixel(0, 0, 0, alpha) {
 }
 
 Pixel::Pixel(Color r, Color g, Color b, uint8_t alpha) :
@@ -32,5 +32,29 @@ QColor Pixel::convertToQColor() const {
 
 QBrush Pixel::convertToQBrush() const {
   return QBrush(convertToQColor());
+}
+
+Color Pixel::getRed() const {
+  return _r;
+}
+
+Color Pixel::getBlue() const {
+  return _b;
+}
+
+Color Pixel::getGreen() const {
+  return _g;
+}
+
+Color Pixel::getAlpha() const {
+  return _alpha;
+}
+
+bool Pixel::hasSomeTransparency() const {
+  return _alpha < 255;
+}
+
+bool Pixel::isSolid() const {
+  return _alpha == 255;
 }
 } // capy

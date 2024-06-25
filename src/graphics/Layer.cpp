@@ -18,8 +18,9 @@
 #include "Layer.hpp"
 
 namespace capy {
-Layer::Layer(int width, int height) {
-  _pixels.resize(width * height, {});
+Layer::Layer(int width, int height) :
+  _width(width), _height(height) {
+  _pixels.resize(width * height, Pixel{0});
 }
 
 bool Layer::isVisible() const {
@@ -32,5 +33,10 @@ void Layer::show() {
 
 void Layer::hide() {
   _visible = false;
+}
+
+const Pixel& Layer::getPixel(int x, int y) const {
+  const int singleDimensionalIndex = y * _width + x;
+  return _pixels.at(singleDimensionalIndex);
 }
 } // capy

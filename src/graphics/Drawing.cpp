@@ -21,6 +21,9 @@ namespace capy {
 Drawing::Drawing(int width, int height) :
   _width(width), _height(height) {
   _layers.emplace_back(width, height);
+  for (int i = 0; i < 100; i++) {
+    _layers.emplace_back(width, height);
+  }
 }
 
 int Drawing::getWidth() const {
@@ -43,6 +46,17 @@ QPixmap Drawing::convergeLayersIntoPixmap() const {
 }
 
 QColor Drawing::calculateConvergedPixelColor(int x, int y) const {
-  return QColor(128, 64, 128, 255);
+  //return QColor(128, 64, 128, 255);
+  // TODO: Find last layer with non-zero opacity, later when opacitty is introduced it will be harder..
+  // TODO: To improve performance look from the back and find FIRST
+  auto currentColor = QColor(255, 255, 255, 255);
+  for (const auto& layer : _layers) {
+    auto pixel = layer.getPixel(x, y);
+    if (pixel.isSolid()) {
+      currentColor = pixel.convertToQColor();
+    }
+  }
+
+  return currentColor;
 }
 } // capy
