@@ -38,6 +38,11 @@ MainWindow::~MainWindow() {
 void MainWindow::menuBarFileNewClicked() {
   NewFileDialog dialog(this);
   dialog.exec();
-  // TODO: use CapyFileManager, maybe std::optional and access drawing widget from here
+  // TODO: if exec() == accepted or something? Maybe no need for optional
+  const auto newFileDialogResult = dialog.getResult();
+  if (newFileDialogResult.has_value()) {
+    _drawingWidget->startNewDrawing(newFileDialogResult->width,
+                                    newFileDialogResult->height);
+  }
 }
 }
