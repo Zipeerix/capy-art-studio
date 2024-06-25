@@ -15,30 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#ifndef LAYER_HPP
+#define LAYER_HPP
 
-#include <memory>
-#include <QSettings>
+#include <QImage>
+#include "Pixel.hpp"
 
 namespace capy {
-class ConfigurationManager {
+class Layer {
 public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  Layer(int width, int height);
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
+  [[nodiscard]] bool isVisible() const;
 
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
+  void hide();
+  void show();
 
 private:
-  QSettings _settings{};
+  std::vector<Pixel> _pixels;
+  bool _visible = false;
 };
 } // capy
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif //LAYER_HPP

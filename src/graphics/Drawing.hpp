@@ -15,30 +15,29 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#ifndef DRAWING_HPP
+#define DRAWING_HPP
 
-#include <memory>
-#include <QSettings>
+#include <vector>
+#include "Layer.hpp"
 
 namespace capy {
-class ConfigurationManager {
+class Drawing {
 public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  Drawing(int width, int height);
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
+  [[nodiscard]] int getWidth() const;
+  [[nodiscard]] int getHeight() const;
 
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
+  QPixmap convergeLayersIntoPixmap(int pixelRatio) const;
 
 private:
-  QSettings _settings{};
+  std::vector<Layer> _layers;
+
+  int _currentLayout = 0;
+  int _width;
+  int _height;
 };
 } // capy
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif //DRAWING_HPP

@@ -15,30 +15,47 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#ifndef DRAWINGWIDGET_HPP
+#define DRAWINGWIDGET_HPP
 
-#include <memory>
-#include <QSettings>
+#include <QGraphicsView>
+#include "graphics/Drawing.hpp"
+#include "graphics/DrawingTools.hpp"
+#include "graphics/PixelPosition.hpp"
+#include "utils/ConfigurationManager.hpp"
 
-namespace capy {
-class ConfigurationManager {
+namespace capy::ui {
+struct Pixel {
+  uint8_t r, g, b, a;
+};
+
+class DrawingWidget final : public QGraphicsView {
 public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  explicit DrawingWidget(QWidget* parent);
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
-
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
+  void startNewDrawing(int width, int height);
+  void redraw();
 
 private:
-  QSettings _settings{};
-};
-} // capy
+  std::shared_ptr<ConfigurationManager> _settings;
 
-#endif //CONFIGURATIONMANAGER_HPP
+  QGraphicsScene* _scene = nullptr;
+  QGraphicsPixmapItem* _drawnImage = nullptr;
+
+  Drawing _drawing;
+  DrawingTool _tool = DrawingTool::Hand;
+
+  bool _rightMousePressed = false;
+  int _panStartX = 0;
+  int _panStartY = 0;
+
+  PixelPosition getPixelPositionOfEvent(const QMouseEvent* event) const;
+
+  void mousePressEvent(QMouseEvent* event) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
+  void mouseMoveEvent(QMouseEvent* event) override;
+  void wheelEvent(QWheelEvent* event) override;
+};
+}
+
+#endif //DRAWINGWIDGET_HPP

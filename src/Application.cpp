@@ -15,26 +15,18 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "utils/ConfigurationManager.hpp"
+#include "ui/MainWindow.hpp"
 #include "Application.hpp"
 
 namespace capy {
 Application::Application(int argc, char** argv) :
-  _guiApplication(argc, argv), _guiEngine({}) {
+  _guiApplication(argc, argv) {
+  _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
 }
 
 int Application::start() {
-  registerMetadata();
-  registerTypes();
-
-  QObject::connect(
-      &_guiEngine,
-      &QQmlApplicationEngine::objectCreationFailed,
-      &_guiApplication,
-      [] { QCoreApplication::exit(-1); },
-      Qt::QueuedConnection);
-  _guiEngine.loadFromModule("CapyArtStudio", "Main");
-
+  ui::MainWindow mainWindow;
+  mainWindow.show();
   return _guiApplication.exec();
 }
 
@@ -43,11 +35,5 @@ void Application::registerMetadata() {
   QCoreApplication::setOrganizationDomain(
       "https://github.com/Zipeerix/capy-art-studio");
   QCoreApplication::setApplicationName("CapyArt Studio");
-}
-
-void Application::registerTypes() {
-  qmlRegisterSingletonType<ConfigurationManager>(
-      "Capy.ConfigurationManager", 1, 0, "ConfigurationManager",
-      &ConfigurationManager::accessInstance);
 }
 } // capy

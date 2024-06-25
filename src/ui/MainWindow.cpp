@@ -15,30 +15,29 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#include "MainWindow.hpp"
+#include "./ui_mainwindow.h"
+#include "DrawingWidget.hpp"
+#include "dialogs/NewFileDialog.hpp"
 
-#include <memory>
-#include <QSettings>
+namespace capy::ui {
+MainWindow::MainWindow(QWidget* parent)
+  : QMainWindow(parent), ui(new Ui::MainWindow),
+    _drawingWidget(new DrawingWidget(this)) {
+  ui->setupUi(this);
+  ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
-namespace capy {
-class ConfigurationManager {
-public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  connect(ui->actionFileNew, SIGNAL(triggered()), this,
+          SLOT(menuBarFileNewClicked()));
+}
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
+MainWindow::~MainWindow() {
+  delete ui;
+}
 
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
-
-private:
-  QSettings _settings{};
-};
-} // capy
-
-#endif //CONFIGURATIONMANAGER_HPP
+void MainWindow::menuBarFileNewClicked() {
+  NewFileDialog dialog(this);
+  dialog.exec();
+  // TODO: use CapyFileManager, maybe std::optional and access drawing widget from here
+}
+}

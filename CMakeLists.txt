@@ -5,13 +5,31 @@ project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 set(APPLICATION_SOURCE_FILES
         src/Application.cpp
         src/Application.hpp
+        src/graphics/Layer.hpp
+        src/graphics/Layer.cpp
+        src/graphics/Drawing.hpp
+        src/graphics/Drawing.cpp
+        src/graphics/DrawingTools.hpp
+        src/graphics/Pixel.hpp
+        src/graphics/Pixel.cpp
+        src/graphics/PixelPosition.hpp
+        src/graphics/PixelPosition.cpp
+        src/ui/MainWindow.hpp
+        src/ui/MainWindow.cpp
+        src/ui/DrawingWidget.hpp
+        src/ui/DrawingWidget.cpp
+        src/ui/dialogs/NewFileDialog.cpp
+        src/ui/dialogs/NewFileDialog.hpp
         src/utils/TomlWrapper.hpp
         src/utils/ConfigurationManager.hpp
         src/utils/ConfigurationManager.cpp
+        src/io/CapyFileManager.cpp
+        src/io/CapyFileManager.hpp
 )
 
 set(APPLICATION_UI_FILES
-        ui/Main.qml
+        src/ui/MainWindow.ui
+        src/ui/dialogs/NewFileDialog.ui
 )
 
 set(TEST_FILES
@@ -19,10 +37,11 @@ set(TEST_FILES
 )
 
 set(LIBS_TO_LINK
-        Qt6::Quick
+        Qt6::Widgets
         spdlog::spdlog
         fmt::fmt
         tomlplusplus::tomlplusplus
+        rapidjson
 )
 
 set(Qt6_DIR /opt/homebrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6)
@@ -31,24 +50,17 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
 find_package(tomlplusplus REQUIRED)
+find_package(RapidJSON REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(CapyArtStudio
         src/main.cpp
         ${APPLICATION_SOURCE_FILES}
-)
-
-qt_import_qml_plugins(CapyArtStudio)
-
-qt_add_qml_module(CapyArtStudio
-        URI CapyArtStudio
-        VERSION 1.0
-        QML_FILES
         ${APPLICATION_UI_FILES}
 )
 

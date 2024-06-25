@@ -15,30 +15,31 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
-
-#include <memory>
-#include <QSettings>
+#include "Drawing.hpp"
 
 namespace capy {
-class ConfigurationManager {
-public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+Drawing::Drawing(int width, int height) :
+  _width(width), _height(height) {
+  _layers.emplace_back(width, height);
+}
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
+int Drawing::getWidth() const {
+  return _width;
+}
 
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
+int Drawing::getHeight() const {
+  return _height;
+}
 
-protected:
-  ConfigurationManager() = default;
+QPixmap Drawing::convergeLayersIntoPixmap(int pixelRatio) const {
+  QImage image(_width, _height, QImage::Format_RGBA8888);
+  for (int i = 0; i < _width; i++) {
+    for (int j = 0; j < _height; j++) {
+      image.setPixelColor(QPoint(i, j), QColor(128, 64, 128, 255));
+    }
+  }
 
-private:
-  QSettings _settings{};
-};
+  return QPixmap::fromImage(image).scaled(
+      QSize(_width * pixelRatio, _height * pixelRatio));
+}
 } // capy
-
-#endif //CONFIGURATIONMANAGER_HPP

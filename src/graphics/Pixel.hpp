@@ -15,30 +15,29 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#ifndef PIXEL_HPP
+#define PIXEL_HPP
 
-#include <memory>
-#include <QSettings>
+#include <QBrush>
+#include <cstdint>
 
 namespace capy {
-class ConfigurationManager {
+using Color = uint8_t;
+
+class Pixel {
 public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  Pixel();
+  Pixel(Color r, Color g, Color b, uint8_t alpha);
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
-
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
+  [[nodiscard]] QColor convertToQColor() const;
+  [[nodiscard]] QBrush convertToQBrush() const;
 
 private:
-  QSettings _settings{};
+  Color _r;
+  Color _g;
+  Color _b;
+  uint8_t _alpha;
 };
 } // capy
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif //PIXEL_HPP
