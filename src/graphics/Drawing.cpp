@@ -21,9 +21,6 @@ namespace capy {
 Drawing::Drawing(int width, int height) :
   _width(width), _height(height) {
   _layers.emplace_back(width, height);
-  for (int i = 0; i < 100; i++) {
-    _layers.emplace_back(width, height);
-  }
 }
 
 int Drawing::getWidth() const {
