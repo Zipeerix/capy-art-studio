@@ -60,6 +60,7 @@ qt_add_executable(CapyArtStudio
         src/main.cpp
         ${APPLICATION_SOURCE_FILES}
         ${APPLICATION_UI_FILES}
+        resources/resources.qrc
 )
 
 set_target_properties(CapyArtStudio PROPERTIES
