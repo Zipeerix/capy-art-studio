@@ -31,15 +31,18 @@ int Drawing::getHeight() const {
   return _height;
 }
 
-QPixmap Drawing::convergeLayersIntoPixmap(int pixelRatio) const {
+QPixmap Drawing::convergeLayersIntoPixmap() const {
   QImage image(_width, _height, QImage::Format_RGBA8888);
-  for (int i = 0; i < _width; i++) {
-    for (int j = 0; j < _height; j++) {
-      image.setPixelColor(QPoint(i, j), QColor(128, 64, 128, 255));
+  for (int x = 0; x < _width; x++) {
+    for (int y = 0; y < _height; y++) {
+      image.setPixelColor(QPoint(x, y), calculateConvergedPixelColor(x, y));
     }
   }
 
-  return QPixmap::fromImage(image).scaled(
-      QSize(_width * pixelRatio, _height * pixelRatio));
+  return QPixmap::fromImage(image);
+}
+
+QColor Drawing::calculateConvergedPixelColor(int x, int y) const {
+  return QColor(128, 64, 128, 255);
 }
 } // capy

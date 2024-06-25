@@ -29,7 +29,7 @@ public:
   [[nodiscard]] int getWidth() const;
   [[nodiscard]] int getHeight() const;
 
-  QPixmap convergeLayersIntoPixmap(int pixelRatio) const;
+  QPixmap convergeLayersIntoPixmap() const;
 
 private:
   std::vector<Layer> _layers;
@@ -37,6 +37,8 @@ private:
   int _currentLayout = 0;
   int _width;
   int _height;
+
+  QColor calculateConvergedPixelColor(int x, int y) const;
 };
 } // capy
 

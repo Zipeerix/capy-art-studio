@@ -24,10 +24,6 @@ std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
   return singletonEntity;
 }
 
-int ConfigurationManager::getPixelRatio() const {
-  return _settings.value("general/pixelRatio", 20).toInt();
-}
-
 bool ConfigurationManager::getDrawGrid() const {
   return _settings.value("general/drawGrid", true).toBool();
 }

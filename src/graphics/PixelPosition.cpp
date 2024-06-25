@@ -19,9 +19,9 @@
 #include <QtCore/qmath.h>
 
 namespace capy {
-PixelPosition::PixelPosition(QPointF relativePosition, int pixelRatio) {
-  _x = qFloor(relativePosition.x() / pixelRatio);
-  _y = qFloor(relativePosition.y() / pixelRatio);
+PixelPosition::PixelPosition(QPointF relativePosition) {
+  _x = qFloor(relativePosition.x());
+  _y = qFloor(relativePosition.y());
 }
 
 int PixelPosition::getX() const {
