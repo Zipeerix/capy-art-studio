@@ -18,12 +18,17 @@
 #include "ConfigurationManager.hpp"
 
 namespace capy {
-ConfigurationManager* ConfigurationManager::_singleton = new
-    ConfigurationManager();
+std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
+  static std::shared_ptr<ConfigurationManager> singletonEntity(
+      new ConfigurationManager());
+  return singletonEntity;
+}
 
-ConfigurationManager* ConfigurationManager::accessInstance(
-    [[maybe_unused]] QQmlEngine* engine,
-    [[maybe_unused]] QJSEngine* jsEngine) {
-  return _singleton;
+int ConfigurationManager::getPixelRatio() const {
+  return _settings.value("general/pixelRatio", 20).toInt();
+}
+
+bool ConfigurationManager::getDrawGrid() const {
+  return _settings.value("general/drawGrid", true).toBool();
 }
 } // capy

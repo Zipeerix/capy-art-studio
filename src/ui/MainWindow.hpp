@@ -15,30 +15,31 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include <memory>
-#include <QSettings>
+#include <QMainWindow>
+#include "DrawingWidget.hpp"
 
-namespace capy {
-class ConfigurationManager {
+namespace capy::ui {
+namespace Ui {
+class MainWindow;
+}
+
+class MainWindow final : public QMainWindow {
+  Q_OBJECT
+
 public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  explicit MainWindow(QWidget* parent = nullptr);
+  ~MainWindow() override;
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
-
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
+public slots:
+  void menuBarFileNewClicked();
 
 private:
-  QSettings _settings{};
+  Ui::MainWindow* ui;
+  DrawingWidget* _drawingWidget;
 };
-} // capy
+}
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif // MAINWINDOW_H

@@ -18,8 +18,7 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include <QApplication>
 
 namespace capy {
 class Application {
@@ -29,11 +28,9 @@ public:
   [[nodiscard]] int start();
 
 private:
-  QGuiApplication _guiApplication;
-  QQmlApplicationEngine _guiEngine;
+  QApplication _guiApplication;
 
   static void registerMetadata();
-  static void registerTypes();
 };
 } // capy
 

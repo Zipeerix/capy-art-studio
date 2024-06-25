@@ -15,30 +15,17 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
-
-#include <memory>
-#include <QSettings>
+#ifndef DRAWINGTOOLS_HPP
+#define DRAWINGTOOLS_HPP
 
 namespace capy {
-class ConfigurationManager {
-public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
-
-  static std::shared_ptr<ConfigurationManager> createInstance();
-
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
-
-private:
-  QSettings _settings{};
+enum class DrawingTool {
+  Pen,
+  Eraser,
+  Hand,
+  Rectangle,
+  Circle
 };
-} // capy
+}
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif //DRAWINGTOOLS_HPP

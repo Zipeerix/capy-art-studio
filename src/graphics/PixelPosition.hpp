@@ -15,30 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONFIGURATIONMANAGER_HPP
-#define CONFIGURATIONMANAGER_HPP
+#ifndef PIXELPOSITION_HPP
+#define PIXELPOSITION_HPP
 
-#include <memory>
-#include <QSettings>
+#include <QPoint>
 
 namespace capy {
-class ConfigurationManager {
+class PixelPosition {
 public:
-  ConfigurationManager(ConfigurationManager&) = delete;
-  void operator=(const ConfigurationManager&) = delete;
+  explicit PixelPosition(QPointF point, int pixelRatio);
 
-  static std::shared_ptr<ConfigurationManager> createInstance();
+  [[nodiscard]] int getX() const;
+  [[nodiscard]] int getY() const;
+  [[nodiscard]] int getSingleDimensionalIndex(int width) const;
 
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
-  [[nodiscard]] bool getDrawGrid() const;
-
-protected:
-  ConfigurationManager() = default;
+  [[nodiscard]] bool isValid() const;
 
 private:
-  QSettings _settings{};
+  int _x;
+  int _y;
 };
 } // capy
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif //PIXELPOSITION_HPP
