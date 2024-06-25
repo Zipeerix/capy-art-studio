@@ -91,6 +91,7 @@ std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {
   const auto clickedPixel = mapPositionOfEventToScene(event);
 
+  // TODO: Maybe make tools their own objects and pass clickedPixel and other data to them
   switch (_tool) {
     case DrawingTool::Hand: {
       if (event->button() == Qt::LeftButton) {
