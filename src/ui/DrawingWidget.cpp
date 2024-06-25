@@ -42,14 +42,13 @@ void DrawingWidget::startNewDrawing(int width, int height) {
 void DrawingWidget::redraw() {
   _scene->clear();
 
-  const int pixelRatio = _settings->getPixelRatio();
   const int width = _drawing.getWidth();
   const int height = _drawing.getHeight();
 
-  _scene->setSceneRect(QRect(0, 0, width * pixelRatio, height * pixelRatio));
+  _scene->setSceneRect(QRect(0, 0, width, height));
   centerOn(_scene->sceneRect().center());
 
-  const auto pixmap = _drawing.convergeLayersIntoPixmap(pixelRatio);
+  const auto pixmap = _drawing.convergeLayersIntoPixmap();
   if (pixmap.isNull()) {
     return;
   }
@@ -57,27 +56,27 @@ void DrawingWidget::redraw() {
   _scene->addPixmap(pixmap);
 
   if (_settings->getDrawGrid()) {
-    const int totalDrawingWidth = width * pixelRatio;
-    const int totalDrawingHeight = height * pixelRatio;
+    const int totalDrawingWidth = width;
+    const int totalDrawingHeight = height;
 
-    for (int y = 0;
-         y <= totalDrawingHeight; y += pixelRatio)
-      _scene->addLine(0, y, totalDrawingHeight, y,
-                      QPen(Qt::lightGray));
+    qDebug() << "Drawing grid";
+    auto pen = QPen(Qt::lightGray);
+    pen.setWidthF(0.1);
+    pen.setCosmetic(true);
 
-    for (int x = 0; x <= totalDrawingWidth
-         ; x += pixelRatio)
-      _scene->addLine(x, 0, x, totalDrawingWidth,
-                      QPen(Qt::lightGray));
+    for (int y = 0; y <= totalDrawingHeight; y += 1)
+      _scene->addLine(0, y, totalDrawingHeight, y, pen);
+
+    for (int x = 0; x <= totalDrawingWidth; x += 1)
+      _scene->addLine(x, 0, x, totalDrawingWidth, pen);
   }
 }
 
 PixelPosition DrawingWidget::getPixelPositionOfEvent(
     const QMouseEvent* event) const {
-  const int pixelRatio = _settings->getPixelRatio();
   // performance of getting settings every click?
   const auto relativePos = mapToScene(event->position().toPoint());
-  return PixelPosition(relativePos, pixelRatio);
+  return PixelPosition(relativePos);
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {

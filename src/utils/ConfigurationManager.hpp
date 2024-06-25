@@ -30,7 +30,6 @@ public:
   static std::shared_ptr<ConfigurationManager> createInstance();
 
   // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] int getPixelRatio() const;
   [[nodiscard]] bool getDrawGrid() const;
 
 protected:

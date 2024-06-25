@@ -21,9 +21,10 @@
 #include <QPoint>
 
 namespace capy {
+// TODO: Remove this class, no longer needed without pixel ratio
 class PixelPosition {
 public:
-  explicit PixelPosition(QPointF point, int pixelRatio);
+  explicit PixelPosition(QPointF point);
 
   [[nodiscard]] int getX() const;
   [[nodiscard]] int getY() const;
