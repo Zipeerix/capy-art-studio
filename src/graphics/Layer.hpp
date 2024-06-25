@@ -30,6 +30,8 @@ public:
 
   [[nodiscard]] const Pixel& getPixel(int x, int y) const;
 
+  void drawPixel(int x, int y, const QColor& color);
+
   void hide();
   void show();
 
@@ -39,6 +41,8 @@ private:
 
   int _width;
   int _height;
+
+  [[nodiscard]] Pixel& getMutablePixel(int x, int y);
 };
 } // capy
 

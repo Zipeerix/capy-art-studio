@@ -34,6 +34,11 @@ int Drawing::getHeight() const {
   return _height;
 }
 
+void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
+  auto& currentLayer = _layers.at(_currentLayer);
+  currentLayer.drawPixel(x, y, color);
+}
+
 QPixmap Drawing::convergeLayersIntoPixmap() const {
   QImage image(_width, _height, QImage::Format_RGBA8888);
   for (int x = 0; x < _width; x++) {

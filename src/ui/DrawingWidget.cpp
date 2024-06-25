@@ -18,7 +18,6 @@
 #include "DrawingWidget.hpp"
 #include <QMouseEvent>
 #include <QScrollBar>
-#include "graphics/PixelPosition.hpp"
 
 namespace capy::ui {
 DrawingWidget::DrawingWidget(QWidget* parent) :
@@ -72,17 +71,25 @@ void DrawingWidget::redraw() {
   }
 }
 
-PixelPosition DrawingWidget::getPixelPositionOfEvent(
+std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
     const QMouseEvent* event) const {
-  // performance of getting settings every click?
-  const auto relativePos = mapToScene(event->position().toPoint());
-  return PixelPosition(relativePos);
+  const auto mappedPosition = mapToScene(event->position().toPoint());
+  const int mappedPositionX = qFloor(mappedPosition.x());
+  const int mappedPositionY = qFloor(mappedPosition.y());
+
+  // TODO: Performance optimization?
+  if (mappedPositionX >= 0 &&
+      mappedPositionY >= 0 &&
+      mappedPositionX < _drawing.getWidth() &&
+      mappedPositionY < _drawing.getHeight()) {
+    return QPoint{mappedPositionX, mappedPositionY};
+  }
+
+  return std::nullopt;
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {
-  const auto clickedPixel = getPixelPositionOfEvent(event);
-  qDebug() << "Clicked Pixel: " << clickedPixel.getX() << "," << clickedPixel.
-      getY();
+  const auto clickedPixel = mapPositionOfEventToScene(event);
 
   switch (_tool) {
     case DrawingTool::Hand: {
@@ -92,12 +99,20 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
         _panStartY = event->y();
         setCursor(Qt::ClosedHandCursor);
         event->accept();
+        return;
       }
     }
 
-    case DrawingTool::Pen:
-      // currentLayer() -> drawPixel(x, y) = color, check if clickedPosition.isValid()
-      break;
+    case DrawingTool::Pen: {
+      if (clickedPixel.has_value()) {
+        _drawing.drawPixelOnCurrentLayer(clickedPixel->x(),
+                                         clickedPixel->y(),
+                                         QColor(0, 0, 0, 255));
+        redraw();
+      }
+      return;
+    }
+
     case DrawingTool::Eraser: // same as pen but set to invisible
       break;
     case DrawingTool::Rectangle:
@@ -135,7 +150,10 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
 }
 
 void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
-  switch (_tool) {
+  const auto movingThroughPixel = mapPositionOfEventToScene(event);
+
+  switch
+  (_tool) {
     case DrawingTool::Hand: {
       if (_rightMousePressed) {
         horizontalScrollBar()->setValue(
@@ -145,11 +163,20 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
         _panStartX = event->x();
         _panStartY = event->y();
         event->accept();
+        return;
       }
     }
 
-    case DrawingTool::Pen:
-      break;
+    case DrawingTool::Pen: {
+      if (movingThroughPixel.has_value()) {
+        _drawing.drawPixelOnCurrentLayer(movingThroughPixel->x(),
+                                         movingThroughPixel->y(),
+                                         QColor(0, 0, 0, 255));
+        redraw();
+      }
+      return;
+    }
+
     case DrawingTool::Eraser:
       break;
     case DrawingTool::Rectangle:

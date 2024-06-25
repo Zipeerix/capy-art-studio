@@ -26,6 +26,13 @@ Pixel::Pixel(Color r, Color g, Color b, uint8_t alpha) :
   _r(r), _g(g), _b(b), _alpha(alpha) {
 }
 
+void Pixel::updateFromQColor(const QColor& color) {
+  _r = color.red();
+  _g = color.green();
+  _b = color.blue();
+  _alpha = color.alpha();
+}
+
 QColor Pixel::convertToQColor() const {
   return QColor(_r, _g, _b, _alpha);
 }

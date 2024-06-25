@@ -35,7 +35,18 @@ void Layer::hide() {
   _visible = false;
 }
 
+void Layer::drawPixel(int x, int y, const QColor& color) {
+  auto& targetPixel = getMutablePixel(x, y);
+  targetPixel.updateFromQColor(color);
+}
+
+/* TODO Combine two functions below */
 const Pixel& Layer::getPixel(int x, int y) const {
+  const int singleDimensionalIndex = y * _width + x;
+  return _pixels.at(singleDimensionalIndex);
+}
+
+Pixel& Layer::getMutablePixel(int x, int y) {
   const int singleDimensionalIndex = y * _width + x;
   return _pixels.at(singleDimensionalIndex);
 }
