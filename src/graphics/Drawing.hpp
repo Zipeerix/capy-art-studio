@@ -31,12 +31,13 @@ public:
 
   [[nodiscard]] QPixmap convergeLayersIntoPixmap() const;
 
+  void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
+
   // TODO: Methods to add and remove layers, remember that there has to be at least one layer
 
 private:
   std::vector<Layer> _layers;
-
-  int _currentLayout = 0;
+  int _currentLayer = 0;
   int _width;
   int _height;
 

@@ -29,6 +29,8 @@ public:
   explicit Pixel(uint8_t alpha);
   Pixel(Color r, Color g, Color b, uint8_t alpha);
 
+  void updateFromQColor(const QColor& color);
+
   [[nodiscard]] QColor convertToQColor() const;
   [[nodiscard]] QBrush convertToQBrush() const;
 

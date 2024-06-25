@@ -21,7 +21,6 @@
 #include <QGraphicsView>
 #include "graphics/Drawing.hpp"
 #include "graphics/DrawingTools.hpp"
-#include "graphics/PixelPosition.hpp"
 #include "utils/ConfigurationManager.hpp"
 
 namespace capy::ui {
@@ -43,13 +42,14 @@ private:
   QGraphicsPixmapItem* _drawnImage = nullptr;
 
   Drawing _drawing;
-  DrawingTool _tool = DrawingTool::Hand;
+  DrawingTool _tool = DrawingTool::Pen;
 
   bool _rightMousePressed = false;
   int _panStartX = 0;
   int _panStartY = 0;
 
-  PixelPosition getPixelPositionOfEvent(const QMouseEvent* event) const;
+  std::optional<QPoint> mapPositionOfEventToScene(
+      const QMouseEvent* event) const;
 
   void mousePressEvent(QMouseEvent* event) override;
   void mouseReleaseEvent(QMouseEvent* event) override;
