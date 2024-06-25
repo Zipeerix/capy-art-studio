@@ -22,9 +22,23 @@ namespace capy::ui {
 NewFileDialog::NewFileDialog(QWidget* parent) :
   QDialog(parent), ui(new Ui::NewFileDialog) {
   ui->setupUi(this);
+
+  connect(ui->buttonBox, SIGNAL(accepted()), this,
+          SLOT(okClicked()));
 }
 
 NewFileDialog::~NewFileDialog() {
   delete ui;
+}
+
+std::optional<NewFileDialogResult> NewFileDialog::getResult() const {
+  return _result;
+}
+
+void NewFileDialog::okClicked() {
+  // TODO: This is a plceholder
+  _result = NewFileDialogResult{ui->widthLineEdit->text().toInt(),
+                                ui->heightLineEdit->text().toInt()};
+  accept();
 }
 }

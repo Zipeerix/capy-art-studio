@@ -21,6 +21,12 @@
 #include <QDialog>
 
 namespace capy::ui {
+// TODO: This is a placeholder, use capy manager later
+struct NewFileDialogResult {
+  int width;
+  int height;
+};
+
 namespace Ui {
 class NewFileDialog;
 }
@@ -32,8 +38,15 @@ public:
   explicit NewFileDialog(QWidget* parent = nullptr);
   ~NewFileDialog() override;
 
+  // TODO: This is a placeholder
+  [[nodiscard]] std::optional<NewFileDialogResult> getResult() const;
+
+public slots:
+  void okClicked();
+
 private:
   Ui::NewFileDialog* ui;
+  std::optional<NewFileDialogResult> _result;
 };
 }
 
