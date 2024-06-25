@@ -34,7 +34,7 @@ int PixelPosition::getY() const {
 
 int PixelPosition::getSingleDimensionalIndex(int width) const {
   // TODO: Move below to help util function
-  return _x * width + _y;
+  return _y * width + _x;
 }
 
 bool PixelPosition::isValid() const {

@@ -28,12 +28,17 @@ public:
 
   [[nodiscard]] bool isVisible() const;
 
+  [[nodiscard]] const Pixel& getPixel(int x, int y) const;
+
   void hide();
   void show();
 
 private:
   std::vector<Pixel> _pixels;
   bool _visible = false;
+
+  int _width;
+  int _height;
 };
 } // capy
 

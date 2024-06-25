@@ -55,11 +55,11 @@ void DrawingWidget::redraw() {
 
   _scene->addPixmap(pixmap);
 
+  // TODO: Only show grid when zoomed in enough
   if (_settings->getDrawGrid()) {
     const int totalDrawingWidth = width;
     const int totalDrawingHeight = height;
 
-    qDebug() << "Drawing grid";
     auto pen = QPen(Qt::lightGray);
     pen.setWidthF(0.1);
     pen.setCosmetic(true);

@@ -26,11 +26,19 @@ using Color = uint8_t;
 
 class Pixel {
 public:
-  Pixel();
+  explicit Pixel(uint8_t alpha);
   Pixel(Color r, Color g, Color b, uint8_t alpha);
 
   [[nodiscard]] QColor convertToQColor() const;
   [[nodiscard]] QBrush convertToQBrush() const;
+
+  [[nodiscard]] Color getRed() const;
+  [[nodiscard]] Color getGreen() const;
+  [[nodiscard]] Color getBlue() const;
+  [[nodiscard]] Color getAlpha() const;
+
+  [[nodiscard]] bool hasSomeTransparency() const;
+  [[nodiscard]] bool isSolid() const;
 
 private:
   Color _r;
