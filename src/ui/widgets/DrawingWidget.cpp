@@ -16,6 +16,7 @@
 *******************************************************************************/
 
 #include "DrawingWidget.hpp"
+#include "algorithms/Bresenham.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
@@ -33,11 +34,9 @@ void DrawingWidget::startNewDrawing(int width, int height) {
   _drawing = Drawing(width, height);
   _scene->clear();
 
-  // TODO: Test layers
   _drawing_canvas_item = new DrawingCanvasItem(width, height);
   _scene->addItem(_drawing_canvas_item);
 
-  // TODO: Only show grid when zoomed in enough
   if (_settings->getShouldDrawGrid()) {
     const int totalDrawingWidth = width;
     const int totalDrawingHeight = height;
@@ -129,8 +128,10 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
         return;
       }
     }
-    case DrawingTool::Pen:
-      break;
+    case DrawingTool::Pen: {
+      _lastContinousDrawingPoint = std::nullopt;
+      return;
+    }
     case DrawingTool::Eraser:
       break;
     case DrawingTool::Rectangle:
@@ -161,18 +162,28 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
     }
 
     case DrawingTool::Pen: {
-      // TOOD: Draw lines between points or smth, have auto lastPoint auto thisPoint and draw line between
       if (movingThroughPixel.has_value()) {
         const auto clickedPixelX = movingThroughPixel->x();
         const auto clickedPixelY = movingThroughPixel->y();
 
-        _drawing.drawPixelOnCurrentLayer(clickedPixelX,
-                                         clickedPixelY,
-                                         QColor(0, 255, 0, 255));
-        const auto combinedColor = _drawing.calculateCombinedPixelColor(
-            clickedPixelX, clickedPixelY);
-        _drawing_canvas_item->updateCanvasPixel(clickedPixelX, clickedPixelY,
-                                                combinedColor);
+        if (_lastContinousDrawingPoint.has_value()) {
+          // TODO: Move this to a method or cleanup/tool_to_class seperation
+          static const auto pixelDrawingAction = [&](int x, int y) {
+            _drawing.drawPixelOnCurrentLayer(x, y, QColor(255, 0, 0, 255));
+            auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
+            _drawing_canvas_item->updateCanvasPixel(x, y, combinedColor);
+          };
+
+          algorithms::applyBresenham(_lastContinousDrawingPoint->x(),
+                                     _lastContinousDrawingPoint->y(),
+                                     clickedPixelX,
+                                     clickedPixelY,
+                                     pixelDrawingAction);
+        }
+
+        _lastContinousDrawingPoint = movingThroughPixel.value();
+
+        // pixelDrawingAction(clickedPixelX, clickedPixelY...)
       }
       return;
     }

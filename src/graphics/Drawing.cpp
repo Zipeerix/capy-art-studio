@@ -21,10 +21,6 @@ namespace capy {
 Drawing::Drawing(int width, int height) :
   _width(width), _height(height) {
   _layers.emplace_back(width, height);
-  // TODO: Readd when testing multiple layers
-  for (int i = 0; i < 1; i++) {
-    _layers.emplace_back(width, height);
-  }
 }
 
 int Drawing::getWidth() const {
@@ -54,7 +50,7 @@ QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
   // TODO: To improve performance look from the back and find FIRST
   auto currentColor = QColor(255, 255, 255, 255);
   for (const auto& layer : _layers) {
-    auto pixel = layer.getPixel(x, y);
+    const auto pixel = layer.getPixel(x, y);
     if (pixel.isSolid()) {
       currentColor = pixel.convertToQColor();
     }

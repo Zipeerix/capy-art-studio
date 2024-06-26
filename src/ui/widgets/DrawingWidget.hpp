@@ -46,6 +46,8 @@ private:
   Drawing _drawing;
   DrawingTool _tool = DrawingTool::Pen;
 
+  std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
+
   bool _rightMousePressed = false;
   int _panStartX = 0;
   int _panStartY = 0;

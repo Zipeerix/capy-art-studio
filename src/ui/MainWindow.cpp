@@ -16,8 +16,8 @@
 *******************************************************************************/
 
 #include "MainWindow.hpp"
-#include "./ui_mainwindow.h"
-#include "DrawingWidget.hpp"
+#include "ui_mainwindow.h"
+#include "widgets/DrawingWidget.hpp"
 #include "dialogs/NewFileDialog.hpp"
 
 namespace capy::ui {

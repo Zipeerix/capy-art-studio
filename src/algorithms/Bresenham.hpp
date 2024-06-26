@@ -15,34 +15,19 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#ifndef BRESENHAM_HPP
+#define BRESENHAM_HPP
 
-#include <vector>
-#include "Layer.hpp"
+#include <QPoint>
+#include <functional>
 
-namespace capy {
-class Drawing {
-public:
-  Drawing(int width, int height);
+namespace capy::algorithms {
+using CoordinateApplicationFunction = std::function<void(int x, int y)>;
 
-  [[nodiscard]] int getWidth() const;
-  [[nodiscard]] int getHeight() const;
-  [[nodiscard]] const Layer& getCurrentLayer() const;
-  void setCurrentLayer(int newCurrentLayer);
+void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
+                    const CoordinateApplicationFunction& actionOnTarget);
+void applyBresenham(int x1, int y1, int x2, int y2,
+                    const CoordinateApplicationFunction& actionOnTarget);
+}
 
-  //[[nodiscard]] QPixmap combineLayersIntoPixmap() const;
-  void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
-  [[nodiscard]] QColor calculateCombinedPixelColor(int x, int y) const;
-
-  // TODO: Methods to add and remove layers, remember that there has to be at least one layer
-
-private:
-  std::vector<Layer> _layers;
-  int _currentLayer = 0;
-  int _width;
-  int _height;
-};
-} // capy
-
-#endif //DRAWING_HPP
+#endif //BRESENHAM_HPP
