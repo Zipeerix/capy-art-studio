@@ -15,39 +15,21 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ui/MainWindow.hpp"
-#include "ui/ConsoleWindow.hpp"
-#include "Application.hpp"
+#include "ConsoleWindow.hpp"
+#include "ui_ConsoleWindow.h"
 
-#include "utils/ConsoleLogger.hpp"
-
-namespace capy {
-Application::Application(int argc, char** argv) :
-  _guiApplication(argc, argv),
-  _configurationManager(ConfigurationManager::createInstance()) {
-  _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
+namespace capy::ui {
+ConsoleWindow::ConsoleWindow(QWidget* parent)
+  : QMainWindow(parent)
+    , ui(new Ui::ConsoleWindow) {
+  ui->setupUi(this);
 }
 
-Application::~Application() {
-  ConsoleLogger::cleanup();
+ConsoleWindow::~ConsoleWindow() {
+  delete ui;
 }
 
-int Application::start() {
-  ui::MainWindow mainWindow;
-  mainWindow.show();
-
-  if (_configurationManager->getEnableConsole()) {
-    ConsoleLogger::init();
-    ConsoleLogger::showConsoleWindow();
-  }
-
-  return _guiApplication.exec();
+void ConsoleWindow::log(const QString& message) const {
+  ui->logTextArea->append(message + "\n");
 }
-
-void Application::registerMetadata() {
-  QCoreApplication::setOrganizationName("Zipeerix");
-  QCoreApplication::setOrganizationDomain(
-      "https://github.com/Zipeerix/capy-art-studio");
-  QCoreApplication::setApplicationName("CapyArt Studio");
 }
-} // capy

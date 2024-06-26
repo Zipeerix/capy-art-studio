@@ -33,4 +33,8 @@ double ConfigurationManager::getGridWidth() const {
   // also do color
   return _settings.value("general/gridWidth", 0.3).toDouble();
 }
+
+bool ConfigurationManager::getEnableConsole() const {
+  return _settings.value("general/showConsole", true).toBool();
+}
 } // capy

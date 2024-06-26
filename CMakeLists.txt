@@ -14,10 +14,12 @@ set(APPLICATION_SOURCE_FILES
         src/graphics/DrawingTools.hpp
         src/graphics/Pixel.hpp
         src/graphics/Pixel.cpp
-        src/ui/widgets/DrawingCanvasItem.hpp
-        src/ui/widgets/DrawingCanvasItem.cpp
+        src/ui/ConsoleWindow.cpp
+        src/ui/ConsoleWindow.hpp
         src/ui/MainWindow.hpp
         src/ui/MainWindow.cpp
+        src/ui/widgets/DrawingCanvasItem.hpp
+        src/ui/widgets/DrawingCanvasItem.cpp
         src/ui/widgets/DrawingWidget.hpp
         src/ui/widgets/DrawingWidget.cpp
         src/ui/dialogs/NewFileDialog.cpp
@@ -25,12 +27,17 @@ set(APPLICATION_SOURCE_FILES
         src/utils/TomlWrapper.hpp
         src/utils/ConfigurationManager.hpp
         src/utils/ConfigurationManager.cpp
+        src/utils/ConsoleLogger.hpp
+        src/utils/ConsoleLogger.cpp
+        src/utils/Memory.cpp
+        src/utils/Memory.hpp
         src/io/CapyFileManager.cpp
         src/io/CapyFileManager.hpp
 )
 
 set(APPLICATION_UI_FILES
         src/ui/MainWindow.ui
+        src/ui/ConsoleWindow.ui
         src/ui/dialogs/NewFileDialog.ui
 )
 
