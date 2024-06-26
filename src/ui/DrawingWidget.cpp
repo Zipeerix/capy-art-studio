@@ -31,14 +31,7 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
 
 void DrawingWidget::startNewDrawing(int width, int height) {
   _drawing = Drawing(width, height);
-  redraw();
-}
-
-void DrawingWidget::redraw() {
   _scene->clear();
-
-  const int width = _drawing.getWidth();
-  const int height = _drawing.getHeight();
 
   // TODO: Test layers
   _drawing_canvas_item = new DrawingCanvasItem(width, height);
@@ -168,6 +161,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
     }
 
     case DrawingTool::Pen: {
+      // TOOD: Draw lines between points or smth, have auto lastPoint auto thisPoint and draw line between
       if (movingThroughPixel.has_value()) {
         const auto clickedPixelX = movingThroughPixel->x();
         const auto clickedPixelY = movingThroughPixel->y();

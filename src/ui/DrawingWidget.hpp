@@ -34,7 +34,6 @@ public:
   explicit DrawingWidget(QWidget* parent);
 
   void startNewDrawing(int width, int height);
-  void redraw();
 
   void setCurrentLayer(int newLayer);
 
