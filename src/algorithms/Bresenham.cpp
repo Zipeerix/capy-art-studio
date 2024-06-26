@@ -15,34 +15,45 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#include "Bresenham.hpp"
+#include <cmath>
 
-#include <vector>
-#include "Layer.hpp"
+namespace capy::algorithms {
+static std::pair<int, int> calculateAbosluteDifference(int n0, int n1) {
+  const int dn = n1 - n0;
+  const int multiplicator = dn > 0 ? 1 : -1;
+  return {multiplicator, std::abs(dn)};
+}
 
-namespace capy {
-class Drawing {
-public:
-  Drawing(int width, int height);
+void applyBresenham(int x0, int y0, int x1, int y1,
+                    const CoordinateApplicationFunction& actionOnTarget) {
+  const auto [sx, dx] = calculateAbosluteDifference(x0, x1);
+  const auto [sy, dy] = calculateAbosluteDifference(y0, y1);
+  int epsilon = 0;
+  if (dx > dy) {
+    for (auto x = x0, y = y0; sx < 0 ? x >= x1 : x <= x1; x += sx) {
+      actionOnTarget(x, y);
+      epsilon += dy;
+      if (epsilon << 1 >= dx) {
+        y += sy;
+        epsilon -= dx;
+      }
+    }
+  } else {
+    for (auto x = x0, y = y0; sy < 0 ? y >= y1 : y <= y1; y += sy) {
+      actionOnTarget(x, y);
+      epsilon += dx;
+      if (epsilon << 1 >= dy) {
+        x += sx;
+        epsilon -= dy;
+      }
+    }
+  }
+}
 
-  [[nodiscard]] int getWidth() const;
-  [[nodiscard]] int getHeight() const;
-  [[nodiscard]] const Layer& getCurrentLayer() const;
-  void setCurrentLayer(int newCurrentLayer);
-
-  //[[nodiscard]] QPixmap combineLayersIntoPixmap() const;
-  void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
-  [[nodiscard]] QColor calculateCombinedPixelColor(int x, int y) const;
-
-  // TODO: Methods to add and remove layers, remember that there has to be at least one layer
-
-private:
-  std::vector<Layer> _layers;
-  int _currentLayer = 0;
-  int _width;
-  int _height;
-};
-} // capy
-
-#endif //DRAWING_HPP
+void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
+                    const CoordinateApplicationFunction& actionOnTarget) {
+  applyBresenham(firstPoint.x(), firstPoint.y(), secondPoint.x(),
+                 secondPoint.y(), actionOnTarget);
+}
+}

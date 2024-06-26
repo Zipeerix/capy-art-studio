@@ -5,6 +5,8 @@ project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 set(APPLICATION_SOURCE_FILES
         src/Application.cpp
         src/Application.hpp
+        src/algorithms/Bresenham.hpp
+        src/algorithms/Bresenham.cpp
         src/graphics/Layer.hpp
         src/graphics/Layer.cpp
         src/graphics/Drawing.hpp
@@ -12,12 +14,12 @@ set(APPLICATION_SOURCE_FILES
         src/graphics/DrawingTools.hpp
         src/graphics/Pixel.hpp
         src/graphics/Pixel.cpp
-        src/ui/DrawingCanvasItem.hpp
-        src/ui/DrawingCanvasItem.cpp
+        src/ui/widgets/DrawingCanvasItem.hpp
+        src/ui/widgets/DrawingCanvasItem.cpp
         src/ui/MainWindow.hpp
         src/ui/MainWindow.cpp
-        src/ui/DrawingWidget.hpp
-        src/ui/DrawingWidget.cpp
+        src/ui/widgets/DrawingWidget.hpp
+        src/ui/widgets/DrawingWidget.cpp
         src/ui/dialogs/NewFileDialog.cpp
         src/ui/dialogs/NewFileDialog.hpp
         src/utils/TomlWrapper.hpp
@@ -33,7 +35,7 @@ set(APPLICATION_UI_FILES
 )
 
 set(TEST_FILES
-        tests/placeholder.cpp
+        tests/algorithms/BresenhamTests.cpp
 )
 
 set(LIBS_TO_LINK

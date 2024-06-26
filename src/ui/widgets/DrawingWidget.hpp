@@ -34,7 +34,6 @@ public:
   explicit DrawingWidget(QWidget* parent);
 
   void startNewDrawing(int width, int height);
-  void redraw();
 
   void setCurrentLayer(int newLayer);
 
@@ -46,6 +45,8 @@ private:
 
   Drawing _drawing;
   DrawingTool _tool = DrawingTool::Pen;
+
+  std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
 
   bool _rightMousePressed = false;
   int _panStartX = 0;

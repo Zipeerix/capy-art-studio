@@ -19,7 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "DrawingWidget.hpp"
+#include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
 namespace Ui {
