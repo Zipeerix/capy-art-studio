@@ -21,12 +21,8 @@
 namespace capy::ui {
 DrawingCanvasItem::DrawingCanvasItem(int width, int height) {
   _canvasRepresentation = QImage(width, height, QImage::Format_RGBA8888);
-  // TODO: How to handle this? Maybe copy from first layer at init time
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      _canvasRepresentation.setPixelColor(x, y, QColor(255, 255, 255, 255));
-    }
-  }
+  fillCanvas();
+  update();
 }
 
 QRectF DrawingCanvasItem::boundingRect() const {
@@ -43,5 +39,15 @@ void DrawingCanvasItem::paint(QPainter* painter,
 void DrawingCanvasItem::updateCanvasPixel(int x, int y, const QColor& color) {
   _canvasRepresentation.setPixelColor(x, y, color);
   update();
+}
+
+void DrawingCanvasItem::fillCanvas() {
+  // TODO: maybe take from first layer since now they have to be SYNCED
+  // TODO: and alpha = 0?
+  for (int x = 0; x < _canvasRepresentation.width(); x++) {
+    for (int y = 0; y < _canvasRepresentation.height(); y++) {
+      _canvasRepresentation.setPixelColor(x, y, QColor(255, 255, 255, 255));
+    }
+  }
 }
 }

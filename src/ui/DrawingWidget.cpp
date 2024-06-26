@@ -22,8 +22,10 @@
 
 namespace capy::ui {
 DrawingWidget::DrawingWidget(QWidget* parent) :
-  QGraphicsView(parent), _scene(new QGraphicsScene(this)),
-  _drawing(0, 0), _settings(ConfigurationManager::createInstance()) {
+  QGraphicsView(parent),
+  _settings(ConfigurationManager::createInstance()),
+  _scene(new QGraphicsScene(this)),
+  _drawing(0, 0) {
   setScene(_scene);
 }
 
@@ -38,19 +40,17 @@ void DrawingWidget::redraw() {
   const int width = _drawing.getWidth();
   const int height = _drawing.getHeight();
 
-  // TODO: This should not be a pointer, at lesat delete it if it has to be
   // TODO: Test layers
   _drawing_canvas_item = new DrawingCanvasItem(width, height);
   _scene->addItem(_drawing_canvas_item);
 
   // TODO: Only show grid when zoomed in enough
-  if (_settings->getDrawGrid()) {
-    qDebug() << "Drawing grid";
+  if (_settings->getShouldDrawGrid()) {
     const int totalDrawingWidth = width;
     const int totalDrawingHeight = height;
 
     auto pen = QPen(Qt::lightGray);
-    pen.setWidthF(0.1);
+    pen.setWidthF(_settings->getGridWidth());
     pen.setCosmetic(true);
 
     for (int y = 0; y <= totalDrawingHeight; y += 1)
@@ -59,6 +59,10 @@ void DrawingWidget::redraw() {
     for (int x = 0; x <= totalDrawingWidth; x += 1)
       _scene->addLine(x, 0, x, totalDrawingWidth, pen);
   }
+}
+
+void DrawingWidget::setCurrentLayer(int newLayer) {
+  _drawing.setCurrentLayer(newLayer);
 }
 
 std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
@@ -101,7 +105,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
 
         _drawing.drawPixelOnCurrentLayer(clickedPixelX,
                                          clickedPixelY,
-                                         QColor(0, 0, 0, 255));
+                                         (255, 0, 0, 255));
         const auto combinedColor = _drawing.calculateCombinedPixelColor(
             clickedPixelX, clickedPixelY);
         _drawing_canvas_item->updateCanvasPixel(clickedPixelX, clickedPixelY,
@@ -149,8 +153,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
 void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
   const auto movingThroughPixel = mapPositionOfEventToScene(event);
 
-  switch
-  (_tool) {
+  switch (_tool) {
     case DrawingTool::Hand: {
       if (_rightMousePressed) {
         horizontalScrollBar()->setValue(
@@ -171,7 +174,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
 
         _drawing.drawPixelOnCurrentLayer(clickedPixelX,
                                          clickedPixelY,
-                                         QColor(0, 0, 0, 255));
+                                         QColor(0, 255, 0, 255));
         const auto combinedColor = _drawing.calculateCombinedPixelColor(
             clickedPixelX, clickedPixelY);
         _drawing_canvas_item->updateCanvasPixel(clickedPixelX, clickedPixelY,

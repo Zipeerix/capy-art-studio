@@ -20,7 +20,7 @@
 namespace capy {
 Layer::Layer(int width, int height) :
   _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel{255});
+  _pixels.resize(width * height, Pixel{0});
 }
 
 bool Layer::isVisible() const {

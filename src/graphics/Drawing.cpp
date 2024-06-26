@@ -21,8 +21,8 @@ namespace capy {
 Drawing::Drawing(int width, int height) :
   _width(width), _height(height) {
   _layers.emplace_back(width, height);
-  // TODO: Remove
-  for (int i = 0; i < 100; i++) {
+  // TODO: Readd when testing multiple layers
+  for (int i = 0; i < 1; i++) {
     _layers.emplace_back(width, height);
   }
 }
@@ -33,6 +33,14 @@ int Drawing::getWidth() const {
 
 int Drawing::getHeight() const {
   return _height;
+}
+
+const Layer& Drawing::getCurrentLayer() const {
+  return _layers.at(_currentLayer);
+}
+
+void Drawing::setCurrentLayer(int newCurrentLayer) {
+  _currentLayer = newCurrentLayer;
 }
 
 void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {

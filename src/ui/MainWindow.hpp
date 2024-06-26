@@ -35,6 +35,7 @@ public:
 
 public slots:
   void menuBarFileNewClicked();
+  void currentLayerChanged(int newLayer);
 
 private:
   Ui::MainWindow* ui;

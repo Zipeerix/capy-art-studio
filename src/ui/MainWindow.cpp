@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   connect(ui->actionFileNew, SIGNAL(triggered()), this,
           SLOT(menuBarFileNewClicked()));
+  connect(ui->layerSpinBox, SIGNAL(valueChanged(int)), this,
+          SLOT(currentLayerChanged(int)));
 }
 
 MainWindow::~MainWindow() {
@@ -44,5 +46,9 @@ void MainWindow::menuBarFileNewClicked() {
     _drawingWidget->startNewDrawing(newFileDialogResult->width,
                                     newFileDialogResult->height);
   }
+}
+
+void MainWindow::currentLayerChanged(int newLayer) {
+  _drawingWidget->setCurrentLayer(newLayer);
 }
 }

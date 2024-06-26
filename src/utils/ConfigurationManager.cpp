@@ -15,6 +15,7 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
+#include <QColor>
 #include "ConfigurationManager.hpp"
 
 namespace capy {
@@ -24,7 +25,12 @@ std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
   return singletonEntity;
 }
 
-bool ConfigurationManager::getDrawGrid() const {
+bool ConfigurationManager::getShouldDrawGrid() const {
   return _settings.value("general/drawGrid", true).toBool();
+}
+
+double ConfigurationManager::getGridWidth() const {
+  // also do color
+  return _settings.value("general/gridWidth", 0.3).toDouble();
 }
 } // capy

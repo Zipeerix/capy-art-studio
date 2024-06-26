@@ -28,6 +28,8 @@ public:
 
   [[nodiscard]] int getWidth() const;
   [[nodiscard]] int getHeight() const;
+  [[nodsicard]] const Layer& getCurrentLayer() const;
+  void setCurrentLayer(int newCurrentLayer);
 
   //[[nodiscard]] QPixmap combineLayersIntoPixmap() const;
   void drawPixelOnCurrentLayer(int x, int y, const QColor& color);

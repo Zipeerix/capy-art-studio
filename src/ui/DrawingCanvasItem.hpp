@@ -36,6 +36,8 @@ private:
 
   void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
              QWidget* widget) override;
+
+  void fillCanvas();
 };
 }
 

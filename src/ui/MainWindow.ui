@@ -14,7 +14,7 @@
    <string>CapyArt Studio</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../resources/resources.qrc">
+   <iconset>
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -40,6 +40,16 @@
           <property name="title">
            <string>GroupBox</string>
           </property>
+          <widget class="QSpinBox" name="layerSpinBox">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>20</y>
+             <width>42</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -64,7 +74,7 @@
          <x>0</x>
          <y>0</y>
          <width>1253</width>
-         <height>841</height>
+         <height>822</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -92,7 +102,7 @@
      <x>0</x>
      <y>0</y>
      <width>1367</width>
-     <height>24</height>
+     <height>43</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -297,8 +307,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../../resources/resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
