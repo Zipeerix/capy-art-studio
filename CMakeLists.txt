@@ -12,6 +12,8 @@ set(APPLICATION_SOURCE_FILES
         src/graphics/DrawingTools.hpp
         src/graphics/Pixel.hpp
         src/graphics/Pixel.cpp
+        src/ui/DrawingCanvasItem.hpp
+        src/ui/DrawingCanvasItem.cpp
         src/ui/MainWindow.hpp
         src/ui/MainWindow.cpp
         src/ui/DrawingWidget.hpp

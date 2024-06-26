@@ -20,6 +20,7 @@
 
 #include <QGraphicsView>
 #include "graphics/Drawing.hpp"
+#include "DrawingCanvasItem.hpp"
 #include "graphics/DrawingTools.hpp"
 #include "utils/ConfigurationManager.hpp"
 
@@ -36,6 +37,7 @@ public:
   void redraw();
 
 private:
+  DrawingCanvasItem* _drawing_canvas_item = nullptr;
   std::shared_ptr<ConfigurationManager> _settings;
 
   QGraphicsScene* _scene = nullptr;

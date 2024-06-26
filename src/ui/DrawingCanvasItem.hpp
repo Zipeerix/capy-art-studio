@@ -15,43 +15,28 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Drawing.hpp"
+#ifndef DRAWINGCANVASITEM_HPP
+#define DRAWINGCANVASITEM_HPP
 
-namespace capy {
-Drawing::Drawing(int width, int height) :
-  _width(width), _height(height) {
-  _layers.emplace_back(width, height);
-  // TODO: Remove
-  for (int i = 0; i < 100; i++) {
-    _layers.emplace_back(width, height);
-  }
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
+#include <QPainter>
+
+namespace capy::ui {
+class DrawingCanvasItem final : public QGraphicsItem {
+public:
+  DrawingCanvasItem(int width, int height);
+
+  void updateCanvasPixel(int x, int y, const QColor& color);
+
+private:
+  QImage _canvasRepresentation;
+
+  [[nodiscard]] QRectF boundingRect() const override;
+
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
+};
 }
 
-int Drawing::getWidth() const {
-  return _width;
-}
-
-int Drawing::getHeight() const {
-  return _height;
-}
-
-void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
-  auto& currentLayer = _layers.at(_currentLayer);
-  currentLayer.drawPixel(x, y, color);
-}
-
-QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
-  //return QColor(128, 64, 128, 255);
-  // TODO: Find last layer with non-zero opacity, later when opacitty is introduced it will be harder..
-  // TODO: To improve performance look from the back and find FIRST
-  auto currentColor = QColor(255, 255, 255, 255);
-  for (const auto& layer : _layers) {
-    auto pixel = layer.getPixel(x, y);
-    if (pixel.isSolid()) {
-      currentColor = pixel.convertToQColor();
-    }
-  }
-
-  return currentColor;
-}
-} // capy
+#endif //DRAWINGCANVASITEM_HPP

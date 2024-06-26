@@ -16,6 +16,7 @@
 *******************************************************************************/
 
 #include "DrawingWidget.hpp"
+#include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
 
@@ -24,13 +25,6 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
   QGraphicsView(parent), _scene(new QGraphicsScene(this)),
   _drawing(0, 0), _settings(ConfigurationManager::createInstance()) {
   setScene(_scene);
-  /*
-  setViewportUpdateMode(FullViewportUpdate);
-  setTransformationAnchor(AnchorUnderMouse);
-  setResizeAnchor(AnchorViewCenter);*/
-  //setRenderHint(QPainter::Antialiasing);
-  //setTransformationAnchor(QGraphicsView::NoAnchor);
-  //setResizeAnchor(QGraphicsView::NoAnchor);
 }
 
 void DrawingWidget::startNewDrawing(int width, int height) {
@@ -44,18 +38,14 @@ void DrawingWidget::redraw() {
   const int width = _drawing.getWidth();
   const int height = _drawing.getHeight();
 
-  _scene->setSceneRect(QRect(0, 0, width, height));
-  centerOn(_scene->sceneRect().center());
-
-  const auto pixmap = _drawing.convergeLayersIntoPixmap();
-  if (pixmap.isNull()) {
-    return;
-  }
-
-  _scene->addPixmap(pixmap);
+  // TODO: This should not be a pointer, at lesat delete it if it has to be
+  // TODO: Test layers
+  _drawing_canvas_item = new DrawingCanvasItem(width, height);
+  _scene->addItem(_drawing_canvas_item);
 
   // TODO: Only show grid when zoomed in enough
   if (_settings->getDrawGrid()) {
+    qDebug() << "Drawing grid";
     const int totalDrawingWidth = width;
     const int totalDrawingHeight = height;
 
@@ -106,10 +96,16 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
 
     case DrawingTool::Pen: {
       if (clickedPixel.has_value()) {
-        _drawing.drawPixelOnCurrentLayer(clickedPixel->x(),
-                                         clickedPixel->y(),
+        const auto clickedPixelX = clickedPixel->x();
+        const auto clickedPixelY = clickedPixel->y();
+
+        _drawing.drawPixelOnCurrentLayer(clickedPixelX,
+                                         clickedPixelY,
                                          QColor(0, 0, 0, 255));
-        redraw();
+        const auto combinedColor = _drawing.calculateCombinedPixelColor(
+            clickedPixelX, clickedPixelY);
+        _drawing_canvas_item->updateCanvasPixel(clickedPixelX, clickedPixelY,
+                                                combinedColor);
       }
       return;
     }
@@ -170,10 +166,16 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
 
     case DrawingTool::Pen: {
       if (movingThroughPixel.has_value()) {
-        _drawing.drawPixelOnCurrentLayer(movingThroughPixel->x(),
-                                         movingThroughPixel->y(),
+        const auto clickedPixelX = movingThroughPixel->x();
+        const auto clickedPixelY = movingThroughPixel->y();
+
+        _drawing.drawPixelOnCurrentLayer(clickedPixelX,
+                                         clickedPixelY,
                                          QColor(0, 0, 0, 255));
-        redraw();
+        const auto combinedColor = _drawing.calculateCombinedPixelColor(
+            clickedPixelX, clickedPixelY);
+        _drawing_canvas_item->updateCanvasPixel(clickedPixelX, clickedPixelY,
+                                                combinedColor);
       }
       return;
     }

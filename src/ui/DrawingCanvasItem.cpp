@@ -15,43 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Drawing.hpp"
 
-namespace capy {
-Drawing::Drawing(int width, int height) :
-  _width(width), _height(height) {
-  _layers.emplace_back(width, height);
-  // TODO: Remove
-  for (int i = 0; i < 100; i++) {
-    _layers.emplace_back(width, height);
-  }
-}
+#include "DrawingCanvasItem.hpp"
 
-int Drawing::getWidth() const {
-  return _width;
-}
-
-int Drawing::getHeight() const {
-  return _height;
-}
-
-void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
-  auto& currentLayer = _layers.at(_currentLayer);
-  currentLayer.drawPixel(x, y, color);
-}
-
-QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
-  //return QColor(128, 64, 128, 255);
-  // TODO: Find last layer with non-zero opacity, later when opacitty is introduced it will be harder..
-  // TODO: To improve performance look from the back and find FIRST
-  auto currentColor = QColor(255, 255, 255, 255);
-  for (const auto& layer : _layers) {
-    auto pixel = layer.getPixel(x, y);
-    if (pixel.isSolid()) {
-      currentColor = pixel.convertToQColor();
+namespace capy::ui {
+DrawingCanvasItem::DrawingCanvasItem(int width, int height) {
+  _canvasRepresentation = QImage(width, height, QImage::Format_RGBA8888);
+  // TODO: How to handle this? Maybe copy from first layer at init time
+  for (int x = 0; x < width; x++) {
+    for (int y = 0; y < height; y++) {
+      _canvasRepresentation.setPixelColor(x, y, QColor(255, 255, 255, 255));
     }
   }
-
-  return currentColor;
 }
-} // capy
+
+QRectF DrawingCanvasItem::boundingRect() const {
+  return QRectF(0, 0, _canvasRepresentation.width(),
+                _canvasRepresentation.height());
+}
+
+void DrawingCanvasItem::paint(QPainter* painter,
+                              const QStyleOptionGraphicsItem* option,
+                              QWidget* widget) {
+  painter->drawImage(0, 0, _canvasRepresentation);
+}
+
+void DrawingCanvasItem::updateCanvasPixel(int x, int y, const QColor& color) {
+  _canvasRepresentation.setPixelColor(x, y, color);
+  update();
+}
+}
