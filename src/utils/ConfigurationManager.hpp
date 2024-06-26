@@ -32,6 +32,7 @@ public:
   // TODO This is a placeholder, think of a way how to get/set settings
   [[nodiscard]] bool getShouldDrawGrid() const;
   [[nodiscard]] double getGridWidth() const;
+  [[nodiscard]] bool getEnableConsole() const;
 
 protected:
   ConfigurationManager() = default;

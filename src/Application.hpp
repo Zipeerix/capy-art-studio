@@ -19,15 +19,18 @@
 #define APPLICATION_HPP
 
 #include <QApplication>
+#include "utils/ConfigurationManager.hpp"
 
 namespace capy {
 class Application {
 public:
   Application(int argc, char** argv);
+  ~Application();
 
   [[nodiscard]] int start();
 
 private:
+  std::shared_ptr<ConfigurationManager> _configurationManager;
   QApplication _guiApplication;
 
   static void registerMetadata();

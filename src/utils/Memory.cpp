@@ -15,39 +15,11 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ui/MainWindow.hpp"
-#include "ui/ConsoleWindow.hpp"
-#include "Application.hpp"
 
-#include "utils/ConsoleLogger.hpp"
+#include "Memory.hpp"
 
 namespace capy {
-Application::Application(int argc, char** argv) :
-  _guiApplication(argc, argv),
-  _configurationManager(ConfigurationManager::createInstance()) {
-  _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
+uint64_t calculateInMemorySizeOfImage(int width, int height, int layers) {
+  return width * height * layers;
 }
-
-Application::~Application() {
-  ConsoleLogger::cleanup();
 }
-
-int Application::start() {
-  ui::MainWindow mainWindow;
-  mainWindow.show();
-
-  if (_configurationManager->getEnableConsole()) {
-    ConsoleLogger::init();
-    ConsoleLogger::showConsoleWindow();
-  }
-
-  return _guiApplication.exec();
-}
-
-void Application::registerMetadata() {
-  QCoreApplication::setOrganizationName("Zipeerix");
-  QCoreApplication::setOrganizationDomain(
-      "https://github.com/Zipeerix/capy-art-studio");
-  QCoreApplication::setApplicationName("CapyArt Studio");
-}
-} // capy

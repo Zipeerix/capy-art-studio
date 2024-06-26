@@ -15,39 +15,43 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ui/MainWindow.hpp"
-#include "ui/ConsoleWindow.hpp"
-#include "Application.hpp"
+#ifndef CONSOLEMANAGER_HPP
+#define CONSOLEMANAGER_HPP
 
-#include "utils/ConsoleLogger.hpp"
+#include <QString>
+#include <string>
 
 namespace capy {
-Application::Application(int argc, char** argv) :
-  _guiApplication(argc, argv),
-  _configurationManager(ConfigurationManager::createInstance()) {
-  _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
+// TODO: Change to namespace?
+class ConsoleLogger {
+public:
+  enum class Severity {
+    Default,
+    Expected,
+    Mild,
+    Severe,
+    Fatal,
+  };
+
+  ConsoleLogger(ConsoleLogger&) = delete;
+  void operator=(const ConsoleLogger&) = delete;
+
+  static void init();
+  static void cleanup();
+  static void showConsoleWindow();
+
+  static void debug(const std::string& message, const std::string& module);
+  static void info(const std::string& message);
+  static void warning(const std::string& message, Severity severity);
+  static void error(const std::string& message, Severity severity);
+
+protected:
+  ConsoleLogger() = default;
+
+  static std::string severityToString(Severity severity);
+  static void log(const std::string& message, const std::string& extraInfo);
+  static std::string getDateTimeString();
+};
 }
 
-Application::~Application() {
-  ConsoleLogger::cleanup();
-}
-
-int Application::start() {
-  ui::MainWindow mainWindow;
-  mainWindow.show();
-
-  if (_configurationManager->getEnableConsole()) {
-    ConsoleLogger::init();
-    ConsoleLogger::showConsoleWindow();
-  }
-
-  return _guiApplication.exec();
-}
-
-void Application::registerMetadata() {
-  QCoreApplication::setOrganizationName("Zipeerix");
-  QCoreApplication::setOrganizationDomain(
-      "https://github.com/Zipeerix/capy-art-studio");
-  QCoreApplication::setApplicationName("CapyArt Studio");
-}
-} // capy
+#endif //CONSOLEMANAGER_HPP

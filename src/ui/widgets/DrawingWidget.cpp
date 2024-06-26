@@ -16,7 +16,11 @@
 *******************************************************************************/
 
 #include "DrawingWidget.hpp"
+
+#include <fmt/format.h>
 #include "algorithms/Bresenham.hpp"
+#include "utils/ConsoleLogger.hpp"
+#include "utils/Memory.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
@@ -31,6 +35,9 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
 }
 
 void DrawingWidget::startNewDrawing(int width, int height) {
+  ConsoleLogger::info(fmt::format(
+      "Creating new image with dimensions {}x{} with per layer size of {} bytes",
+      width, height, calculateInMemorySizeOfImage(width, height)));
   _drawing = Drawing(width, height);
   _scene->clear();
 
