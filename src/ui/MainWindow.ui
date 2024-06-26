@@ -6,31 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1367</width>
-    <height>867</height>
+    <width>934</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>CapyArt Studio</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../../resources/resources.qrc">
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -40,16 +28,11 @@
           <property name="title">
            <string>GroupBox</string>
           </property>
-          <widget class="QSpinBox" name="layerSpinBox">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>20</y>
-             <width>42</width>
-             <height>22</height>
-            </rect>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QSpinBox" name="layerSpinBox"/>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -73,8 +56,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1253</width>
-         <height>822</height>
+         <width>684</width>
+         <height>651</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -94,6 +77,25 @@
       </widget>
      </widget>
     </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_8">
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>GroupBox</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>PushButton</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -101,7 +103,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1367</width>
+     <width>934</width>
      <height>43</height>
     </rect>
    </property>
@@ -307,6 +309,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../resources/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
