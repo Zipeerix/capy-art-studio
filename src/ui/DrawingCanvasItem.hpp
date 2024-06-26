@@ -15,22 +15,30 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QColor>
-#include "ConfigurationManager.hpp"
+#ifndef DRAWINGCANVASITEM_HPP
+#define DRAWINGCANVASITEM_HPP
 
-namespace capy {
-std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
-  static std::shared_ptr<ConfigurationManager> singletonEntity(
-      new ConfigurationManager());
-  return singletonEntity;
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
+#include <QPainter>
+
+namespace capy::ui {
+class DrawingCanvasItem final : public QGraphicsItem {
+public:
+  DrawingCanvasItem(int width, int height);
+
+  void updateCanvasPixel(int x, int y, const QColor& color);
+
+private:
+  QImage _canvasRepresentation;
+
+  [[nodiscard]] QRectF boundingRect() const override;
+
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
+
+  void fillCanvas();
+};
 }
 
-bool ConfigurationManager::getShouldDrawGrid() const {
-  return _settings.value("general/drawGrid", true).toBool();
-}
-
-double ConfigurationManager::getGridWidth() const {
-  // also do color
-  return _settings.value("general/gridWidth", 0.3).toDouble();
-}
-} // capy
+#endif //DRAWINGCANVASITEM_HPP

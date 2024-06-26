@@ -15,22 +15,39 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QColor>
-#include "ConfigurationManager.hpp"
 
-namespace capy {
-std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
-  static std::shared_ptr<ConfigurationManager> singletonEntity(
-      new ConfigurationManager());
-  return singletonEntity;
+#include "DrawingCanvasItem.hpp"
+
+namespace capy::ui {
+DrawingCanvasItem::DrawingCanvasItem(int width, int height) {
+  _canvasRepresentation = QImage(width, height, QImage::Format_RGBA8888);
+  fillCanvas();
+  update();
 }
 
-bool ConfigurationManager::getShouldDrawGrid() const {
-  return _settings.value("general/drawGrid", true).toBool();
+QRectF DrawingCanvasItem::boundingRect() const {
+  return QRectF(0, 0, _canvasRepresentation.width(),
+                _canvasRepresentation.height());
 }
 
-double ConfigurationManager::getGridWidth() const {
-  // also do color
-  return _settings.value("general/gridWidth", 0.3).toDouble();
+void DrawingCanvasItem::paint(QPainter* painter,
+                              const QStyleOptionGraphicsItem* option,
+                              QWidget* widget) {
+  painter->drawImage(0, 0, _canvasRepresentation);
 }
-} // capy
+
+void DrawingCanvasItem::updateCanvasPixel(int x, int y, const QColor& color) {
+  _canvasRepresentation.setPixelColor(x, y, color);
+  update();
+}
+
+void DrawingCanvasItem::fillCanvas() {
+  // TODO: maybe take from first layer since now they have to be SYNCED
+  // TODO: and alpha = 0?
+  for (int x = 0; x < _canvasRepresentation.width(); x++) {
+    for (int y = 0; y < _canvasRepresentation.height(); y++) {
+      _canvasRepresentation.setPixelColor(x, y, QColor(255, 255, 255, 255));
+    }
+  }
+}
+}

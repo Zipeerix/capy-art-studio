@@ -28,10 +28,12 @@ public:
 
   [[nodiscard]] int getWidth() const;
   [[nodiscard]] int getHeight() const;
+  [[nodsicard]] const Layer& getCurrentLayer() const;
+  void setCurrentLayer(int newCurrentLayer);
 
-  [[nodiscard]] QPixmap convergeLayersIntoPixmap() const;
-
+  //[[nodiscard]] QPixmap combineLayersIntoPixmap() const;
   void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
+  [[nodiscard]] QColor calculateCombinedPixelColor(int x, int y) const;
 
   // TODO: Methods to add and remove layers, remember that there has to be at least one layer
 
@@ -40,8 +42,6 @@ private:
   int _currentLayer = 0;
   int _width;
   int _height;
-
-  [[nodiscard]] QColor calculateConvergedPixelColor(int x, int y) const;
 };
 } // capy
 

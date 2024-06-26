@@ -30,7 +30,8 @@ public:
   static std::shared_ptr<ConfigurationManager> createInstance();
 
   // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] bool getDrawGrid() const;
+  [[nodiscard]] bool getShouldDrawGrid() const;
+  [[nodiscard]] double getGridWidth() const;
 
 protected:
   ConfigurationManager() = default;

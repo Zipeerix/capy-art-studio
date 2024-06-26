@@ -21,6 +21,10 @@ namespace capy {
 Drawing::Drawing(int width, int height) :
   _width(width), _height(height) {
   _layers.emplace_back(width, height);
+  // TODO: Readd when testing multiple layers
+  for (int i = 0; i < 1; i++) {
+    _layers.emplace_back(width, height);
+  }
 }
 
 int Drawing::getWidth() const {
@@ -31,23 +35,20 @@ int Drawing::getHeight() const {
   return _height;
 }
 
+const Layer& Drawing::getCurrentLayer() const {
+  return _layers.at(_currentLayer);
+}
+
+void Drawing::setCurrentLayer(int newCurrentLayer) {
+  _currentLayer = newCurrentLayer;
+}
+
 void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
   auto& currentLayer = _layers.at(_currentLayer);
   currentLayer.drawPixel(x, y, color);
 }
 
-QPixmap Drawing::convergeLayersIntoPixmap() const {
-  QImage image(_width, _height, QImage::Format_RGBA8888);
-  for (int x = 0; x < _width; x++) {
-    for (int y = 0; y < _height; y++) {
-      image.setPixelColor(QPoint(x, y), calculateConvergedPixelColor(x, y));
-    }
-  }
-
-  return QPixmap::fromImage(image);
-}
-
-QColor Drawing::calculateConvergedPixelColor(int x, int y) const {
+QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
   //return QColor(128, 64, 128, 255);
   // TODO: Find last layer with non-zero opacity, later when opacitty is introduced it will be harder..
   // TODO: To improve performance look from the back and find FIRST

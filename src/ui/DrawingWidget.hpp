@@ -20,6 +20,7 @@
 
 #include <QGraphicsView>
 #include "graphics/Drawing.hpp"
+#include "DrawingCanvasItem.hpp"
 #include "graphics/DrawingTools.hpp"
 #include "utils/ConfigurationManager.hpp"
 
@@ -35,11 +36,13 @@ public:
   void startNewDrawing(int width, int height);
   void redraw();
 
+  void setCurrentLayer(int newLayer);
+
 private:
   std::shared_ptr<ConfigurationManager> _settings;
 
+  DrawingCanvasItem* _drawing_canvas_item = nullptr;
   QGraphicsScene* _scene = nullptr;
-  QGraphicsPixmapItem* _drawnImage = nullptr;
 
   Drawing _drawing;
   DrawingTool _tool = DrawingTool::Pen;
