@@ -19,38 +19,33 @@
 #include <cmath>
 
 namespace capy::algorithms {
+static std::pair<int, int> calculateAbosluteDifference(int n0, int n1) {
+  const int dn = n1 - n0;
+  const int multiplicator = dn > 0 ? 1 : -1;
+  return {multiplicator, std::abs(dn)};
+}
+
 void applyBresenham(int x0, int y0, int x1, int y1,
                     const CoordinateApplicationFunction& actionOnTarget) {
-  /* TODO Refactor */
-  /* TODO Read post maybe do original: https://www.middle-engine.com/blog/posts/2020/07/28/bresenhams-line-algorithm */
-  /* TODO: I think orginal is better for 'exected' results for artist */
-  const auto dx = x1 - x0;
-  const auto dy = y1 - y0;
-
-  const auto adx = (abs(dx) + 1) << 1;
-  const auto ady = (abs(dy) + 1) << 1;
-
-  const auto sx = dx > 0 ? 1 : -1;
-  const auto sy = dy > 0 ? 1 : -1;
-
-  if (adx > ady) {
-    auto eps = (ady - adx) >> 1;
+  const auto [sx, dx] = calculateAbosluteDifference(x0, x1);
+  const auto [sy, dy] = calculateAbosluteDifference(y0, y1);
+  int epsilon = 0;
+  if (dx > dy) {
     for (auto x = x0, y = y0; sx < 0 ? x >= x1 : x <= x1; x += sx) {
       actionOnTarget(x, y);
-      eps += ady;
-      if (eps << 1 >= adx) {
+      epsilon += dy;
+      if (epsilon << 1 >= dx) {
         y += sy;
-        eps -= adx;
+        epsilon -= dx;
       }
     }
   } else {
-    auto eps = (adx - ady) >> 1;
     for (auto x = x0, y = y0; sy < 0 ? y >= y1 : y <= y1; y += sy) {
       actionOnTarget(x, y);
-      eps += adx;
-      if (eps << 1 >= ady) {
+      epsilon += dx;
+      if (epsilon << 1 >= dy) {
         x += sx;
-        eps -= ady;
+        epsilon -= dy;
       }
     }
   }
