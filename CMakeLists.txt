@@ -50,6 +50,7 @@ set(LIBS_TO_LINK
         spdlog::spdlog
         fmt::fmt
         tomlplusplus::tomlplusplus
+        libzippp::libzippp
         rapidjson
 )
 
@@ -64,6 +65,7 @@ find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
 find_package(tomlplusplus REQUIRED)
 find_package(RapidJSON REQUIRED)
+find_package(libzippp REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
