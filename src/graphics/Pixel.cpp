@@ -18,10 +18,13 @@
 #include "Pixel.hpp"
 
 namespace capy {
-Pixel::Pixel(uint8_t alpha) : Pixel(0, 0, 0, alpha) {}
-
-Pixel::Pixel(Color r, Color g, Color b, uint8_t alpha)
+Pixel::Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b,
+             uint8_t alpha)
     : _r(r), _g(g), _b(b), _alpha(alpha) {}
+
+Pixel Pixel::white(uint8_t alpha) { return {255, 255, 255, alpha}; }
+
+Pixel Pixel::black(uint8_t alpha) { return {0, 0, 0, alpha}; }
 
 void Pixel::updateFromQColor(const QColor& color) {
   _r = color.red();
@@ -34,15 +37,21 @@ QColor Pixel::convertToQColor() const { return QColor(_r, _g, _b, _alpha); }
 
 QBrush Pixel::convertToQBrush() const { return QBrush(convertToQColor()); }
 
-Color Pixel::getRed() const { return _r; }
+ColorChannelValue Pixel::getRed() const { return _r; }
 
-Color Pixel::getBlue() const { return _b; }
+ColorChannelValue Pixel::getBlue() const { return _b; }
 
-Color Pixel::getGreen() const { return _g; }
+ColorChannelValue Pixel::getGreen() const { return _g; }
 
-Color Pixel::getAlpha() const { return _alpha; }
+ColorChannelValue Pixel::getAlpha() const { return _alpha; }
 
-bool Pixel::hasSomeTransparency() const { return _alpha < 255; }
+bool Pixel::hasSomeTransparency() const {
+  return _alpha < constants::alpha::solidColor;
+}
 
-bool Pixel::isSolid() const { return _alpha == 255; }
+bool Pixel::isSolid() const { return _alpha == constants::alpha::solidColor; }
+
+bool Pixel::isTransparent() const {
+  return _alpha == constants::alpha::transparent;
+}
 }  // namespace capy

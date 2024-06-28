@@ -24,33 +24,11 @@
 
 #include "ui/ConsoleWindow.hpp"
 
-namespace capy {
+namespace capy::logger {
 static bool isEnabled = false;
 static ui::ConsoleWindow* consoleWindow = nullptr;
 
-void ConsoleLogger::init() {
-  isEnabled = true;
-  consoleWindow = new ui::ConsoleWindow();
-}
-
-void ConsoleLogger::cleanup() {
-  if (!isEnabled) {
-    return;
-  }
-
-  isEnabled = false;
-  delete consoleWindow;
-}
-
-void ConsoleLogger::showConsoleWindow() {
-  if (!isEnabled) {
-    return;
-  }
-
-  consoleWindow->show();
-}
-
-std::string ConsoleLogger::severityToString(Severity severity) {
+static std::string severityToString(Severity severity) {
   switch (severity) {
     case Severity::Default:
       return "";
@@ -67,13 +45,12 @@ std::string ConsoleLogger::severityToString(Severity severity) {
   }
 }
 
-std::string ConsoleLogger::getDateTimeString() {
+static std::string getDateTimeString() {
   const auto localTime = std::chrono::system_clock::now();
   return fmt::format("{:%F %T}", localTime);
 }
 
-void ConsoleLogger::log(const std::string& message,
-                        const std::string& extraInfo) {
+static void log(const std::string& message, const std::string& extraInfo) {
   if (!isEnabled) {
     return;
   }
@@ -83,20 +60,41 @@ void ConsoleLogger::log(const std::string& message,
   consoleWindow->log(QString::fromStdString(logMessage));
 }
 
-void ConsoleLogger::debug(const std::string& message,
-                          const std::string& module) {
+void init() {
+  isEnabled = true;
+  consoleWindow = new ui::ConsoleWindow();
+}
+
+void cleanup() {
+  if (!isEnabled) {
+    return;
+  }
+
+  isEnabled = false;
+  delete consoleWindow;
+}
+
+void showConsoleWindow() {
+  if (!isEnabled) {
+    return;
+  }
+
+  consoleWindow->show();
+}
+
+void debug(const std::string& message, const std::string& module) {
   log(message, fmt::format("<font color=\"blue\">DEBUG<{}></font>", module));
 }
 
-void ConsoleLogger::info(const std::string& message) { log(message, "INFO"); }
+void info(const std::string& message) { log(message, "INFO"); }
 
-void ConsoleLogger::warning(const std::string& message, Severity severity) {
+void warning(const std::string& message, Severity severity) {
   log(message, fmt::format("<font color=\"yellow\">WARNING<{}></font>",
                            severityToString(severity)));
 }
 
-void ConsoleLogger::error(const std::string& message, Severity severity) {
+void error(const std::string& message, Severity severity) {
   log(message, fmt::format("<font color=\"red\">ERROR<{}></font>",
                            severityToString(severity)));
 }
-}  // namespace capy
+}  // namespace capy::logger

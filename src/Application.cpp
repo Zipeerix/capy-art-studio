@@ -28,15 +28,15 @@ Application::Application(int argc, char** argv)
   _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
 }
 
-Application::~Application() { ConsoleLogger::cleanup(); }
+Application::~Application() { logger::cleanup(); }
 
 int Application::start() {
   ui::MainWindow mainWindow;
   mainWindow.show();
 
   if (_configurationManager->getEnableConsole()) {
-    ConsoleLogger::init();
-    ConsoleLogger::showConsoleWindow();
+    logger::init();
+    logger::showConsoleWindow();
   }
 
   return _guiApplication.exec();

@@ -20,6 +20,10 @@
 namespace capy {
 Drawing::Drawing(int width, int height) : _width(width), _height(height) {
   _layers.emplace_back(width, height);
+  // NOTE: For testing
+  for (int i = 0; i < 3; i++) {
+    _layers.emplace_back(width, height);
+  }
 }
 
 int Drawing::getWidth() const { return _width; }
@@ -40,18 +44,10 @@ void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
 }
 
 QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
-  // return QColor(128, 64, 128, 255);
-  //  TODO: Find last layer with non-zero opacity, later when opacitty is
-  //  introduced it will be harder..
-  //  TODO: To improve performance look from the back and find FIRST
-  auto currentColor = QColor(255, 255, 255, 255);
-  for (const auto& layer : _layers) {
-    const auto pixel = layer.getPixel(x, y);
-    if (pixel.isSolid()) {
-      currentColor = pixel.convertToQColor();
-    }
-  }
-
-  return currentColor;
+  // TODO: idk how to move to class since the lambda fucking dies there
+  algorithms::AlphaBlender alphaBlender([&](int x, int y, int layer) {
+    return _layers.at(layer).getPixel(x, y);
+  });  // tODO: if keeping it this way then pass layers size to constructor lol
+  return alphaBlender.blend(x, y, _layers.size());
 }
 }  // namespace capy

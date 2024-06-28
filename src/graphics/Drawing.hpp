@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "Layer.hpp"
+#include "algorithms/AlphaBlending.hpp"
 
 namespace capy {
 class Drawing {

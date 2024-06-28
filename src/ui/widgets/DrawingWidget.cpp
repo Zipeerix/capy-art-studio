@@ -34,15 +34,23 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
   setScene(_scene);
 }
 
+void DrawingWidget::setDrawingColor(QColor color){
+  _drawingColor = color;
+}
+
+QColor DrawingWidget::getDrawingColor(){
+  return _drawingColor;
+}
+
 void DrawingWidget::startNewDrawing(int width, int height) {
-  ConsoleLogger::info(fmt::format(
+  logger::info(fmt::format(
       "Creating new image with dimensions {}x{} with per layer size of {} bytes",
       width, height, calculateInMemorySizeOfImage(width, height)));
   _drawing = Drawing(width, height);
   _scene->clear();
 
-  _drawing_canvas_item = new DrawingCanvasItem(width, height);
-  _scene->addItem(_drawing_canvas_item);
+  _drawingCanvasItem = new DrawingCanvasItem(width, height);
+  _scene->addItem(_drawingCanvasItem);
 
   if (_settings->getShouldDrawGrid()) {
     const int totalDrawingWidth = width;
@@ -104,10 +112,10 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
 
         _drawing.drawPixelOnCurrentLayer(clickedPixelX,
                                          clickedPixelY,
-                                         (255, 0, 0, 255));
+                                         _drawingColor);
         const auto combinedColor = _drawing.calculateCombinedPixelColor(
             clickedPixelX, clickedPixelY);
-        _drawing_canvas_item->updateCanvasPixel(clickedPixelX, clickedPixelY,
+        _drawingCanvasItem->updateCanvasPixel(clickedPixelX, clickedPixelY,
                                                 combinedColor);
       }
       return;
@@ -176,9 +184,9 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
         if (_lastContinousDrawingPoint.has_value()) {
           // TODO: Move this to a method or cleanup/tool_to_class seperation
           static const auto pixelDrawingAction = [&](int x, int y) {
-            _drawing.drawPixelOnCurrentLayer(x, y, QColor(255, 0, 0, 255));
+            _drawing.drawPixelOnCurrentLayer(x, y, _drawingColor);
             auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
-            _drawing_canvas_item->updateCanvasPixel(x, y, combinedColor);
+            _drawingCanvasItem->updateCanvasPixel(x, y, combinedColor);
           };
 
           algorithms::applyBresenham(_lastContinousDrawingPoint->x(),

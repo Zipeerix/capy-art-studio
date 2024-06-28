@@ -15,31 +15,27 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Layer.hpp"
+#ifndef ALPHABLENDING_HPP
+#define ALPHABLENDING_HPP
 
-#include "utils/General.hpp"
+#include <QColor>
 
-namespace capy {
-Layer::Layer(int width, int height) : _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
-}
+#include "graphics/Pixel.hpp"
 
-bool Layer::isVisible() const { return _visible; }
+namespace capy::algorithms {
+QColor alphaBlend(QColor bottomPixel, QColor topPixel);
 
-void Layer::show() { _visible = true; }
+class AlphaBlender {
+ public:
+  using PixelColorGettingFunction = std::function<const Pixel&(int, int, int)>;
 
-void Layer::hide() { _visible = false; }
+  explicit AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction);
 
-void Layer::drawPixel(int x, int y, const QColor& color) {
-  auto& targetPixel = getMutablePixel(x, y);
-  targetPixel.updateFromQColor(color);
-}
+  QColor blend(int x, int y, int layerCount) const;
 
-const Pixel& Layer::getPixel(int x, int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
+ private:
+  PixelColorGettingFunction _pixelColorGettingFunction;
+};
+}  // namespace capy::algorithms
 
-Pixel& Layer::getMutablePixel(int x, int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-}  // namespace capy
+#endif  // ALPHABLENDING_HPP
