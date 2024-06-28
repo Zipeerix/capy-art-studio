@@ -15,7 +15,6 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-
 #include "Application.hpp"
 
 int main(int argc, char* argv[]) {

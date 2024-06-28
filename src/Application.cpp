@@ -15,22 +15,20 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ui/MainWindow.hpp"
-#include "ui/ConsoleWindow.hpp"
 #include "Application.hpp"
 
+#include "ui/ConsoleWindow.hpp"
+#include "ui/MainWindow.hpp"
 #include "utils/ConsoleLogger.hpp"
 
 namespace capy {
-Application::Application(int argc, char** argv) :
-  _guiApplication(argc, argv),
-  _configurationManager(ConfigurationManager::createInstance()) {
+Application::Application(int argc, char** argv)
+    : _guiApplication(argc, argv),
+      _configurationManager(ConfigurationManager::createInstance()) {
   _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
 }
 
-Application::~Application() {
-  ConsoleLogger::cleanup();
-}
+Application::~Application() { ConsoleLogger::cleanup(); }
 
 int Application::start() {
   ui::MainWindow mainWindow;
@@ -50,4 +48,4 @@ void Application::registerMetadata() {
       "https://github.com/Zipeerix/capy-art-studio");
   QCoreApplication::setApplicationName("CapyArt Studio");
 }
-} // capy
+}  // namespace capy

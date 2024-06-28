@@ -20,8 +20,7 @@
 
 namespace capy {
 // TODO Use rapid json to encode info and then compress the file
-class CapyFileManager {
-};
-} // capy
+class CapyFileManager {};
+}  // namespace capy
 
-#endif //CAPYFILEMANAGER_HPP
+#endif  // CAPYFILEMANAGER_HPP

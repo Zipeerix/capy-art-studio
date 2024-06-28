@@ -18,13 +18,10 @@
 #include "Pixel.hpp"
 
 namespace capy {
-Pixel::Pixel(uint8_t alpha) :
-  Pixel(0, 0, 0, alpha) {
-}
+Pixel::Pixel(uint8_t alpha) : Pixel(0, 0, 0, alpha) {}
 
-Pixel::Pixel(Color r, Color g, Color b, uint8_t alpha) :
-  _r(r), _g(g), _b(b), _alpha(alpha) {
-}
+Pixel::Pixel(Color r, Color g, Color b, uint8_t alpha)
+    : _r(r), _g(g), _b(b), _alpha(alpha) {}
 
 void Pixel::updateFromQColor(const QColor& color) {
   _r = color.red();
@@ -33,35 +30,19 @@ void Pixel::updateFromQColor(const QColor& color) {
   _alpha = color.alpha();
 }
 
-QColor Pixel::convertToQColor() const {
-  return QColor(_r, _g, _b, _alpha);
-}
+QColor Pixel::convertToQColor() const { return QColor(_r, _g, _b, _alpha); }
 
-QBrush Pixel::convertToQBrush() const {
-  return QBrush(convertToQColor());
-}
+QBrush Pixel::convertToQBrush() const { return QBrush(convertToQColor()); }
 
-Color Pixel::getRed() const {
-  return _r;
-}
+Color Pixel::getRed() const { return _r; }
 
-Color Pixel::getBlue() const {
-  return _b;
-}
+Color Pixel::getBlue() const { return _b; }
 
-Color Pixel::getGreen() const {
-  return _g;
-}
+Color Pixel::getGreen() const { return _g; }
 
-Color Pixel::getAlpha() const {
-  return _alpha;
-}
+Color Pixel::getAlpha() const { return _alpha; }
 
-bool Pixel::hasSomeTransparency() const {
-  return _alpha < 255;
-}
+bool Pixel::hasSomeTransparency() const { return _alpha < 255; }
 
-bool Pixel::isSolid() const {
-  return _alpha == 255;
-}
-} // capy
+bool Pixel::isSolid() const { return _alpha == 255; }
+}  // namespace capy

@@ -18,22 +18,15 @@
 #include "Layer.hpp"
 
 namespace capy {
-Layer::Layer(int width, int height) :
-  _width(width), _height(height) {
+Layer::Layer(int width, int height) : _width(width), _height(height) {
   _pixels.resize(width * height, Pixel{0});
 }
 
-bool Layer::isVisible() const {
-  return _visible;
-}
+bool Layer::isVisible() const { return _visible; }
 
-void Layer::show() {
-  _visible = true;
-}
+void Layer::show() { _visible = true; }
 
-void Layer::hide() {
-  _visible = false;
-}
+void Layer::hide() { _visible = false; }
 
 void Layer::drawPixel(int x, int y, const QColor& color) {
   auto& targetPixel = getMutablePixel(x, y);
@@ -50,4 +43,4 @@ Pixel& Layer::getMutablePixel(int x, int y) {
   const int singleDimensionalIndex = y * _width + x;
   return _pixels.at(singleDimensionalIndex);
 }
-} // capy
+}  // namespace capy

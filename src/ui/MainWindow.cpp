@@ -16,16 +16,22 @@
 *******************************************************************************/
 
 #include "MainWindow.hpp"
+
+#include "dialogs/NewFileDialog.hpp"
 #include "ui_mainwindow.h"
 #include "widgets/DrawingWidget.hpp"
-#include "dialogs/NewFileDialog.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
-  : QMainWindow(parent), ui(new Ui::MainWindow),
-    _drawingWidget(new DrawingWidget(this)) {
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      _drawingWidget(new DrawingWidget(this)) {
   ui->setupUi(this);
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
+
+  setupDock(ui->toolsDock);
+  setupDock(ui->colorsDock);
+  setupDock(ui->layersDock);
 
   connect(ui->actionFileNew, SIGNAL(triggered()), this,
           SLOT(menuBarFileNewClicked()));
@@ -33,8 +39,19 @@ MainWindow::MainWindow(QWidget* parent)
           SLOT(currentLayerChanged(int)));
 }
 
-MainWindow::~MainWindow() {
-  delete ui;
+MainWindow::~MainWindow() { delete ui; }
+
+void MainWindow::setupDock(QDockWidget* dockWidget) {
+  const auto palette = dockWidget->palette();
+  const QColor backgroundColor = palette.color(QPalette::Window);
+  const QColor borderColor = palette.color(QPalette::Shadow);
+  dockWidget->setStyleSheet(QString("QDockWidget::title {"
+                                    "    background: %1;"
+                                    "    border: 1px solid %2;"
+                                    "    padding: 5px;"
+                                    "}")
+                                .arg(backgroundColor.name())
+                                .arg(borderColor.name()));
 }
 
 void MainWindow::menuBarFileNewClicked() {
@@ -51,4 +68,4 @@ void MainWindow::menuBarFileNewClicked() {
 void MainWindow::currentLayerChanged(int newLayer) {
   _drawingWidget->setCurrentLayer(newLayer);
 }
-}
+}  // namespace capy::ui

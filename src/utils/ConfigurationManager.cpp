@@ -15,8 +15,9 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QColor>
 #include "ConfigurationManager.hpp"
+
+#include <QColor>
 
 namespace capy {
 std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
@@ -37,4 +38,4 @@ double ConfigurationManager::getGridWidth() const {
 bool ConfigurationManager::getEnableConsole() const {
   return _settings.value("general/showConsole", true).toBool();
 }
-} // capy
+}  // namespace capy

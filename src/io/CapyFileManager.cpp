@@ -17,5 +17,4 @@
 
 #include "CapyFileManager.hpp"
 
-namespace capy {
-} // capy
+namespace capy {}  // namespace capy

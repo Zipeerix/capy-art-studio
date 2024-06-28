@@ -15,7 +15,6 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
@@ -25,4 +24,4 @@ namespace capy {
 uint64_t calculateInMemorySizeOfImage(int width, int height, int layers = 1);
 }
 
-#endif //MEMORY_HPP
+#endif  // MEMORY_HPP

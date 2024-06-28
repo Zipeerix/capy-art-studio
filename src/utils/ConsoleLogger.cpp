@@ -15,10 +15,13 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <chrono>
+#include "ConsoleLogger.hpp"
+
 #include <fmt/chrono.h>
 #include <fmt/format.h>
-#include "ConsoleLogger.hpp"
+
+#include <chrono>
+
 #include "ui/ConsoleWindow.hpp"
 
 namespace capy {
@@ -85,9 +88,7 @@ void ConsoleLogger::debug(const std::string& message,
   log(message, fmt::format("<font color=\"blue\">DEBUG<{}></font>", module));
 }
 
-void ConsoleLogger::info(const std::string& message) {
-  log(message, "INFO");
-}
+void ConsoleLogger::info(const std::string& message) { log(message, "INFO"); }
 
 void ConsoleLogger::warning(const std::string& message, Severity severity) {
   log(message, fmt::format("<font color=\"yellow\">WARNING<{}></font>",
@@ -98,4 +99,4 @@ void ConsoleLogger::error(const std::string& message, Severity severity) {
   log(message, fmt::format("<font color=\"red\">ERROR<{}></font>",
                            severityToString(severity)));
 }
-}
+}  // namespace capy

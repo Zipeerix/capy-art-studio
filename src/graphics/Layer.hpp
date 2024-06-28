@@ -19,11 +19,12 @@
 #define LAYER_HPP
 
 #include <QImage>
+
 #include "Pixel.hpp"
 
 namespace capy {
 class Layer {
-public:
+ public:
   Layer(int width, int height);
 
   [[nodiscard]] bool isVisible() const;
@@ -35,7 +36,7 @@ public:
   void hide();
   void show();
 
-private:
+ private:
   std::vector<Pixel> _pixels;
   bool _visible = false;
 
@@ -44,6 +45,6 @@ private:
 
   [[nodiscard]] Pixel& getMutablePixel(int x, int y);
 };
-} // capy
+}  // namespace capy
 
-#endif //LAYER_HPP
+#endif  // LAYER_HPP
