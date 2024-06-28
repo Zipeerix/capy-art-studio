@@ -36,11 +36,14 @@ public:
   void startNewDrawing(int width, int height);
 
   void setCurrentLayer(int newLayer);
+  [[nodiscard]] QColor getDrawingColor();
+  void setDrawingColor(QColor color);
 
 private:
   std::shared_ptr<ConfigurationManager> _settings;
+  QColor _drawingColor = QColor(255, 255, 255, 255);
 
-  DrawingCanvasItem* _drawing_canvas_item = nullptr;
+  DrawingCanvasItem* _drawingCanvasItem = nullptr;
   QGraphicsScene* _scene = nullptr;
 
   Drawing _drawing;

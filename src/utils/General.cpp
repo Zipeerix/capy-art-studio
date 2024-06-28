@@ -15,31 +15,8 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Layer.hpp"
-
-#include "utils/General.hpp"
+#include "General.hpp"
 
 namespace capy {
-Layer::Layer(int width, int height) : _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
-}
-
-bool Layer::isVisible() const { return _visible; }
-
-void Layer::show() { _visible = true; }
-
-void Layer::hide() { _visible = false; }
-
-void Layer::drawPixel(int x, int y, const QColor& color) {
-  auto& targetPixel = getMutablePixel(x, y);
-  targetPixel.updateFromQColor(color);
-}
-
-const Pixel& Layer::getPixel(int x, int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-
-Pixel& Layer::getMutablePixel(int x, int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
+int convert2DIndexto1DIndex(int x, int y, int width) { return y * width + x; }
 }  // namespace capy

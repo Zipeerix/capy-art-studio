@@ -37,6 +37,28 @@ MainWindow::MainWindow(QWidget* parent)
           SLOT(menuBarFileNewClicked()));
   connect(ui->layerSpinBox, SIGNAL(valueChanged(int)), this,
           SLOT(currentLayerChanged(int)));
+
+  connect(ui->redButton, SIGNAL(clicked()), this, SLOT(redButtonClicked()));
+  connect(ui->blackButton, SIGNAL(clicked()), this, SLOT(blackButtonClicked()));
+  connect(ui->opacitySpinBox, SIGNAL(valueChanged(int)), this,
+          SLOT(opacityChanged(int)));
+}
+
+void MainWindow::blackButtonClicked() {
+  const auto spinBoxValue = ui->opacitySpinBox->value();
+  _drawingWidget->setDrawingColor(QColor(0, 0, 0, 255));
+}
+
+void MainWindow::redButtonClicked() {
+  const auto spinBoxValue = ui->opacitySpinBox->value();
+  _drawingWidget->setDrawingColor(QColor(255, 0, 0, 255));
+}
+
+void MainWindow::opacityChanged(int value) {
+  auto color = _drawingWidget->getDrawingColor();
+  color.setAlpha(value);
+
+  _drawingWidget->setDrawingColor(color);
 }
 
 MainWindow::~MainWindow() { delete ui; }

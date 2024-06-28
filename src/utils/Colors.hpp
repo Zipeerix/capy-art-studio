@@ -15,31 +15,19 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Layer.hpp"
+#ifndef COLORS_HPP
+#define COLORS_HPP
 
-#include "utils/General.hpp"
-
+// TODO: move colorchannelvalue somewhere else and create constants.hpp for
+// values
 namespace capy {
-Layer::Layer(int width, int height) : _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
-}
+using ColorChannelValue = uint8_t;
 
-bool Layer::isVisible() const { return _visible; }
-
-void Layer::show() { _visible = true; }
-
-void Layer::hide() { _visible = false; }
-
-void Layer::drawPixel(int x, int y, const QColor& color) {
-  auto& targetPixel = getMutablePixel(x, y);
-  targetPixel.updateFromQColor(color);
-}
-
-const Pixel& Layer::getPixel(int x, int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-
-Pixel& Layer::getMutablePixel(int x, int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
+namespace constants::alpha {
+constexpr ColorChannelValue solidColor = 255;
+constexpr ColorChannelValue semiTransparent = 127;
+constexpr ColorChannelValue transparent = 0;
+}  // namespace constants::alpha
 }  // namespace capy
+
+#endif  // COLORS_HPP

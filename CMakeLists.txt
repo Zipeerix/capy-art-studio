@@ -7,6 +7,8 @@ set(APPLICATION_SOURCE_FILES
         src/Application.hpp
         src/algorithms/Bresenham.hpp
         src/algorithms/Bresenham.cpp
+        src/algorithms/AlphaBlending.hpp
+        src/algorithms/AlphaBlending.cpp
         src/graphics/Layer.hpp
         src/graphics/Layer.cpp
         src/graphics/Drawing.hpp
@@ -31,6 +33,8 @@ set(APPLICATION_SOURCE_FILES
         src/utils/ConsoleLogger.cpp
         src/utils/Memory.cpp
         src/utils/Memory.hpp
+        src/utils/General.hpp
+        src/utils/General.cpp
         src/io/CapyFileManager.cpp
         src/io/CapyFileManager.hpp
 )

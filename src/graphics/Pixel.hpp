@@ -21,31 +21,35 @@
 #include <QBrush>
 #include <cstdint>
 
-namespace capy {
-using Color = uint8_t;
+#include "utils/Colors.hpp"
 
+namespace capy {
 class Pixel {
  public:
-  explicit Pixel(uint8_t alpha);
-  Pixel(Color r, Color g, Color b, uint8_t alpha);
+  Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b,
+        uint8_t alpha);
+
+  static Pixel white(uint8_t alpha = constants::alpha::solidColor);
+  static Pixel black(uint8_t alpha = constants::alpha::solidColor);
 
   void updateFromQColor(const QColor& color);
 
   [[nodiscard]] QColor convertToQColor() const;
   [[nodiscard]] QBrush convertToQBrush() const;
 
-  [[nodiscard]] Color getRed() const;
-  [[nodiscard]] Color getGreen() const;
-  [[nodiscard]] Color getBlue() const;
-  [[nodiscard]] Color getAlpha() const;
+  [[nodiscard]] ColorChannelValue getRed() const;
+  [[nodiscard]] ColorChannelValue getGreen() const;
+  [[nodiscard]] ColorChannelValue getBlue() const;
+  [[nodiscard]] ColorChannelValue getAlpha() const;
 
   [[nodiscard]] bool hasSomeTransparency() const;
   [[nodiscard]] bool isSolid() const;
+  [[nodiscard]] bool isTransparent() const;
 
  private:
-  Color _r;
-  Color _g;
-  Color _b;
+  ColorChannelValue _r;
+  ColorChannelValue _g;
+  ColorChannelValue _b;
   uint8_t _alpha;
 };
 }  // namespace capy

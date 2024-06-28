@@ -21,37 +21,23 @@
 #include <QString>
 #include <string>
 
-namespace capy {
-// TODO: Change to namespace?
-class ConsoleLogger {
- public:
-  enum class Severity {
-    Default,
-    Expected,
-    Mild,
-    Severe,
-    Fatal,
-  };
-
-  ConsoleLogger(ConsoleLogger&) = delete;
-  void operator=(const ConsoleLogger&) = delete;
-
-  static void init();
-  static void cleanup();
-  static void showConsoleWindow();
-
-  static void debug(const std::string& message, const std::string& module);
-  static void info(const std::string& message);
-  static void warning(const std::string& message, Severity severity);
-  static void error(const std::string& message, Severity severity);
-
- protected:
-  ConsoleLogger() = default;
-
-  static std::string severityToString(Severity severity);
-  static void log(const std::string& message, const std::string& extraInfo);
-  static std::string getDateTimeString();
+namespace capy::logger {
+enum class Severity {
+  Default,
+  Expected,
+  Mild,
+  Severe,
+  Fatal,
 };
-}  // namespace capy
+
+void init();
+void cleanup();
+void showConsoleWindow();
+
+void debug(const std::string& message, const std::string& module);
+void info(const std::string& message);
+void warning(const std::string& message, Severity severity);
+void error(const std::string& message, Severity severity);
+}  // namespace capy::logger
 
 #endif  // CONSOLEMANAGER_HPP
