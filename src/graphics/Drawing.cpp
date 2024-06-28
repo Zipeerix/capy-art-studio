@@ -44,10 +44,11 @@ void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
 }
 
 QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
-  // TODO: idk how to move to class since the lambda fucking dies there
-  algorithms::AlphaBlender alphaBlender([&](int x, int y, int layer) {
+  // TODO: Is it fine? Doesn't the lambda get fucked here?
+  // TODO: if program crashes then its this retarded static here
+  static algorithms::AlphaBlender alphaBlender([&](int x, int y, int layer) {
     return _layers.at(layer).getPixel(x, y);
-  });  // tODO: if keeping it this way then pass layers size to constructor lol
+  });
   return alphaBlender.blend(x, y, _layers.size());
 }
 }  // namespace capy

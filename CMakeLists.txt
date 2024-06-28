@@ -47,6 +47,7 @@ set(APPLICATION_UI_FILES
 
 set(TEST_FILES
         tests/algorithms/BresenhamTests.cpp
+        tests/algorithms/AlphaBlendingTests.cpp
 )
 
 set(LIBS_TO_LINK
