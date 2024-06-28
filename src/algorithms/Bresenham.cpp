@@ -16,6 +16,7 @@
 *******************************************************************************/
 
 #include "Bresenham.hpp"
+
 #include <cmath>
 
 namespace capy::algorithms {
@@ -56,4 +57,4 @@ void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
   applyBresenham(firstPoint.x(), firstPoint.y(), secondPoint.x(),
                  secondPoint.y(), actionOnTarget);
 }
-}
+}  // namespace capy::algorithms

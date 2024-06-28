@@ -28,15 +28,15 @@ class ConsoleWindow;
 class ConsoleWindow final : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   explicit ConsoleWindow(QWidget* parent = nullptr);
   ~ConsoleWindow() override;
 
   void log(const QString&) const;
 
-private:
+ private:
   Ui::ConsoleWindow* ui;
 };
-}
+}  // namespace capy::ui
 
-#endif // CONSOLEWINDOW_HPP
+#endif  // CONSOLEWINDOW_HPP

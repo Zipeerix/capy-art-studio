@@ -15,11 +15,10 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-
 #include "Memory.hpp"
 
 namespace capy {
 uint64_t calculateInMemorySizeOfImage(int width, int height, int layers) {
   return width * height * layers;
 }
-}
+}  // namespace capy

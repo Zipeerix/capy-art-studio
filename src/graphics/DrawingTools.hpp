@@ -19,13 +19,7 @@
 #define DRAWINGTOOLS_HPP
 
 namespace capy {
-enum class DrawingTool {
-  Pen,
-  Eraser,
-  Hand,
-  Rectangle,
-  Circle
-};
+enum class DrawingTool { Pen, Eraser, Hand, Rectangle, Circle };
 }
 
-#endif //DRAWINGTOOLS_HPP
+#endif  // DRAWINGTOOLS_HPP

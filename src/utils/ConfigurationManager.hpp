@@ -18,12 +18,12 @@
 #ifndef CONFIGURATIONMANAGER_HPP
 #define CONFIGURATIONMANAGER_HPP
 
-#include <memory>
 #include <QSettings>
+#include <memory>
 
 namespace capy {
 class ConfigurationManager {
-public:
+ public:
   ConfigurationManager(ConfigurationManager&) = delete;
   void operator=(const ConfigurationManager&) = delete;
 
@@ -34,12 +34,12 @@ public:
   [[nodiscard]] double getGridWidth() const;
   [[nodiscard]] bool getEnableConsole() const;
 
-protected:
+ protected:
   ConfigurationManager() = default;
 
-private:
+ private:
   QSettings _settings{};
 };
-} // capy
+}  // namespace capy
 
-#endif //CONFIGURATIONMANAGER_HPP
+#endif  // CONFIGURATIONMANAGER_HPP

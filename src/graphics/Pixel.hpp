@@ -25,7 +25,7 @@ namespace capy {
 using Color = uint8_t;
 
 class Pixel {
-public:
+ public:
   explicit Pixel(uint8_t alpha);
   Pixel(Color r, Color g, Color b, uint8_t alpha);
 
@@ -42,12 +42,12 @@ public:
   [[nodiscard]] bool hasSomeTransparency() const;
   [[nodiscard]] bool isSolid() const;
 
-private:
+ private:
   Color _r;
   Color _g;
   Color _b;
   uint8_t _alpha;
 };
-} // capy
+}  // namespace capy
 
-#endif //PIXEL_HPP
+#endif  // PIXEL_HPP

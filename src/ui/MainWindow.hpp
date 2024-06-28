@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
@@ -29,18 +30,20 @@ class MainWindow;
 class MainWindow final : public QMainWindow {
   Q_OBJECT
 
-public:
+ public:
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
-public slots:
+ public slots:
   void menuBarFileNewClicked();
   void currentLayerChanged(int newLayer);
 
-private:
+ private:
   Ui::MainWindow* ui;
   DrawingWidget* _drawingWidget;
-};
-}
 
-#endif // MAINWINDOW_H
+  void setupDock(QDockWidget* dockWiget);
+};
+}  // namespace capy::ui
+
+#endif  // MAINWINDOW_H

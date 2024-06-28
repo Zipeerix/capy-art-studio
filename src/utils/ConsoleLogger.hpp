@@ -24,7 +24,7 @@
 namespace capy {
 // TODO: Change to namespace?
 class ConsoleLogger {
-public:
+ public:
   enum class Severity {
     Default,
     Expected,
@@ -45,13 +45,13 @@ public:
   static void warning(const std::string& message, Severity severity);
   static void error(const std::string& message, Severity severity);
 
-protected:
+ protected:
   ConsoleLogger() = default;
 
   static std::string severityToString(Severity severity);
   static void log(const std::string& message, const std::string& extraInfo);
   static std::string getDateTimeString();
 };
-}
+}  // namespace capy
 
-#endif //CONSOLEMANAGER_HPP
+#endif  // CONSOLEMANAGER_HPP

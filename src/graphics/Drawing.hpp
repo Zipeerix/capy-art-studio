@@ -19,11 +19,12 @@
 #define DRAWING_HPP
 
 #include <vector>
+
 #include "Layer.hpp"
 
 namespace capy {
 class Drawing {
-public:
+ public:
   Drawing(int width, int height);
 
   [[nodiscard]] int getWidth() const;
@@ -35,14 +36,15 @@ public:
   void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
   [[nodiscard]] QColor calculateCombinedPixelColor(int x, int y) const;
 
-  // TODO: Methods to add and remove layers, remember that there has to be at least one layer
+  // TODO: Methods to add and remove layers, remember that there has to be at
+  // least one layer
 
-private:
+ private:
   std::vector<Layer> _layers;
   int _currentLayer = 0;
   int _width;
   int _height;
 };
-} // capy
+}  // namespace capy
 
-#endif //DRAWING_HPP
+#endif  // DRAWING_HPP

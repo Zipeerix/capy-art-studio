@@ -21,4 +21,4 @@
 #define TOML_EXCEPTIONS 0
 #include <toml++/toml.hpp>
 
-#endif //TOMLWRAPPER_H
+#endif  // TOMLWRAPPER_H

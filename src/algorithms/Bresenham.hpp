@@ -28,6 +28,6 @@ void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
                     const CoordinateApplicationFunction& actionOnTarget);
 void applyBresenham(int x1, int y1, int x2, int y2,
                     const CoordinateApplicationFunction& actionOnTarget);
-}
+}  // namespace capy::algorithms
 
-#endif //BRESENHAM_HPP
+#endif  // BRESENHAM_HPP
