@@ -34,7 +34,7 @@ static ColorChannelValue getBlendChannelValue(ColorChannelValue currentColor,
   const auto fromAdded = addedColor * alphaPercentage;
   const auto fromCurrent = currentColor * (1.0 - alphaPercentage);
 
-  return static_cast<ColorChannelValue>(fromAdded + fromCurrent);
+  return static_cast<ColorChannelValue>(std::round(fromAdded + fromCurrent));
 }
 
 static QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor,
