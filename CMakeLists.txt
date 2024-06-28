@@ -5,6 +5,8 @@ project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 set(APPLICATION_SOURCE_FILES
         src/Application.cpp
         src/Application.hpp
+        src/ai/AiServiceInterface.cpp
+        src/ai/AiServiceInterface.hpp
         src/algorithms/Bresenham.hpp
         src/algorithms/Bresenham.cpp
         src/algorithms/AlphaBlending.hpp
