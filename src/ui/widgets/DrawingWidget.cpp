@@ -96,7 +96,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
   switch (_tool) {
     case DrawingTool::Hand: {
       if (event->button() == Qt::LeftButton) {
-        _rightMousePressed = true;
+        _leftMouseButtonPressed = true;
         _panStartX = event->x();
         _panStartY = event->y();
         setCursor(Qt::ClosedHandCursor);
@@ -137,7 +137,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
   switch (_tool) {
     case DrawingTool::Hand: {
       if (event->button() == Qt::LeftButton) {
-        _rightMousePressed = false;
+        _leftMouseButtonPressed = false;
         setCursor(Qt::ArrowCursor);
         event->accept();
         return;
@@ -164,7 +164,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
 
   switch (_tool) {
     case DrawingTool::Hand: {
-      if (_rightMousePressed) {
+      if (_leftMouseButtonPressed) {
         horizontalScrollBar()->setValue(
             horizontalScrollBar()->value() - (event->x() - _panStartX));
         verticalScrollBar()->setValue(

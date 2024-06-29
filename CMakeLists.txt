@@ -22,6 +22,10 @@ set(APPLICATION_SOURCE_FILES
         src/ui/ConsoleWindow.hpp
         src/ui/MainWindow.hpp
         src/ui/MainWindow.cpp
+        src/ui/widgets/ColorPicker.cpp
+        src/ui/widgets/ColorPicker.hpp
+        src/ui/widgets/ColorPickerSlider.hpp
+        src/ui/widgets/ColorPickerSlider.cpp
         src/ui/widgets/DrawingCanvasItem.hpp
         src/ui/widgets/DrawingCanvasItem.cpp
         src/ui/widgets/DrawingWidget.hpp

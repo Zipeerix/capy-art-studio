@@ -37,9 +37,6 @@ class MainWindow final : public QMainWindow {
  public slots:
   void menuBarFileNewClicked();
   void currentLayerChanged(int newLayer);
-  void blackButtonClicked();
-  void redButtonClicked();
-  void opacityChanged(int);
 
  private:
   Ui::MainWindow* ui;

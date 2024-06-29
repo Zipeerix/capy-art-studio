@@ -15,54 +15,25 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWINGWIDGET_HPP
-#define DRAWINGWIDGET_HPP
+#ifndef COLORPICKER_HPP
+#define COLORPICKER_HPP
 
-#include <QGraphicsView>
-#include "graphics/Drawing.hpp"
-#include "DrawingCanvasItem.hpp"
-#include "graphics/DrawingTools.hpp"
-#include "utils/ConfigurationManager.hpp"
+#include <QDialog>
 
 namespace capy::ui {
-struct Pixel {
-  uint8_t r, g, b, a;
+class ColorPicker final : public QDialog {
+ public:
+  explicit ColorPicker(QWidget* parent = nullptr);
+  ~ColorPicker() override;
+
+  [[nodiscard]] QColor getSelectedColor() const;
+
+ public slots:
+  void addToColorPaletteClicked();
+
+ private:
+  QColor _selectedColor;
 };
+}  // namespace capy::ui
 
-class DrawingWidget final : public QGraphicsView {
-public:
-  explicit DrawingWidget(QWidget* parent);
-
-  void startNewDrawing(int width, int height);
-
-  void setCurrentLayer(int newLayer);
-  [[nodiscard]] QColor getDrawingColor();
-  void setDrawingColor(QColor color);
-
-private:
-  std::shared_ptr<ConfigurationManager> _settings;
-  QColor _drawingColor = QColor(0, 0, 0, 255);
-
-  DrawingCanvasItem* _drawingCanvasItem = nullptr;
-  QGraphicsScene* _scene = nullptr;
-
-  Drawing _drawing;
-  DrawingTool _tool = DrawingTool::Pen;
-
-  std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
-
-  bool _leftMouseButtonPressed = false;
-  int _panStartX = 0;
-  int _panStartY = 0;
-
-  std::optional<QPoint> mapPositionOfEventToScene(
-      const QMouseEvent* event) const;
-
-  void mousePressEvent(QMouseEvent* event) override;
-  void mouseReleaseEvent(QMouseEvent* event) override;
-  void mouseMoveEvent(QMouseEvent* event) override;
-  void wheelEvent(QWheelEvent* event) override;
-};
-}
-
-#endif //DRAWINGWIDGET_HPP
+#endif  // COLORPICKER_HPP
