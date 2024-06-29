@@ -41,7 +41,7 @@ public:
 
 private:
   std::shared_ptr<ConfigurationManager> _settings;
-  QColor _drawingColor = QColor(255, 255, 255, 255);
+  QColor _drawingColor = QColor(0, 0, 0, 255);
 
   DrawingCanvasItem* _drawingCanvasItem = nullptr;
   QGraphicsScene* _scene = nullptr;
@@ -51,7 +51,7 @@ private:
 
   std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
 
-  bool _rightMousePressed = false;
+  bool _leftMouseButtonPressed = false;
   int _panStartX = 0;
   int _panStartY = 0;
 

@@ -17,8 +17,12 @@
 
 #include "MainWindow.hpp"
 
+#include <fmt/format.h>
+
 #include "dialogs/NewFileDialog.hpp"
 #include "ui_mainwindow.h"
+#include "utils/ConsoleLogger.hpp"
+#include "widgets/ColorPicker.hpp"
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
@@ -27,38 +31,24 @@ MainWindow::MainWindow(QWidget* parent)
       ui(new Ui::MainWindow),
       _drawingWidget(new DrawingWidget(this)) {
   ui->setupUi(this);
-  ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
+
+  connect(ui->actionFileNew, &QAction::triggered, this,
+          &MainWindow::menuBarFileNewClicked);
+  connect(ui->layerSpinBox, &QSpinBox::valueChanged, this,
+          &MainWindow::currentLayerChanged);
 
   setupDock(ui->toolsDock);
-  setupDock(ui->colorsDock);
+  setupDock(ui->colorPickerDock);
+  setupDock(ui->colorPaletteDock);
   setupDock(ui->layersDock);
 
-  connect(ui->actionFileNew, SIGNAL(triggered()), this,
-          SLOT(menuBarFileNewClicked()));
-  connect(ui->layerSpinBox, SIGNAL(valueChanged(int)), this,
-          SLOT(currentLayerChanged(int)));
+  ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
-  connect(ui->redButton, SIGNAL(clicked()), this, SLOT(redButtonClicked()));
-  connect(ui->blackButton, SIGNAL(clicked()), this, SLOT(blackButtonClicked()));
-  connect(ui->opacitySpinBox, SIGNAL(valueChanged(int)), this,
-          SLOT(opacityChanged(int)));
-}
+  _colorPicker = new ColorPicker(this);
+  connect(_colorPicker, &ColorPicker::colorChanged, this,
+          &MainWindow::colorPickerColorChanged);
 
-void MainWindow::blackButtonClicked() {
-  const auto spinBoxValue = ui->opacitySpinBox->value();
-  _drawingWidget->setDrawingColor(QColor(0, 0, 0, 255));
-}
-
-void MainWindow::redButtonClicked() {
-  const auto spinBoxValue = ui->opacitySpinBox->value();
-  _drawingWidget->setDrawingColor(QColor(255, 0, 0, 255));
-}
-
-void MainWindow::opacityChanged(int value) {
-  auto color = _drawingWidget->getDrawingColor();
-  color.setAlpha(value);
-
-  _drawingWidget->setDrawingColor(color);
+  ui->colorPickerDock->setWidget(_colorPicker);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -87,7 +77,15 @@ void MainWindow::menuBarFileNewClicked() {
   }
 }
 
+void MainWindow::colorPickerColorChanged(QColor newColor) {
+  logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(),
+                           newColor.green(), newColor.blue(),
+                           newColor.alpha()));
+  _drawingWidget->setDrawingColor(newColor);
+}
+
 void MainWindow::currentLayerChanged(int newLayer) {
+  logger::debug(fmt::format("Layer changed to: {}", newLayer), "MainWindow");
   _drawingWidget->setCurrentLayer(newLayer);
 }
 }  // namespace capy::ui

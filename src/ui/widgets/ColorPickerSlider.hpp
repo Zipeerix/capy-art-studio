@@ -15,40 +15,34 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COLORPICKERSLIDER_HPP
+#define COLORPICKERSLIDER_HPP
 
-#include <QMainWindow>
-
-#include "widgets/ColorPicker.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include <QGradientStops>
+#include <QSlider>
+#include <functional>
 
 namespace capy::ui {
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow final : public QMainWindow {
+class ColorPickerSlider : public QSlider {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
+  explicit ColorPickerSlider(Qt::Orientation orientation,
+                             QWidget* parent = nullptr);
+  explicit ColorPickerSlider(QWidget* parent = nullptr);
 
- public slots:
-  void menuBarFileNewClicked();
-  void currentLayerChanged(int newLayer);
+  ~ColorPickerSlider() override;
 
-  // Singnal handlers from child widgets
-  void colorPickerColorChanged(QColor newColor);
+  void setGradientStops(QGradientStops gradientStops);
+  void setRenderCheckerboard(bool renderCheckerboard);
+
+  void paintEvent(QPaintEvent* event) override;
 
  private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
-  ColorPicker* _colorPicker;
-
-  void setupDock(QDockWidget* dockWiget);
+  QGradientStops _gradientStops;
+  bool _renderCheckerboard = false;
+  QPixmap _checkerboardPixmap;
 };
 }  // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+#endif  // COLORPICKERSLIDER_HPP

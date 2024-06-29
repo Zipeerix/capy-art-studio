@@ -15,40 +15,42 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COLORPICKER_HPP
+#define COLORPICKER_HPP
 
-#include <QMainWindow>
-
-#include "widgets/ColorPicker.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include <QDialog>
+#include <QLabel>
+#include "ColorPickerSlider.hpp"
 
 namespace capy::ui {
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow final : public QMainWindow {
+class ColorPicker final : public QDialog {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
+  explicit ColorPicker(QWidget* parent = nullptr);
+  ~ColorPicker() override;
+
+  void setColor(QColor color);
+
+  void updateShownColor();
 
  public slots:
-  void menuBarFileNewClicked();
-  void currentLayerChanged(int newLayer);
+  void addToColorPaletteClicked();
 
-  // Singnal handlers from child widgets
-  void colorPickerColorChanged(QColor newColor);
+  signals:
+    void colorChanged(QColor newColor);
 
  private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
-  ColorPicker* _colorPicker;
+  ColorPickerSlider* _hueSlider;
+  ColorPickerSlider* _saturationSlider;
+  ColorPickerSlider* _brightnessSlider;
+  ColorPickerSlider* _alphaSlider;
 
-  void setupDock(QDockWidget* dockWiget);
+  QLabel* _hexLabel;
+  QLabel* _colorShowcase;
+
+  QColor _selectedColor;
 };
 }  // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+#endif  // COLORPICKER_HPP
