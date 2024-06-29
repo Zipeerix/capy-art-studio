@@ -20,6 +20,7 @@
 
 #include <QMainWindow>
 
+#include "widgets/ColorPicker.hpp"
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
@@ -38,9 +39,13 @@ class MainWindow final : public QMainWindow {
   void menuBarFileNewClicked();
   void currentLayerChanged(int newLayer);
 
+  // Singnal handlers from child widgets
+  void colorPickerColorChanged(QColor newColor);
+
  private:
   Ui::MainWindow* ui;
   DrawingWidget* _drawingWidget;
+  ColorPicker* _colorPicker;
 
   void setupDock(QDockWidget* dockWiget);
 };

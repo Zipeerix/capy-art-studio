@@ -19,19 +19,36 @@
 #define COLORPICKER_HPP
 
 #include <QDialog>
+#include <QLabel>
+#include "ColorPickerSlider.hpp"
 
 namespace capy::ui {
 class ColorPicker final : public QDialog {
+  Q_OBJECT
+
  public:
   explicit ColorPicker(QWidget* parent = nullptr);
   ~ColorPicker() override;
 
-  [[nodiscard]] QColor getSelectedColor() const;
+  void setColor(QColor color);
+
+  void updateShownColor();
 
  public slots:
   void addToColorPaletteClicked();
 
+  signals:
+    void colorChanged(QColor newColor);
+
  private:
+  ColorPickerSlider* _hueSlider;
+  ColorPickerSlider* _saturationSlider;
+  ColorPickerSlider* _brightnessSlider;
+  ColorPickerSlider* _alphaSlider;
+
+  QLabel* _hexLabel;
+  QLabel* _colorShowcase;
+
   QColor _selectedColor;
 };
 }  // namespace capy::ui

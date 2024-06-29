@@ -36,9 +36,9 @@ ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 0, 0);
 
-  auto* colorShowcase = new QLabel(this);
-  colorShowcase->setMinimumSize(100, 100);
-  mainLayout->addWidget(colorShowcase);
+  _colorShowcase = new QLabel(this);
+  _colorShowcase->setMinimumSize(100, 100);
+  mainLayout->addWidget(_colorShowcase);
 
   auto* subLayout = new QVBoxLayout(this);
   subLayout->setContentsMargins(10, 10, 10, 10);
@@ -47,59 +47,52 @@ ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
   auto* controls = new QHBoxLayout();
   subLayout->addLayout(controls);
 
-  auto* hexLabel = new QLabel;
-  controls->addWidget(hexLabel);
 
   auto* colorSliders = new QGridLayout;
 
-  auto* hueSlider = new ColorPickerSlider(Qt::Horizontal);
-  auto* saturationSlider = new ColorPickerSlider(Qt::Horizontal);
-  auto* brightnessSlider = new ColorPickerSlider(Qt::Horizontal);
-  auto* alphaSlider = new ColorPickerSlider(Qt::Horizontal);
+  _hexLabel  = new QLabel;
+  controls->addWidget(_hexLabel);
+
+  _hueSlider = new ColorPickerSlider(Qt::Horizontal);
+  _saturationSlider = new ColorPickerSlider(Qt::Horizontal);
+  _brightnessSlider = new ColorPickerSlider(Qt::Horizontal);
+  _alphaSlider = new ColorPickerSlider(Qt::Horizontal);
+
   auto* hueLabel = new QLabel;
   auto* saturationLabel = new QLabel;
   auto* brightnessLabel = new QLabel;
   auto* alphaLabel = new QLabel;
 
-  auto updateColor = [=]() {
-    QColor color;
-    color.setHsv(hueSlider->value(), saturationSlider->value(),
-                 brightnessSlider->value(), alphaSlider->value());
-    colorShowcase->setStyleSheet("background-color: " + color.name());
-    hexLabel->setText(color.name());
-    _selectedColor = color;
-  };
-
-  connect(hueSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_hueSlider, &QSlider::valueChanged, this, [=](int value) {
     hueLabel->setText(QString::number(value));
-    saturationSlider->setGradientStops(
+    _saturationSlider->setGradientStops(
         {{0.0 / 255.0, QColor::fromHsv(value, 0, 255)},
          {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
-    brightnessSlider->setGradientStops(
+    _brightnessSlider->setGradientStops(
         {{0.0 / 255.0, QColor::fromHsv(value, 255, 0)},
          {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
-    alphaSlider->setGradientStops(
+    _alphaSlider->setGradientStops(
         {{0.0 / 255.0, QColor::fromHsv(value, 255, 255, 0)},
          {255.0 / 255.0, QColor::fromHsv(value, 255, 255, 255)}});
-    updateColor();
+    updateShownColor();
   });
-  connect(saturationSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_saturationSlider, &QSlider::valueChanged, this, [=](int value) {
     saturationLabel->setText(QString::number(value));
-    updateColor();
+    updateShownColor();
   });
-  connect(brightnessSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_brightnessSlider, &QSlider::valueChanged, this, [=](int value) {
     brightnessLabel->setText(QString::number(value));
-    updateColor();
+    updateShownColor();
   });
-  connect(alphaSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_alphaSlider, &QSlider::valueChanged, this, [=](int value) {
     alphaLabel->setText(QString::number(value));
-    updateColor();
+    updateShownColor();
   });
 
-  hueLabel->setText(QString::number(hueSlider->value()));
-  saturationLabel->setText(QString::number(saturationSlider->value()));
-  brightnessLabel->setText(QString::number(brightnessSlider->value()));
-  alphaLabel->setText(QString::number(alphaSlider->value()));
+  hueLabel->setText(QString::number(_hueSlider->value()));
+  saturationLabel->setText(QString::number(_saturationSlider->value()));
+  brightnessLabel->setText(QString::number(_brightnessSlider->value()));
+  alphaLabel->setText(QString::number(_alphaSlider->value()));
 
   hueLabel->setMinimumSize(hueLabel->fontMetrics().boundingRect("000").size());
   saturationLabel->setMinimumSize(
@@ -114,41 +107,41 @@ ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
   brightnessLabel->setAlignment(Qt::AlignRight);
   alphaLabel->setAlignment(Qt::AlignRight);
 
-  hueSlider->setRange(0, 359);
-  hueSlider->setGradientStops({{0.0 / 360.0, Qt::red},
+  _hueSlider->setRange(0, 359);
+  _hueSlider->setGradientStops({{0.0 / 360.0, Qt::red},
                                {60.0 / 360.0, Qt::yellow},
                                {120.0 / 360.0, Qt::green},
                                {180.0 / 360.0, Qt::cyan},
                                {240.0 / 360.0, Qt::blue},
                                {300.0 / 360.0, Qt::magenta},
                                {359.0 / 360.0, Qt::red}});
-  saturationSlider->setRange(0, 255);
-  brightnessSlider->setRange(0, 255);
-  alphaSlider->setRange(0, 255);
+  _saturationSlider->setRange(0, 255);
+  _brightnessSlider->setRange(0, 255);
+  _alphaSlider->setRange(0, 255);
 
-  saturationSlider->setGradientStops(
-      {{0.0 / 255.0, QColor::fromHsv(hueSlider->value(), 0, 255)},
-       {255.0 / 255.0, QColor::fromHsv(hueSlider->value(), 255, 255)}});
-  brightnessSlider->setGradientStops(
-      {{0.0 / 255.0, QColor::fromHsv(hueSlider->value(), 255, 0)},
-       {255.0 / 255.0, QColor::fromHsv(hueSlider->value(), 255, 255)}});
-  alphaSlider->setRenderCheckerboard(true);
-  alphaSlider->setGradientStops(
-      {{0.0 / 255.0, QColor::fromHsv(hueSlider->value(), 255, 255, 0)},
-       {255.0 / 255.0, QColor::fromHsv(hueSlider->value(), 255, 255, 255)}});
+  _saturationSlider->setGradientStops(
+      {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 0, 255)},
+       {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255)}});
+  _brightnessSlider->setGradientStops(
+      {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 0)},
+       {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255)}});
+  _alphaSlider->setRenderCheckerboard(true);
+  _alphaSlider->setGradientStops(
+      {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255, 0)},
+       {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255, 255)}});
 
-  hueSlider->setValue(180);
-  saturationSlider->setValue(255);
-  brightnessSlider->setValue(255);
-  alphaSlider->setValue(255);
+  _hueSlider->setValue(180);
+  _saturationSlider->setValue(255);
+  _brightnessSlider->setValue(255);
+  _alphaSlider->setValue(255);
 
-  colorSliders->addWidget(hueSlider, 0, 0);
+  colorSliders->addWidget(_hueSlider, 0, 0);
   colorSliders->addWidget(hueLabel, 0, 1);
-  colorSliders->addWidget(brightnessSlider, 2, 0);
+  colorSliders->addWidget(_brightnessSlider, 2, 0);
   colorSliders->addWidget(brightnessLabel, 2, 1);
-  colorSliders->addWidget(saturationSlider, 1, 0);
+  colorSliders->addWidget(_saturationSlider, 1, 0);
   colorSliders->addWidget(saturationLabel, 1, 1);
-  colorSliders->addWidget(alphaSlider, 3, 0);
+  colorSliders->addWidget(_alphaSlider, 3, 0);
   colorSliders->addWidget(alphaLabel, 3, 1);
 
   subLayout->addLayout(colorSliders);
@@ -162,10 +155,21 @@ ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
   buttons->addWidget(selectButton);
   subLayout->addLayout(buttons);
 
-  updateColor();
+  setColor(QColor(0, 0, 0, 255)); // TODO: Maybe have a default color somewhere, this is copied from canvas widget
+  updateShownColor();
 }
 
 ColorPicker::~ColorPicker() = default;
+
+void ColorPicker::updateShownColor() {
+  QColor color;
+  color.setHsv(_hueSlider->value(), _saturationSlider->value(),
+               _brightnessSlider->value(), _alphaSlider->value());
+  _colorShowcase->setStyleSheet("background-color: " + color.name());
+  _hexLabel->setText(color.name());
+  _selectedColor = color;
+  emit colorChanged(_selectedColor);
+}
 
 void ColorPicker::addToColorPaletteClicked() {
   logger::info(fmt::format("Attempting to add color to palette: ({}, {}. {})",
@@ -174,5 +178,8 @@ void ColorPicker::addToColorPaletteClicked() {
   // TODO: log what color
 }
 
-QColor ColorPicker::getSelectedColor() const { return _selectedColor; }
+void ColorPicker::setColor(QColor color) {
+  _selectedColor = color;
+  updateShownColor();
+}
 }  // namespace capy::ui

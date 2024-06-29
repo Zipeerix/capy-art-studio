@@ -32,18 +32,23 @@ MainWindow::MainWindow(QWidget* parent)
       _drawingWidget(new DrawingWidget(this)) {
   ui->setupUi(this);
 
+  connect(ui->actionFileNew, &QAction::triggered, this,
+          &MainWindow::menuBarFileNewClicked);
+  connect(ui->layerSpinBox, &QSpinBox::valueChanged, this,
+          &MainWindow::currentLayerChanged);
+
   setupDock(ui->toolsDock);
   setupDock(ui->colorPickerDock);
   setupDock(ui->colorPaletteDock);
   setupDock(ui->layersDock);
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
-  ui->colorPickerDock->setWidget(new ColorPicker(this));
 
-  connect(ui->actionFileNew, &QAction::triggered, this,
-          &MainWindow::menuBarFileNewClicked);
-  connect(ui->layerSpinBox, &QSpinBox::valueChanged, this,
-          &MainWindow::currentLayerChanged);
+  _colorPicker = new ColorPicker(this);
+  connect(_colorPicker, &ColorPicker::colorChanged, this,
+          &MainWindow::colorPickerColorChanged);
+
+  ui->colorPickerDock->setWidget(_colorPicker);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -70,6 +75,13 @@ void MainWindow::menuBarFileNewClicked() {
     _drawingWidget->startNewDrawing(newFileDialogResult->width,
                                     newFileDialogResult->height);
   }
+}
+
+void MainWindow::colorPickerColorChanged(QColor newColor) {
+  logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(),
+                           newColor.green(), newColor.blue(),
+                           newColor.alpha()));
+  _drawingWidget->setDrawingColor(newColor);
 }
 
 void MainWindow::currentLayerChanged(int newLayer) {
