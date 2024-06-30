@@ -206,6 +206,7 @@ QColor Palette::getColor(int index) const {
                               "index {} from palette {}",
                               index, _name),
                   logger::Severity::Mild);
+    return;
   }
 
   return _colors.at(index).color;
