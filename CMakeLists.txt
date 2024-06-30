@@ -7,6 +7,8 @@ set(APPLICATION_SOURCE_FILES
         src/Application.hpp
         src/models/PaletteModel.hpp
         src/models/PaletteModel.cpp
+        src/models/PaletteColorTableModel.hpp
+        src/models/PaletteColorTableModel.cpp
         src/ai/AiServiceInterface.cpp
         src/ai/AiServiceInterface.hpp
         src/algorithms/Bresenham.hpp

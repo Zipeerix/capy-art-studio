@@ -21,11 +21,25 @@
 namespace capy::ui {
 ColorPaletteArea::ColorPaletteArea(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::ColorPaletteArea) {
-    ui->setupUi(this);
+  ui(new Ui::ColorPaletteArea),
+  _paletteModel(this),
+  _colorTableModel(this) {
+  ui->setupUi(this);
+  ui->paletteComboBox->setModel(&_paletteModel);
+  ui->colorTableView->setModel(&_colorTableModel);
+
+  connect(ui->paletteComboBox, &QComboBox::currentIndexChanged, this,
+    &ColorPaletteArea::currentColorPaletteChanged);
 }
 
 ColorPaletteArea::~ColorPaletteArea() {
     delete ui;
+}
+
+void ColorPaletteArea::currentColorPaletteChanged(int newPaletteIndex){
+  // TODO get data from model and update the widget in ui
+  const auto colorsOfCurrentPalette = _paletteModel.getColors(newPaletteIndex);
+  _colorTableModel.setColors(colorsOfCurrentPalette);
+  // update model? or is it updated
 }
 } // namespace capy::ui

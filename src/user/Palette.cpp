@@ -188,17 +188,11 @@ void Palette::removeColor(int index) {
   _colors.erase(_colors.begin() + index);
 }
 
-std::string Palette::getName() const{
-  return _name;
-}
+std::string Palette::getName() const { return _name; }
 
-void Palette::setName(std::string newName){
-  _name = std::move(newName);
-}
+void Palette::setName(std::string newName) { _name = std::move(newName); }
 
-int Palette::colorCount() const{
-  return _colors.size();
-}
+int Palette::colorCount() const { return _colors.size(); }
 
 QColor Palette::getColor(int index) const {
   if (index >= _colors.size()) {
@@ -210,5 +204,9 @@ QColor Palette::getColor(int index) const {
   }
 
   return _colors.at(index).color;
+}
+
+std::vector<PaletteColor> Palette::getAllColors() const {
+  return _colors;
 }
 }  // namespace capy

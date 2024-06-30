@@ -24,18 +24,18 @@
 #include "user/Palette.hpp"
 
 namespace capy::models {
-class PaletteModel final : public QAbstractItemModel {
+class PaletteModel final : public QAbstractListModel {
   Q_OBJECT
  public:
   explicit PaletteModel(QObject* parent = nullptr);
 
-  [[nodiscard]] QModelIndex index(int row, int column,
-                                  const QModelIndex& parent) const override;
-  [[nodiscard]] QModelIndex parent(const QModelIndex& child) const override;
   [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
   [[nodiscard]] QVariant data(const QModelIndex& index,
                               int role) const override;
+  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
+                                    int role) const override;
+
+  [[nodiscard]] std::vector<PaletteColor> getColors(int index) const;
 
  private:
   std::vector<Palette> _palettes;
