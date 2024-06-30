@@ -18,11 +18,11 @@
 #include "PaletteModel.hpp"
 
 #include <fmt/format.h>
+
 #include "utils/ConsoleLogger.hpp"
 
 namespace capy::models {
-PaletteModel::PaletteModel(QObject* parent) :
-  QAbstractListModel(parent) {
+PaletteModel::PaletteModel(QObject* parent) : QAbstractListModel(parent) {
   // TODO: Here for testing
   Palette firstPallette;
   firstPallette.setName("First Palette");
@@ -32,7 +32,7 @@ PaletteModel::PaletteModel(QObject* parent) :
   Palette secondPalette;
   secondPalette.setName("Second Palette");
   secondPalette.addColor(QColor(255, 0, 0, 255), "SecondFirst Color Hint");
-  secondPalette.addColor(QColor(0, 255, 0, 255), "SecondSecond Color Hint");
+  secondPalette.addColor(QColor(0, 255, 0, 64), "SecondSecond Color Hint");
 
   _palettes.push_back(firstPallette);
   _palettes.push_back(secondPalette);
@@ -40,7 +40,11 @@ PaletteModel::PaletteModel(QObject* parent) :
 
 std::vector<PaletteColor> PaletteModel::getColors(int index) const {
   if (index >= _palettes.size()) {
-    logger::error(fmt::format("Attempting to get colors of non-existent palette with index {}", index), logger::Severity::Mild);
+    logger::error(
+        fmt::format(
+            "Attempting to get colors of non-existent palette with index {}",
+            index),
+        logger::Severity::Mild);
     return {};
   }
 
@@ -53,11 +57,9 @@ int PaletteModel::rowCount(const QModelIndex& parent) const {
 
 QVariant PaletteModel::data(const QModelIndex& index, int role) const {
   // TODO: Maybe do QAbstractItemModel and have Palette's data as columns
-  if (!index.isValid())
-    return QVariant();
+  if (!index.isValid()) return QVariant();
 
-  if (index.row() >= _palettes.size() || index.row() < 0)
-    return QVariant();
+  if (index.row() >= _palettes.size() || index.row() < 0) return QVariant();
 
   const auto& palette = _palettes.at(index.row());
   switch (role) {

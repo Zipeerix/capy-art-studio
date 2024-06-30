@@ -18,10 +18,8 @@
 #include "PaletteColorTableModel.hpp"
 
 namespace capy::models {
-PaletteColorTableModel::PaletteColorTableModel(QObject* parent) :
-  QAbstractTableModel(parent) {
-
-}
+PaletteColorTableModel::PaletteColorTableModel(QObject* parent)
+    : QAbstractTableModel(parent) {}
 
 void PaletteColorTableModel::setColors(std::vector<PaletteColor> colors) {
   beginResetModel();
@@ -37,12 +35,11 @@ int PaletteColorTableModel::columnCount(const QModelIndex& parent) const {
   return static_cast<int>(ColumnName::ColumnCount);
 }
 
-QVariant PaletteColorTableModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid())
-    return QVariant();
+QVariant PaletteColorTableModel::data(const QModelIndex& index,
+                                      int role) const {
+  if (!index.isValid()) return QVariant();
 
-  if (index.row() >= _colors.size() || index.row() < 0)
-    return QVariant();
+  if (index.row() >= _colors.size() || index.row() < 0) return QVariant();
 
   const auto& color = _colors.at(index.row());
   const auto actualColor = color.color;
@@ -68,7 +65,9 @@ QVariant PaletteColorTableModel::data(const QModelIndex& index, int role) const 
   }
 }
 
-QVariant PaletteColorTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant PaletteColorTableModel::headerData(int section,
+                                            Qt::Orientation orientation,
+                                            int role) const {
   switch (section) {
     case static_cast<int>(ColumnName::Color):
       return "Color";
@@ -80,4 +79,4 @@ QVariant PaletteColorTableModel::headerData(int section, Qt::Orientation orienta
       return QVariant();
   }
 }
-} // capy::models
+}  // namespace capy::models

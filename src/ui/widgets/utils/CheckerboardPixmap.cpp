@@ -15,33 +15,16 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTECOLORTABLEMODEL_HPP
-#define PALETTECOLORTABLEMODEL_HPP
+#include "CheckerboardPixmap.hpp"
 
-#include <QAbstractTableModel>
+#include <QPainter>
 
-#include "user/Palette.hpp"
+namespace capy::ui {
+CheckerboardPixmap::CheckerboardPixmap() : QPixmap(16, 16) {
+  fill(Qt::white);
+  QPainter painter(this);
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
-  Q_OBJECT
- public:
-  enum class ColumnName : int { Color, Hex, Hint, ColumnCount };
-
-  explicit PaletteColorTableModel(QObject* parent);
-
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index,
-                              int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
-                                    int role) const override;
-
-  void setColors(std::vector<PaletteColor> colors);
-
- private:
-  std::vector<PaletteColor> _colors;
-};
-}  // namespace capy::models
-
-#endif  // PALETTECOLORTABLEMODEL_HPP
+  painter.fillRect(0, 0, 8, 8, Qt::lightGray);
+  painter.fillRect(8, 8, 8, 8, Qt::lightGray);
+}
+}  // namespace capy::ui

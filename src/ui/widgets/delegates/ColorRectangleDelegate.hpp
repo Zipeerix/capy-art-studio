@@ -15,33 +15,31 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTECOLORTABLEMODEL_HPP
-#define PALETTECOLORTABLEMODEL_HPP
+#ifndef COLORRECTANGLEDELEGATE_HPP
+#define COLORRECTANGLEDELEGATE_HPP
 
-#include <QAbstractTableModel>
+#include <QLineEdit>
+#include <QPainter>
+#include <QStyledItemDelegate>
+#include <QWidget>
 
-#include "user/Palette.hpp"
+#include "algorithms/Luminance.hpp"
+#include "ui/widgets/utils/CheckerboardPixmap.hpp"
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
+namespace capy::ui {
+class ColorRectangleDelegate final : public QStyledItemDelegate {
   Q_OBJECT
  public:
-  enum class ColumnName : int { Color, Hex, Hint, ColumnCount };
+  explicit ColorRectangleDelegate(QWidget *parent = nullptr);
 
-  explicit PaletteColorTableModel(QObject* parent);
+  void paint(QPainter *painter, const QStyleOptionViewItem &option,
+             const QModelIndex &index) const override;
 
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index,
-                              int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
-                                    int role) const override;
-
-  void setColors(std::vector<PaletteColor> colors);
+  // TODO: Other methods here i think allow for editing of he data
 
  private:
-  std::vector<PaletteColor> _colors;
+  CheckerboardPixmap _checkerboardPixmap{};
 };
-}  // namespace capy::models
+}  // namespace capy::ui
 
-#endif  // PALETTECOLORTABLEMODEL_HPP
+#endif  // COLORRECTANGLEDELEGATE_HPP

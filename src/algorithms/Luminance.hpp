@@ -15,7 +15,6 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-
 #ifndef LUMINANCE_HPP
 #define LUMINANCE_HPP
 
@@ -24,6 +23,6 @@
 namespace capy::algorithms {
 int calculateLuminance(const QColor& color);
 QColor blackOrWhiteBasedOnLuminance(const QColor& color);
-}
+}  // namespace capy::algorithms
 
-#endif //LUMINANCE_HPP
+#endif  // LUMINANCE_HPP

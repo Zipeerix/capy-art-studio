@@ -15,33 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTECOLORTABLEMODEL_HPP
-#define PALETTECOLORTABLEMODEL_HPP
+#include "ColorRectangleDelegate.hpp"
 
-#include <QAbstractTableModel>
+namespace capy::ui {
+ColorRectangleDelegate::ColorRectangleDelegate(QWidget *parent)
+    : QStyledItemDelegate(parent) {}
 
-#include "user/Palette.hpp"
+void ColorRectangleDelegate::paint(QPainter *painter,
+                                   const QStyleOptionViewItem &option,
+                                   const QModelIndex &index) const {
+  painter->save();
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
-  Q_OBJECT
- public:
-  enum class ColumnName : int { Color, Hex, Hint, ColumnCount };
+  painter->drawTiledPixmap(option.rect, _checkerboardPixmap);
 
-  explicit PaletteColorTableModel(QObject* parent);
+  const auto color = index.data(Qt::DisplayRole).value<QColor>();
+  painter->fillRect(option.rect, color);
 
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index,
-                              int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
-                                    int role) const override;
+  const auto alphaText = QString::number(color.alpha());
+  painter->setPen(algorithms::blackOrWhiteBasedOnLuminance(color));
+  painter->drawText(option.rect, Qt::AlignCenter, alphaText);
 
-  void setColors(std::vector<PaletteColor> colors);
-
- private:
-  std::vector<PaletteColor> _colors;
-};
-}  // namespace capy::models
-
-#endif  // PALETTECOLORTABLEMODEL_HPP
+  painter->restore();
+}
+}  // namespace capy::ui

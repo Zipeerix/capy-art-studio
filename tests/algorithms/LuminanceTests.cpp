@@ -25,11 +25,13 @@ using namespace testing;
 // TODO: value of luminance testing
 
 TEST(algorithms, luminance_black_or_white_dark_color) {
-  const auto result = capy::algorithms::blackOrWhiteBasedOnLuminance(QColor(5, 5, 5, 255));
+  const auto result =
+      capy::algorithms::blackOrWhiteBasedOnLuminance(QColor(5, 5, 5, 255));
   ASSERT_EQ(result, Qt::white);
 }
 
 TEST(algorithms, luminance_black_or_white_light_color) {
-  const auto result = capy::algorithms::blackOrWhiteBasedOnLuminance(QColor(222, 253, 255, 255));
+  const auto result = capy::algorithms::blackOrWhiteBasedOnLuminance(
+      QColor(222, 253, 255, 255));
   ASSERT_EQ(result, Qt::black);
 }

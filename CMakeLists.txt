@@ -36,6 +36,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/color-pickers/DefaultColorPickerSlider.hpp
         src/ui/widgets/delegates/ColorRectangleDelegate.hpp
         src/ui/widgets/delegates/ColorRectangleDelegate.cpp
+        src/ui/widgets/utils/CheckerboardPixmap.hpp
+        src/ui/widgets/utils/CheckerboardPixmap.cpp
         src/ui/docks/ColorPickerArea.cpp
         src/ui/docks/ColorPickerArea.hpp
         src/ui/docks/ColorPaletteArea.cpp

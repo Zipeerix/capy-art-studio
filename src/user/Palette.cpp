@@ -206,7 +206,5 @@ QColor Palette::getColor(int index) const {
   return _colors.at(index).color;
 }
 
-std::vector<PaletteColor> Palette::getAllColors() const {
-  return _colors;
-}
+std::vector<PaletteColor> Palette::getAllColors() const { return _colors; }
 }  // namespace capy

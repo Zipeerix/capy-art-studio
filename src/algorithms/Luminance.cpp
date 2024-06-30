@@ -23,14 +23,13 @@ constexpr double LUMINANCE_GREEN_CONSTANT = 0.587;
 constexpr double LUMINANCE_BLUE_CONSTANT = 0.114;
 
 int calculateLuminance(const QColor& color) {
-  return static_cast<int>(
-         LUMINANCE_RED_CONSTANT * color.red() +
-         LUMINANCE_GREEN_CONSTANT * color.green() +
-         LUMINANCE_BLUE_CONSTANT * color.blue());
+  return static_cast<int>(LUMINANCE_RED_CONSTANT * color.red() +
+                          LUMINANCE_GREEN_CONSTANT * color.green() +
+                          LUMINANCE_BLUE_CONSTANT * color.blue());
 }
 
-QColor blackOrWhiteBasedOnLuminance(const QColor& color){
+QColor blackOrWhiteBasedOnLuminance(const QColor& color) {
   return calculateLuminance(color) > 128 ? Qt::black : Qt::white;
 }
 
-}
+}  // namespace capy::algorithms

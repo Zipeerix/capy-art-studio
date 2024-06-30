@@ -22,6 +22,8 @@
 #include <QSlider>
 #include <functional>
 
+#include "ui/widgets/utils/CheckerboardPixmap.hpp"
+
 namespace capy::ui {
 class DefaultColorPickerSlider final : public QSlider {
   Q_OBJECT
@@ -41,7 +43,7 @@ class DefaultColorPickerSlider final : public QSlider {
  private:
   QGradientStops _gradientStops;
   bool _renderCheckerboard = false;
-  QPixmap _checkerboardPixmap;
+  CheckerboardPixmap _checkerboardPixmap;
 };
 }  // namespace capy::ui
 
