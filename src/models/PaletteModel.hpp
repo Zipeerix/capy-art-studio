@@ -15,28 +15,31 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_COLORPALETTEAREA_HPP
-#define CAPY_UI_COLORPALETTEAREA_HPP
+#ifndef PALETTEMODEL_HPP
+#define PALETTEMODEL_HPP
 
-#include <QWidget>
-#include "models/PaletteModel.hpp"
+#include <QAbstractItemModel>
+#include <vector>
 
-namespace capy::ui {
-namespace Ui {
-class ColorPaletteArea;
-}
+#include "user/Palette.hpp"
 
-class ColorPaletteArea final : public QWidget {
-    Q_OBJECT
-public:
-    explicit ColorPaletteArea(QWidget *parent = nullptr);
-    ~ColorPaletteArea() override;
+namespace capy::models {
+class PaletteModel final : public QAbstractItemModel {
+  Q_OBJECT
+ public:
+  explicit PaletteModel(QObject* parent = nullptr);
 
-private:
-    Ui::ColorPaletteArea* ui;
-    models::PaletteModel* _paletteModel; // TODO: Should be ptr?
+  [[nodiscard]] QModelIndex index(int row, int column,
+                                  const QModelIndex& parent) const override;
+  [[nodiscard]] QModelIndex parent(const QModelIndex& child) const override;
+  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
+  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
+  [[nodiscard]] QVariant data(const QModelIndex& index,
+                              int role) const override;
+
+ private:
+  std::vector<Palette> _palettes;
 };
+}  // namespace capy::models
 
-} // namespace capy::ui
-
-#endif // CAPY_UI_COLORPALETTEAREA_HPP
+#endif  // PALETTEMODEL_HPP

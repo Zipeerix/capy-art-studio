@@ -36,8 +36,10 @@ MainWindow::MainWindow(QWidget* parent)
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
-  // TODO: maybe all docks should have references to Drawing and Tooldock or something
-  // TODO: so that singlas can be passed there instead of doing a lot on MainWindow
+  // TODO: maybe all docks should have references to Drawing and Tooldock or
+  // something
+  // TODO: so that singlas can be passed there instead of doing a lot on
+  // MainWindow
   setupColorPickerDock();
   setupColorPaletteDock();
   setupLayersDock();

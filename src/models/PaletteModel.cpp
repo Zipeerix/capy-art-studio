@@ -15,28 +15,17 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_COLORPALETTEAREA_HPP
-#define CAPY_UI_COLORPALETTEAREA_HPP
+#include "PaletteModel.hpp"
 
-#include <QWidget>
-#include "models/PaletteModel.hpp"
+namespace capy::models {
+PaletteModel::PaletteModel(QObject* parent) : QAbstractItemModel(parent) {}
 
-namespace capy::ui {
-namespace Ui {
-class ColorPaletteArea;
+QModelIndex PaletteModel::index(int row, int column,
+                                const QModelIndex& parent) const {
+  throw;
 }
-
-class ColorPaletteArea final : public QWidget {
-    Q_OBJECT
-public:
-    explicit ColorPaletteArea(QWidget *parent = nullptr);
-    ~ColorPaletteArea() override;
-
-private:
-    Ui::ColorPaletteArea* ui;
-    models::PaletteModel* _paletteModel; // TODO: Should be ptr?
-};
-
-} // namespace capy::ui
-
-#endif // CAPY_UI_COLORPALETTEAREA_HPP
+QModelIndex PaletteModel::parent(const QModelIndex& child) const { throw; }
+int PaletteModel::rowCount(const QModelIndex& parent) const { throw; }
+int PaletteModel::columnCount(const QModelIndex& parent) const { throw; }
+QVariant PaletteModel::data(const QModelIndex& index, int role) const { throw; }
+}  // namespace capy::models

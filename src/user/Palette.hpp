@@ -15,28 +15,48 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_COLORPALETTEAREA_HPP
-#define CAPY_UI_COLORPALETTEAREA_HPP
+#ifndef PALETTE_HPP
+#define PALETTE_HPP
 
-#include <QWidget>
-#include "models/PaletteModel.hpp"
+#include <rapidjson/document.h>
 
-namespace capy::ui {
-namespace Ui {
-class ColorPaletteArea;
-}
+#include <QColor>
+#include <expected>
 
-class ColorPaletteArea final : public QWidget {
-    Q_OBJECT
-public:
-    explicit ColorPaletteArea(QWidget *parent = nullptr);
-    ~ColorPaletteArea() override;
-
-private:
-    Ui::ColorPaletteArea* ui;
-    models::PaletteModel* _paletteModel; // TODO: Should be ptr?
+namespace capy {
+struct PaletteColor {
+  QColor color;
+  std::optional<std::string> hint;
 };
 
-} // namespace capy::ui
+class Palette {
+ public:
+  Palette() = default;
+  explicit Palette(std::string name);
 
-#endif // CAPY_UI_COLORPALETTEAREA_HPP
+  static std::expected<Palette, std::string> fromJson(const std::string& path);
+  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
+
+  [[nodiscard]] bool wasEditedFromLastLoad() const;
+
+  [[nodiscard]] std::string getName() const;
+  void setName(std::string newName);
+
+  [[nodiscard]] int colorCount() const;
+  [[nodiscard]] QColor getColor(int index) const;
+  void addColor(const QColor& color, const std::optional<std::string>& hint);
+  void removeColor(int index);
+
+ private:
+  std::string _name;
+  std::string _path;
+  bool _wasEdited = false;
+  std::vector<PaletteColor> _colors;
+
+  std::expected<void, std::string> importValuesFromJson(
+      const rapidjson::Document& root);
+  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
+};
+}  // namespace capy
+
+#endif  // PALETTE_HPP
