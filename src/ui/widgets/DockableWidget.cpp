@@ -15,48 +15,22 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "DockableWidget.hpp"
 
-#include <QMainWindow>
-
-#include "docks/ColorPaletteArea.hpp"
-#include "docks/ColorPickerArea.hpp"
-#include "docks/LayersArea.hpp"
-#include "docks/ToolsArea.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include <QDockWidget>
 
 namespace capy::ui {
-namespace Ui {
-class MainWindow;
+DockableWidget::DockableWidget(QWidget* parent) :
+  QDockWidget(parent) {
+  const auto palette = this->palette();
+  const QColor backgroundColor = palette.color(QPalette::Window);
+  const QColor borderColor = palette.color(QPalette::Shadow);
+  setStyleSheet(QString("QDockWidget::title {"
+                                    "    background: %1;"
+                                    "    border: 1px solid %2;"
+                                    "    padding: 5px;"
+                                    "}")
+                                .arg(backgroundColor.name())
+                                .arg(borderColor.name()));
 }
-
-class MainWindow final : public QMainWindow {
-  Q_OBJECT
-
- public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
-
- public slots:
-  void menuBarFileNewClicked();
-
-  void colorPickerColorChanged(QColor newColor);
-
- private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
-
-  ColorPickerArea* _colorPickerDockArea;
-  ColorPaletteArea* _colorPaletteDockArea;
-  LayersArea* _layersDockArea;
-  ToolsArea* _toolsDockArea;
-
-  void setupColorPickerDock();
-  void setupColorPaletteDock();
-  void setupLayersDock();
-  void setupToolsDock();
-};
-}  // namespace capy::ui
-
-#endif  // MAINWINDOW_H
+}

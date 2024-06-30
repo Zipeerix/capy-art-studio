@@ -15,15 +15,15 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ColorPickerSlider.hpp"
+#include "DefaultColorPickerSlider.hpp"
 
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPainterPath>
 
 namespace capy::ui {
-ColorPickerSlider::ColorPickerSlider(Qt::Orientation orientation,
-                                     QWidget* parent)
+DefaultColorPickerSlider::DefaultColorPickerSlider(Qt::Orientation orientation,
+                                                   QWidget* parent)
     : QSlider(orientation, parent) {
   _checkerboardPixmap = QPixmap(16, 16);
   _checkerboardPixmap.fill(Qt::white);
@@ -32,22 +32,22 @@ ColorPickerSlider::ColorPickerSlider(Qt::Orientation orientation,
   painter.fillRect(8, 8, 8, 8, Qt::lightGray);
 }
 
-ColorPickerSlider::ColorPickerSlider(QWidget* parent)
-    : ColorPickerSlider(Qt::Vertical, parent) {}
+DefaultColorPickerSlider::DefaultColorPickerSlider(QWidget* parent)
+    : DefaultColorPickerSlider(Qt::Vertical, parent) {}
 
-ColorPickerSlider::~ColorPickerSlider() = default;
+DefaultColorPickerSlider::~DefaultColorPickerSlider() = default;
 
-void ColorPickerSlider::setGradientStops(QGradientStops gradientStops) {
+void DefaultColorPickerSlider::setGradientStops(QGradientStops gradientStops) {
   _gradientStops = gradientStops;
   update();
 }
 
-void ColorPickerSlider::setRenderCheckerboard(bool renderCheckerboard) {
+void DefaultColorPickerSlider::setRenderCheckerboard(bool renderCheckerboard) {
   _renderCheckerboard = renderCheckerboard;
   update();
 }
 
-void ColorPickerSlider::paintEvent(QPaintEvent* event) {
+void DefaultColorPickerSlider::paintEvent(QPaintEvent* event) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
 

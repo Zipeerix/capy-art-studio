@@ -15,48 +15,43 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef DEFAULT_COLORPICKER_HPP
+#define DEFAULT_COLORPICKER_HPP
 
-#include <QMainWindow>
+#include <QLabel>
 
-#include "docks/ColorPaletteArea.hpp"
-#include "docks/ColorPickerArea.hpp"
-#include "docks/LayersArea.hpp"
-#include "docks/ToolsArea.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include "DefaultColorPickerSlider.hpp"
+#include "IBaseColorPicker.hpp"
 
 namespace capy::ui {
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow final : public QMainWindow {
+class DefaultColorPicker final : public QWidget {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
+  explicit DefaultColorPicker(QWidget* parent = nullptr);
+  ~DefaultColorPicker() override;
+
+  void setColor(QColor color);
+
+  void updateShownColor();
 
  public slots:
-  void menuBarFileNewClicked();
+  void addToColorPaletteClicked();
 
-  void colorPickerColorChanged(QColor newColor);
+ signals:
+  void colorChanged(QColor newColor);
 
  private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
+  DefaultColorPickerSlider* _hueSlider;
+  DefaultColorPickerSlider* _saturationSlider;
+  DefaultColorPickerSlider* _brightnessSlider;
+  DefaultColorPickerSlider* _alphaSlider;
 
-  ColorPickerArea* _colorPickerDockArea;
-  ColorPaletteArea* _colorPaletteDockArea;
-  LayersArea* _layersDockArea;
-  ToolsArea* _toolsDockArea;
+  QLabel* _hexLabel;
+  QLabel* _colorShowcase;
 
-  void setupColorPickerDock();
-  void setupColorPaletteDock();
-  void setupLayersDock();
-  void setupToolsDock();
+  QColor _selectedColor;
 };
 }  // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+#endif  // DEFAULT_COLORPICKER_HPP

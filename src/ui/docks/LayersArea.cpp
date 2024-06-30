@@ -15,42 +15,18 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef COLORPICKER_HPP
-#define COLORPICKER_HPP
-
-#include <QDialog>
-#include <QLabel>
-#include "ColorPickerSlider.hpp"
+#include "LayersArea.hpp"
+#include "ui_LayersArea.h"
 
 namespace capy::ui {
-class ColorPicker final : public QDialog {
-  Q_OBJECT
+LayersArea::LayersArea(QWidget *parent) :
+  QWidget(parent),
+  ui(new Ui::LayersArea) {
+    ui->setupUi(this);
+}
 
- public:
-  explicit ColorPicker(QWidget* parent = nullptr);
-  ~ColorPicker() override;
+LayersArea::~LayersArea() {
+    delete ui;
+}
+} // namespace capy::ui
 
-  void setColor(QColor color);
-
-  void updateShownColor();
-
- public slots:
-  void addToColorPaletteClicked();
-
-  signals:
-    void colorChanged(QColor newColor);
-
- private:
-  ColorPickerSlider* _hueSlider;
-  ColorPickerSlider* _saturationSlider;
-  ColorPickerSlider* _brightnessSlider;
-  ColorPickerSlider* _alphaSlider;
-
-  QLabel* _hexLabel;
-  QLabel* _colorShowcase;
-
-  QColor _selectedColor;
-};
-}  // namespace capy::ui
-
-#endif  // COLORPICKER_HPP

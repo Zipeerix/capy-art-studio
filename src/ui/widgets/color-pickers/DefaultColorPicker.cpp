@@ -15,7 +15,7 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ColorPicker.hpp"
+#include "DefaultColorPicker.hpp"
 
 #include <fmt/format.h>
 
@@ -25,38 +25,36 @@
 #include <QPainter>
 #include <QPushButton>
 
-#include "ColorPicker.hpp"
-#include "ColorPickerSlider.hpp"
+#include "DefaultColorPickerSlider.hpp"
 #include "utils/ConsoleLogger.hpp"
 
 // TODO: Rewrite constructor, break it down
 
 namespace capy::ui {
-ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
+DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 0, 0);
 
-  _colorShowcase = new QLabel(this);
-  _colorShowcase->setMinimumSize(100, 100);
+  _colorShowcase = new QLabel;
+  _colorShowcase->setMinimumSize(100, 20);
   mainLayout->addWidget(_colorShowcase);
 
-  auto* subLayout = new QVBoxLayout(this);
+  auto* subLayout = new QVBoxLayout();
   subLayout->setContentsMargins(10, 10, 10, 10);
   mainLayout->addLayout(subLayout);
 
   auto* controls = new QHBoxLayout();
   subLayout->addLayout(controls);
 
-
   auto* colorSliders = new QGridLayout;
 
-  _hexLabel  = new QLabel;
+  _hexLabel = new QLabel;
   controls->addWidget(_hexLabel);
 
-  _hueSlider = new ColorPickerSlider(Qt::Horizontal);
-  _saturationSlider = new ColorPickerSlider(Qt::Horizontal);
-  _brightnessSlider = new ColorPickerSlider(Qt::Horizontal);
-  _alphaSlider = new ColorPickerSlider(Qt::Horizontal);
+  _hueSlider = new DefaultColorPickerSlider(Qt::Horizontal);
+  _saturationSlider = new DefaultColorPickerSlider(Qt::Horizontal);
+  _brightnessSlider = new DefaultColorPickerSlider(Qt::Horizontal);
+  _alphaSlider = new DefaultColorPickerSlider(Qt::Horizontal);
 
   auto* hueLabel = new QLabel;
   auto* saturationLabel = new QLabel;
@@ -109,12 +107,12 @@ ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
 
   _hueSlider->setRange(0, 359);
   _hueSlider->setGradientStops({{0.0 / 360.0, Qt::red},
-                               {60.0 / 360.0, Qt::yellow},
-                               {120.0 / 360.0, Qt::green},
-                               {180.0 / 360.0, Qt::cyan},
-                               {240.0 / 360.0, Qt::blue},
-                               {300.0 / 360.0, Qt::magenta},
-                               {359.0 / 360.0, Qt::red}});
+                                {60.0 / 360.0, Qt::yellow},
+                                {120.0 / 360.0, Qt::green},
+                                {180.0 / 360.0, Qt::cyan},
+                                {240.0 / 360.0, Qt::blue},
+                                {300.0 / 360.0, Qt::magenta},
+                                {359.0 / 360.0, Qt::red}});
   _saturationSlider->setRange(0, 255);
   _brightnessSlider->setRange(0, 255);
   _alphaSlider->setRange(0, 255);
@@ -149,19 +147,21 @@ ColorPicker::ColorPicker(QWidget* parent) : QDialog(parent) {
   auto* selectButton = new QPushButton("Add to current Palette");
 
   connect(selectButton, &QPushButton::clicked, this,
-          &ColorPicker::addToColorPaletteClicked);
+          &DefaultColorPicker::addToColorPaletteClicked);
 
   QBoxLayout* buttons = new QHBoxLayout();
   buttons->addWidget(selectButton);
   subLayout->addLayout(buttons);
 
-  setColor(QColor(0, 0, 0, 255)); // TODO: Maybe have a default color somewhere, this is copied from canvas widget
+  setColor(
+      QColor(0, 0, 0, 255));  // TODO: Maybe have a default color somewhere,
+                              // this is copied from canvas widget
   updateShownColor();
 }
 
-ColorPicker::~ColorPicker() = default;
+DefaultColorPicker::~DefaultColorPicker() = default;
 
-void ColorPicker::updateShownColor() {
+void DefaultColorPicker::updateShownColor() {
   QColor color;
   color.setHsv(_hueSlider->value(), _saturationSlider->value(),
                _brightnessSlider->value(), _alphaSlider->value());
@@ -171,14 +171,14 @@ void ColorPicker::updateShownColor() {
   emit colorChanged(_selectedColor);
 }
 
-void ColorPicker::addToColorPaletteClicked() {
+void DefaultColorPicker::addToColorPaletteClicked() {
   logger::info(fmt::format("Attempting to add color to palette: ({}, {}. {})",
                            _selectedColor.red(), _selectedColor.green(),
                            _selectedColor.blue()));
-  // TODO: log what color
+  // TODO
 }
 
-void ColorPicker::setColor(QColor color) {
+void DefaultColorPicker::setColor(QColor color) {
   _selectedColor = color;
   updateShownColor();
 }
