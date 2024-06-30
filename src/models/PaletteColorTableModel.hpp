@@ -15,49 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
+#ifndef PALETTECOLORTABLEMODEL_HPP
+#define PALETTECOLORTABLEMODEL_HPP
 
-#include <rapidjson/document.h>
+#include <QAbstractTableModel>
 
-#include <QColor>
-#include <expected>
+#include "user/Palette.hpp"
 
-namespace capy {
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
-
-class Palette {
+namespace capy::models {
+class PaletteColorTableModel final : public QAbstractTableModel {
+  Q_OBJECT
  public:
-  Palette() = default;
-  explicit Palette(std::string name);
+  enum class ColumnName : int { Color, Hex, Hint, ColumnCount };
 
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
+  explicit PaletteColorTableModel(QObject* parent);
 
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
+  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
+  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
+  [[nodiscard]] QVariant data(const QModelIndex& index,
+                              int role) const override;
+  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
+                                    int role) const override;
 
-  [[nodiscard]] std::string getName() const;
-  void setName(std::string newName);
-
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
+  void setColors(std::vector<PaletteColor> colors);
 
  private:
-  std::string _name;
-  std::string _path;
-  bool _wasEdited = false;
   std::vector<PaletteColor> _colors;
-
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
 };
-}  // namespace capy
+}  // namespace capy::models
 
-#endif  // PALETTE_HPP
+#endif  // PALETTECOLORTABLEMODEL_HPP

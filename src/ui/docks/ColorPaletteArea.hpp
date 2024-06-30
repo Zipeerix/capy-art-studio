@@ -19,6 +19,7 @@
 #define CAPY_UI_COLORPALETTEAREA_HPP
 
 #include <QWidget>
+#include "models/PaletteColorTableModel.hpp"
 #include "models/PaletteModel.hpp"
 
 namespace capy::ui {
@@ -32,9 +33,13 @@ public:
     explicit ColorPaletteArea(QWidget *parent = nullptr);
     ~ColorPaletteArea() override;
 
+public slots:
+  void currentColorPaletteChanged(int newPaletteIndex);
+
 private:
     Ui::ColorPaletteArea* ui;
-    models::PaletteModel* _paletteModel; // TODO: Should be ptr?
+    models::PaletteModel _paletteModel;
+    models::PaletteColorTableModel _colorTableModel;
 };
 
 } // namespace capy::ui

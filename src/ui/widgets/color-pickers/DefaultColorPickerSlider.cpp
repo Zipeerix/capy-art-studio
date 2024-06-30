@@ -24,13 +24,7 @@
 namespace capy::ui {
 DefaultColorPickerSlider::DefaultColorPickerSlider(Qt::Orientation orientation,
                                                    QWidget* parent)
-    : QSlider(orientation, parent) {
-  _checkerboardPixmap = QPixmap(16, 16);
-  _checkerboardPixmap.fill(Qt::white);
-  QPainter painter(&_checkerboardPixmap);
-  painter.fillRect(0, 0, 8, 8, Qt::lightGray);
-  painter.fillRect(8, 8, 8, 8, Qt::lightGray);
-}
+    : QSlider(orientation, parent) {}
 
 DefaultColorPickerSlider::DefaultColorPickerSlider(QWidget* parent)
     : DefaultColorPickerSlider(Qt::Vertical, parent) {}

@@ -15,49 +15,31 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
+#ifndef COLORRECTANGLEDELEGATE_HPP
+#define COLORRECTANGLEDELEGATE_HPP
 
-#include <rapidjson/document.h>
+#include <QLineEdit>
+#include <QPainter>
+#include <QStyledItemDelegate>
+#include <QWidget>
 
-#include <QColor>
-#include <expected>
+#include "algorithms/Luminance.hpp"
+#include "ui/widgets/utils/CheckerboardPixmap.hpp"
 
-namespace capy {
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
-
-class Palette {
+namespace capy::ui {
+class ColorRectangleDelegate final : public QStyledItemDelegate {
+  Q_OBJECT
  public:
-  Palette() = default;
-  explicit Palette(std::string name);
+  explicit ColorRectangleDelegate(QWidget *parent = nullptr);
 
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
+  void paint(QPainter *painter, const QStyleOptionViewItem &option,
+             const QModelIndex &index) const override;
 
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
-
-  [[nodiscard]] std::string getName() const;
-  void setName(std::string newName);
-
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
+  // TODO: Other methods here i think allow for editing of he data
 
  private:
-  std::string _name;
-  std::string _path;
-  bool _wasEdited = false;
-  std::vector<PaletteColor> _colors;
-
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
+  CheckerboardPixmap _checkerboardPixmap{};
 };
-}  // namespace capy
+}  // namespace capy::ui
 
-#endif  // PALETTE_HPP
+#endif  // COLORRECTANGLEDELEGATE_HPP

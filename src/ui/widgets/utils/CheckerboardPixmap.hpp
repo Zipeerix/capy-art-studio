@@ -15,49 +15,20 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
+#ifndef CHECKERBOARDPIXMAP_HPP
+#define CHECKERBOARDPIXMAP_HPP
 
-#include <rapidjson/document.h>
+#include <QPixmap>
 
-#include <QColor>
-#include <expected>
-
-namespace capy {
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
-
-class Palette {
+namespace capy::ui {
+class CheckerboardPixmap final : public QPixmap {
  public:
-  Palette() = default;
-  explicit Palette(std::string name);
+  CheckerboardPixmap();
 
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
-
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
-
-  [[nodiscard]] std::string getName() const;
-  void setName(std::string newName);
-
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
-
- private:
-  std::string _name;
-  std::string _path;
-  bool _wasEdited = false;
-  std::vector<PaletteColor> _colors;
-
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
+private:
+  [[nodiscard]] static QColor getCheckerboardFillColor();
+  [[nodiscard]] static QColor getCheckerboardRectangleColor();
 };
-}  // namespace capy
+}  // namespace capy::ui
 
-#endif  // PALETTE_HPP
+#endif  // CHECKERBOARDPIXMAP_HPP

@@ -15,49 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
+#include "ColorRectangleDelegate.hpp"
 
-#include <rapidjson/document.h>
+namespace capy::ui {
+ColorRectangleDelegate::ColorRectangleDelegate(QWidget *parent)
+    : QStyledItemDelegate(parent) {}
 
-#include <QColor>
-#include <expected>
+void ColorRectangleDelegate::paint(QPainter *painter,
+                                   const QStyleOptionViewItem &option,
+                                   const QModelIndex &index) const {
+  painter->save();
 
-namespace capy {
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
+  painter->drawTiledPixmap(option.rect, _checkerboardPixmap);
 
-class Palette {
- public:
-  Palette() = default;
-  explicit Palette(std::string name);
+  const auto color = index.data(Qt::DisplayRole).value<QColor>();
+  painter->fillRect(option.rect, color);
 
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
+  const auto alphaText = QString::number(color.alpha());
+  painter->setPen(algorithms::blackOrWhiteBasedOnLuminance(color));
+  painter->drawText(option.rect, Qt::AlignCenter, alphaText);
 
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
-
-  [[nodiscard]] std::string getName() const;
-  void setName(std::string newName);
-
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
-
- private:
-  std::string _name;
-  std::string _path;
-  bool _wasEdited = false;
-  std::vector<PaletteColor> _colors;
-
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
-};
-}  // namespace capy
-
-#endif  // PALETTE_HPP
+  painter->restore();
+}
+}  // namespace capy::ui

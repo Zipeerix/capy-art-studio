@@ -15,49 +15,14 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
-
-#include <rapidjson/document.h>
+#ifndef LUMINANCE_HPP
+#define LUMINANCE_HPP
 
 #include <QColor>
-#include <expected>
 
-namespace capy {
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
+namespace capy::algorithms {
+int calculateLuminance(const QColor& color);
+QColor blackOrWhiteBasedOnLuminance(const QColor& color);
+}  // namespace capy::algorithms
 
-class Palette {
- public:
-  Palette() = default;
-  explicit Palette(std::string name);
-
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
-
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
-
-  [[nodiscard]] std::string getName() const;
-  void setName(std::string newName);
-
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
-
- private:
-  std::string _name;
-  std::string _path;
-  bool _wasEdited = false;
-  std::vector<PaletteColor> _colors;
-
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
-};
-}  // namespace capy
-
-#endif  // PALETTE_HPP
+#endif  // LUMINANCE_HPP

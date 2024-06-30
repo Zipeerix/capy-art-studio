@@ -34,6 +34,13 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
   setScene(_scene);
 }
 
+void DrawingWidget::drawBackground(QPainter* painter, const QRectF& rect) {
+  painter->save();
+  painter->resetTransform();
+  painter->drawTiledPixmap(viewport()->rect(), _checkerboardPixmap);
+  painter->restore();
+}
+
 void DrawingWidget::setDrawingColor(QColor color){
   _drawingColor = color;
 }

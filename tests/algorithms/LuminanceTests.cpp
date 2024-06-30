@@ -15,49 +15,23 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
+#include <gmock/gmock-matchers.h>
+#include <gtest/gtest.h>
 
-#include <rapidjson/document.h>
+#include "algorithms/Luminance.hpp"
 
-#include <QColor>
-#include <expected>
+using namespace testing;
 
-namespace capy {
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
+// TODO: value of luminance testing
 
-class Palette {
- public:
-  Palette() = default;
-  explicit Palette(std::string name);
+TEST(algorithms, luminance_black_or_white_dark_color) {
+  const auto result =
+      capy::algorithms::blackOrWhiteBasedOnLuminance(QColor(5, 5, 5, 255));
+  ASSERT_EQ(result, Qt::white);
+}
 
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
-
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
-
-  [[nodiscard]] std::string getName() const;
-  void setName(std::string newName);
-
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
-
- private:
-  std::string _name;
-  std::string _path;
-  bool _wasEdited = false;
-  std::vector<PaletteColor> _colors;
-
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
-};
-}  // namespace capy
-
-#endif  // PALETTE_HPP
+TEST(algorithms, luminance_black_or_white_light_color) {
+  const auto result = capy::algorithms::blackOrWhiteBasedOnLuminance(
+      QColor(222, 253, 255, 255));
+  ASSERT_EQ(result, Qt::black);
+}
