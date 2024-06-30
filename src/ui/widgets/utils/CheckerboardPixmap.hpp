@@ -25,7 +25,7 @@ class CheckerboardPixmap final : public QPixmap {
  public:
   CheckerboardPixmap();
 
-private:
+ private:
   [[nodiscard]] static QColor getCheckerboardFillColor();
   [[nodiscard]] static QColor getCheckerboardRectangleColor();
 };

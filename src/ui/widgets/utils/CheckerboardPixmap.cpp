@@ -30,7 +30,7 @@ CheckerboardPixmap::CheckerboardPixmap() : QPixmap(16, 16) {
 
 QColor CheckerboardPixmap::getCheckerboardFillColor() {
   // TODO: in dark mode: Qt::black if not overriden in settings
- return Qt::white;
+  return Qt::white;
 }
 
 QColor CheckerboardPixmap::getCheckerboardRectangleColor() {
