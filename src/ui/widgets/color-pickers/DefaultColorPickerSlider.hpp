@@ -15,48 +15,34 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COLORPICKERSLIDER_HPP
+#define COLORPICKERSLIDER_HPP
 
-#include <QMainWindow>
-
-#include "docks/ColorPaletteArea.hpp"
-#include "docks/ColorPickerArea.hpp"
-#include "docks/LayersArea.hpp"
-#include "docks/ToolsArea.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include <QGradientStops>
+#include <QSlider>
+#include <functional>
 
 namespace capy::ui {
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow final : public QMainWindow {
+class DefaultColorPickerSlider final : public QSlider {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
+  explicit DefaultColorPickerSlider(Qt::Orientation orientation,
+                                    QWidget* parent = nullptr);
+  explicit DefaultColorPickerSlider(QWidget* parent = nullptr);
 
- public slots:
-  void menuBarFileNewClicked();
+  ~DefaultColorPickerSlider() override;
 
-  void colorPickerColorChanged(QColor newColor);
+  void setGradientStops(QGradientStops gradientStops);
+  void setRenderCheckerboard(bool renderCheckerboard);
+
+  void paintEvent(QPaintEvent* event) override;
 
  private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
-
-  ColorPickerArea* _colorPickerDockArea;
-  ColorPaletteArea* _colorPaletteDockArea;
-  LayersArea* _layersDockArea;
-  ToolsArea* _toolsDockArea;
-
-  void setupColorPickerDock();
-  void setupColorPaletteDock();
-  void setupLayersDock();
-  void setupToolsDock();
+  QGradientStops _gradientStops;
+  bool _renderCheckerboard = false;
+  QPixmap _checkerboardPixmap;
 };
 }  // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+#endif  // COLORPICKERSLIDER_HPP

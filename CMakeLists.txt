@@ -22,14 +22,24 @@ set(APPLICATION_SOURCE_FILES
         src/ui/ConsoleWindow.hpp
         src/ui/MainWindow.hpp
         src/ui/MainWindow.cpp
-        src/ui/widgets/ColorPicker.cpp
-        src/ui/widgets/ColorPicker.hpp
-        src/ui/widgets/ColorPickerSlider.hpp
-        src/ui/widgets/ColorPickerSlider.cpp
+        src/ui/widgets/color-pickers/DefaultColorPicker.cpp
+        src/ui/widgets/color-pickers/DefaultColorPicker.hpp
+        src/ui/widgets/color-pickers/DefaultColorPickerSlider.cpp
+        src/ui/widgets/color-pickers/DefaultColorPickerSlider.hpp
+        src/ui/docks/ColorPickerArea.cpp
+        src/ui/docks/ColorPickerArea.hpp
+        src/ui/docks/ColorPaletteArea.cpp
+        src/ui/docks/ColorPaletteArea.hpp
+        src/ui/docks/ToolsArea.cpp
+        src/ui/docks/ToolsArea.hpp
+        src/ui/docks/LayersArea.cpp
+        src/ui/docks/LayersArea.hpp
         src/ui/widgets/DrawingCanvasItem.hpp
         src/ui/widgets/DrawingCanvasItem.cpp
         src/ui/widgets/DrawingWidget.hpp
         src/ui/widgets/DrawingWidget.cpp
+        src/ui/widgets/DockableWidget.hpp
+        src/ui/widgets/DockableWidget.cpp
         src/ui/dialogs/NewFileDialog.cpp
         src/ui/dialogs/NewFileDialog.hpp
         src/utils/TomlWrapper.hpp
@@ -49,6 +59,9 @@ set(APPLICATION_UI_FILES
         src/ui/MainWindow.ui
         src/ui/ConsoleWindow.ui
         src/ui/dialogs/NewFileDialog.ui
+        src/ui/docks/ToolsArea.ui
+        src/ui/docks/LayersArea.ui
+        src/ui/docks/ColorPaletteArea.ui
 )
 
 set(TEST_FILES

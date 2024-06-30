@@ -15,34 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef COLORPICKERSLIDER_HPP
-#define COLORPICKERSLIDER_HPP
+#ifndef CAPY_UI_COLORPICKERAREA_H
+#define CAPY_UI_COLORPICKERAREA_H
 
-#include <QGradientStops>
-#include <QSlider>
-#include <functional>
+#include <QWidget>
+
+#include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
 
 namespace capy::ui {
-class ColorPickerSlider : public QSlider {
-  Q_OBJECT
+namespace Ui {
+class ColorPickerArea;
+}
 
- public:
-  explicit ColorPickerSlider(Qt::Orientation orientation,
-                             QWidget* parent = nullptr);
-  explicit ColorPickerSlider(QWidget* parent = nullptr);
+class ColorPickerArea final : public QWidget {
+    Q_OBJECT
 
-  ~ColorPickerSlider() override;
+public:
+    explicit ColorPickerArea(QWidget *parent = nullptr);
+    ~ColorPickerArea() override;
 
-  void setGradientStops(QGradientStops gradientStops);
-  void setRenderCheckerboard(bool renderCheckerboard);
+signals:
+    void colorPickerColorChanged(QColor color);
 
-  void paintEvent(QPaintEvent* event) override;
-
- private:
-  QGradientStops _gradientStops;
-  bool _renderCheckerboard = false;
-  QPixmap _checkerboardPixmap;
+private:
+    Ui::ColorPickerArea* ui;
+    DefaultColorPicker* _colorPicker;
 };
-}  // namespace capy::ui
 
-#endif  // COLORPICKERSLIDER_HPP
+} // namespace capy::ui
+
+#endif // CAPY_UI_COLORPICKERAREA_H

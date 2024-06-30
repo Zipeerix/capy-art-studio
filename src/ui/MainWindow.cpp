@@ -22,7 +22,6 @@
 #include "dialogs/NewFileDialog.hpp"
 #include "ui_mainwindow.h"
 #include "utils/ConsoleLogger.hpp"
-#include "widgets/ColorPicker.hpp"
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
@@ -34,37 +33,18 @@ MainWindow::MainWindow(QWidget* parent)
 
   connect(ui->actionFileNew, &QAction::triggered, this,
           &MainWindow::menuBarFileNewClicked);
-  connect(ui->layerSpinBox, &QSpinBox::valueChanged, this,
-          &MainWindow::currentLayerChanged);
-
-  setupDock(ui->toolsDock);
-  setupDock(ui->colorPickerDock);
-  setupDock(ui->colorPaletteDock);
-  setupDock(ui->layersDock);
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
-  _colorPicker = new ColorPicker(this);
-  connect(_colorPicker, &ColorPicker::colorChanged, this,
-          &MainWindow::colorPickerColorChanged);
-
-  ui->colorPickerDock->setWidget(_colorPicker);
+  // TODO: maybe all docks should have references to Drawing and Tooldock or something
+  // TODO: so that singlas can be passed there instead of doing a lot on MainWindow
+  setupColorPickerDock();
+  setupColorPaletteDock();
+  setupLayersDock();
+  setupToolsDock();
 }
 
 MainWindow::~MainWindow() { delete ui; }
-
-void MainWindow::setupDock(QDockWidget* dockWidget) {
-  const auto palette = dockWidget->palette();
-  const QColor backgroundColor = palette.color(QPalette::Window);
-  const QColor borderColor = palette.color(QPalette::Shadow);
-  dockWidget->setStyleSheet(QString("QDockWidget::title {"
-                                    "    background: %1;"
-                                    "    border: 1px solid %2;"
-                                    "    padding: 5px;"
-                                    "}")
-                                .arg(backgroundColor.name())
-                                .arg(borderColor.name()));
-}
 
 void MainWindow::menuBarFileNewClicked() {
   NewFileDialog dialog(this);
@@ -77,15 +57,33 @@ void MainWindow::menuBarFileNewClicked() {
   }
 }
 
+void MainWindow::setupColorPickerDock() {
+  _colorPickerDockArea = new ColorPickerArea(this);
+  connect(_colorPickerDockArea, &ColorPickerArea::colorPickerColorChanged, this,
+          &MainWindow::colorPickerColorChanged);
+
+  ui->colorPickerDock->setWidget(_colorPickerDockArea);
+}
+
+void MainWindow::setupColorPaletteDock() {
+  _colorPaletteDockArea = new ColorPaletteArea(this);
+  ui->colorPaletteDock->setWidget(_colorPaletteDockArea);
+}
+
+void MainWindow::setupLayersDock() {
+  _layersDockArea = new LayersArea(this);
+  ui->layersDock->setWidget(_layersDockArea);
+}
+
+void MainWindow::setupToolsDock() {
+  _toolsDockArea = new ToolsArea(this);
+  ui->toolsDock->setWidget(_toolsDockArea);
+}
+
 void MainWindow::colorPickerColorChanged(QColor newColor) {
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(),
                            newColor.green(), newColor.blue(),
                            newColor.alpha()));
   _drawingWidget->setDrawingColor(newColor);
-}
-
-void MainWindow::currentLayerChanged(int newLayer) {
-  logger::debug(fmt::format("Layer changed to: {}", newLayer), "MainWindow");
-  _drawingWidget->setCurrentLayer(newLayer);
 }
 }  // namespace capy::ui

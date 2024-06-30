@@ -15,48 +15,25 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-
-#include "docks/ColorPaletteArea.hpp"
-#include "docks/ColorPickerArea.hpp"
-#include "docks/LayersArea.hpp"
-#include "docks/ToolsArea.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include "ColorPickerArea.hpp"
+#include "ui_ColorPickerArea.h"
 
 namespace capy::ui {
-namespace Ui {
-class MainWindow;
+ColorPickerArea::ColorPickerArea(QWidget *parent) :
+  QWidget(parent),
+  ui(new Ui::ColorPickerArea) {
+  ui->setupUi(this);
+  _colorPicker = ui->colorPickerWidget;
+
+  _colorPicker->setColor(QColor(0, 0, 0, 255)); // TODO: prob delete this and sync on startup
+  connect(_colorPicker, &DefaultColorPicker::colorChanged, this,
+    // TODO: Maybe can connect straight to signal slot?
+          [&](const QColor& color) {
+            emit colorPickerColorChanged(color);
+          });
 }
 
-class MainWindow final : public QMainWindow {
-  Q_OBJECT
-
- public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
-
- public slots:
-  void menuBarFileNewClicked();
-
-  void colorPickerColorChanged(QColor newColor);
-
- private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
-
-  ColorPickerArea* _colorPickerDockArea;
-  ColorPaletteArea* _colorPaletteDockArea;
-  LayersArea* _layersDockArea;
-  ToolsArea* _toolsDockArea;
-
-  void setupColorPickerDock();
-  void setupColorPaletteDock();
-  void setupLayersDock();
-  void setupToolsDock();
-};
-}  // namespace capy::ui
-
-#endif  // MAINWINDOW_H
+ColorPickerArea::~ColorPickerArea() {
+    delete ui;
+}
+} // namespace capy::ui

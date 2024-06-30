@@ -15,48 +15,28 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CAPY_UI_COLORPALETTEAREA_HPP
+#define CAPY_UI_COLORPALETTEAREA_HPP
 
-#include <QMainWindow>
-
-#include "docks/ColorPaletteArea.hpp"
-#include "docks/ColorPickerArea.hpp"
-#include "docks/LayersArea.hpp"
-#include "docks/ToolsArea.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include <QWidget>
 
 namespace capy::ui {
 namespace Ui {
-class MainWindow;
+class ColorPaletteArea;
 }
 
-class MainWindow final : public QMainWindow {
-  Q_OBJECT
+class ColorPaletteArea final : public QWidget
+{
+    Q_OBJECT
 
- public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
+public:
+    explicit ColorPaletteArea(QWidget *parent = nullptr);
+    ~ColorPaletteArea() override;
 
- public slots:
-  void menuBarFileNewClicked();
-
-  void colorPickerColorChanged(QColor newColor);
-
- private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
-
-  ColorPickerArea* _colorPickerDockArea;
-  ColorPaletteArea* _colorPaletteDockArea;
-  LayersArea* _layersDockArea;
-  ToolsArea* _toolsDockArea;
-
-  void setupColorPickerDock();
-  void setupColorPaletteDock();
-  void setupLayersDock();
-  void setupToolsDock();
+private:
+    Ui::ColorPaletteArea *ui;
 };
-}  // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+} // namespace capy::ui
+
+#endif // CAPY_UI_COLORPALETTEAREA_HPP
