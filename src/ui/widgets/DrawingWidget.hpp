@@ -22,6 +22,7 @@
 #include "graphics/Drawing.hpp"
 #include "DrawingCanvasItem.hpp"
 #include "graphics/DrawingTools.hpp"
+#include "utils/CheckerboardPixmap.hpp"
 #include "utils/ConfigurationManager.hpp"
 
 namespace capy::ui {
@@ -34,12 +35,14 @@ public:
   explicit DrawingWidget(QWidget* parent);
 
   void startNewDrawing(int width, int height);
-
   void setCurrentLayer(int newLayer);
   [[nodiscard]] QColor getDrawingColor();
   void setDrawingColor(QColor color);
 
+  void drawBackground(QPainter* painter, const QRectF& rect) override;
+
 private:
+  CheckerboardPixmap _checkerboardPixmap;
   std::shared_ptr<ConfigurationManager> _settings;
   QColor _drawingColor = QColor(0, 0, 0, 255);
 

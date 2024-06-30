@@ -24,6 +24,10 @@ namespace capy::ui {
 class CheckerboardPixmap final : public QPixmap {
  public:
   CheckerboardPixmap();
+
+private:
+  [[nodiscard]] static QColor getCheckerboardFillColor();
+  [[nodiscard]] static QColor getCheckerboardRectangleColor();
 };
 }  // namespace capy::ui
 
