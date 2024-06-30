@@ -5,6 +5,8 @@ project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 set(APPLICATION_SOURCE_FILES
         src/Application.cpp
         src/Application.hpp
+        src/models/PaletteModel.hpp
+        src/models/PaletteModel.cpp
         src/ai/AiServiceInterface.cpp
         src/ai/AiServiceInterface.hpp
         src/algorithms/Bresenham.hpp
@@ -13,6 +15,8 @@ set(APPLICATION_SOURCE_FILES
         src/algorithms/AlphaBlending.cpp
         src/graphics/Layer.hpp
         src/graphics/Layer.cpp
+        src/user/Palette.cpp
+        src/user/Palette.hpp
         src/graphics/Drawing.hpp
         src/graphics/Drawing.cpp
         src/graphics/DrawingTools.hpp
@@ -68,7 +72,11 @@ set(APPLICATION_UI_FILES
 set(TEST_FILES
         tests/algorithms/BresenhamTests.cpp
         tests/algorithms/AlphaBlendingTests.cpp
+        tests/user/PaletteTests.cpp
 )
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/user/resources/TestPalette.json
+        ${CMAKE_CURRENT_BINARY_DIR}/tests/user/resources/TestPalette.json COPYONLY)
 
 set(LIBS_TO_LINK
         Qt6::Widgets
@@ -146,6 +154,11 @@ else ()
             PRIVATE
             GTest::GTest
             ${LIBS_TO_LINK})
+
+    set_target_properties(CapyArtStudio_Tests PROPERTIES
+            CXX_STANDARD 23
+            CXX_STANDARD_REQUIRED YES
+    )
 
     if (GMock_FOUND)
         target_link_libraries(CapyArtStudio_Tests INTERFACE GTest::GMock)
