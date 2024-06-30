@@ -45,19 +45,18 @@ QVariant PaletteColorTableModel::data(const QModelIndex& index, int role) const 
     return QVariant();
 
   const auto& color = _colors.at(index.row());
+  const auto actualColor = color.color;
   switch (role) {
     case Qt::DisplayRole: {
       switch (index.column()) {
-        case static_cast<int>(ColumnName::Color): {
-          // for now return hint but it should be as in
-          // http://osr600doc.sco.com/en/SDK_qt3/designer-manual-3.html table
-          return QString::fromStdString(color.hint.value_or(""));
-        }
+        case static_cast<int>(ColumnName::Color):
+          return actualColor;
 
-        case static_cast<int>(ColumnName::Hex): {
-          const auto actualColor = color.color;
+        case static_cast<int>(ColumnName::Hex):
           return actualColor.name();
-        }
+
+        case static_cast<int>(ColumnName::Hint):
+          return QString::fromStdString(color.hint.value_or(""));
 
         default:
           return QVariant();

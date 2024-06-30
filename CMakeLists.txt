@@ -15,6 +15,8 @@ set(APPLICATION_SOURCE_FILES
         src/algorithms/Bresenham.cpp
         src/algorithms/AlphaBlending.hpp
         src/algorithms/AlphaBlending.cpp
+        src/algorithms/Luminance.cpp
+        src/algorithms/Luminance.hpp
         src/graphics/Layer.hpp
         src/graphics/Layer.cpp
         src/user/Palette.cpp
@@ -32,6 +34,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/color-pickers/DefaultColorPicker.hpp
         src/ui/widgets/color-pickers/DefaultColorPickerSlider.cpp
         src/ui/widgets/color-pickers/DefaultColorPickerSlider.hpp
+        src/ui/widgets/delegates/ColorRectangleDelegate.hpp
+        src/ui/widgets/delegates/ColorRectangleDelegate.cpp
         src/ui/docks/ColorPickerArea.cpp
         src/ui/docks/ColorPickerArea.hpp
         src/ui/docks/ColorPaletteArea.cpp
@@ -74,6 +78,7 @@ set(APPLICATION_UI_FILES
 set(TEST_FILES
         tests/algorithms/BresenhamTests.cpp
         tests/algorithms/AlphaBlendingTests.cpp
+        tests/algorithms/LuminanceTests.cpp
         tests/user/PaletteTests.cpp
 )
 

@@ -15,36 +15,15 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTECOLORTABLEMODEL_HPP
-#define PALETTECOLORTABLEMODEL_HPP
 
-#include <QAbstractTableModel>
+#ifndef LUMINANCE_HPP
+#define LUMINANCE_HPP
 
-#include "user/Palette.hpp"
+#include <QColor>
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
-  Q_OBJECT
-public:
-  enum class ColumnName: int {
-    Color,
-    Hex,
-    Hint,
-    ColumnCount
-  };
+namespace capy::algorithms {
+int calculateLuminance(const QColor& color);
+QColor blackOrWhiteBasedOnLuminance(const QColor& color);
+}
 
-  explicit PaletteColorTableModel(QObject* parent);
-
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-
-  void setColors(std::vector<PaletteColor> colors);
-
-private:
-  std::vector<PaletteColor> _colors;
-};
-} // capy
-
-#endif //PALETTECOLORTABLEMODEL_HPP
+#endif //LUMINANCE_HPP

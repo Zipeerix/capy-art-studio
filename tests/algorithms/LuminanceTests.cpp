@@ -15,36 +15,21 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTECOLORTABLEMODEL_HPP
-#define PALETTECOLORTABLEMODEL_HPP
+#include <gmock/gmock-matchers.h>
+#include <gtest/gtest.h>
 
-#include <QAbstractTableModel>
+#include "algorithms/Luminance.hpp"
 
-#include "user/Palette.hpp"
+using namespace testing;
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
-  Q_OBJECT
-public:
-  enum class ColumnName: int {
-    Color,
-    Hex,
-    Hint,
-    ColumnCount
-  };
+// TODO: value of luminance testing
 
-  explicit PaletteColorTableModel(QObject* parent);
+TEST(algorithms, luminance_black_or_white_dark_color) {
+  const auto result = capy::algorithms::blackOrWhiteBasedOnLuminance(QColor(5, 5, 5, 255));
+  ASSERT_EQ(result, Qt::white);
+}
 
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-
-  void setColors(std::vector<PaletteColor> colors);
-
-private:
-  std::vector<PaletteColor> _colors;
-};
-} // capy
-
-#endif //PALETTECOLORTABLEMODEL_HPP
+TEST(algorithms, luminance_black_or_white_light_color) {
+  const auto result = capy::algorithms::blackOrWhiteBasedOnLuminance(QColor(222, 253, 255, 255));
+  ASSERT_EQ(result, Qt::black);
+}

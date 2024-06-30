@@ -15,36 +15,22 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTECOLORTABLEMODEL_HPP
-#define PALETTECOLORTABLEMODEL_HPP
+#include "Luminance.hpp"
 
-#include <QAbstractTableModel>
+namespace capy::algorithms {
+constexpr double LUMINANCE_RED_CONSTANT = 0.299;
+constexpr double LUMINANCE_GREEN_CONSTANT = 0.587;
+constexpr double LUMINANCE_BLUE_CONSTANT = 0.114;
 
-#include "user/Palette.hpp"
+int calculateLuminance(const QColor& color) {
+  return static_cast<int>(
+         LUMINANCE_RED_CONSTANT * color.red() +
+         LUMINANCE_GREEN_CONSTANT * color.green() +
+         LUMINANCE_BLUE_CONSTANT * color.blue());
+}
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
-  Q_OBJECT
-public:
-  enum class ColumnName: int {
-    Color,
-    Hex,
-    Hint,
-    ColumnCount
-  };
+QColor blackOrWhiteBasedOnLuminance(const QColor& color){
+  return calculateLuminance(color) > 128 ? Qt::black : Qt::white;
+}
 
-  explicit PaletteColorTableModel(QObject* parent);
-
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-
-  void setColors(std::vector<PaletteColor> colors);
-
-private:
-  std::vector<PaletteColor> _colors;
-};
-} // capy
-
-#endif //PALETTECOLORTABLEMODEL_HPP
+}

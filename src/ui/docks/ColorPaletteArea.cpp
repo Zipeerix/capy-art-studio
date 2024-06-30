@@ -17,6 +17,7 @@
 
 #include "ColorPaletteArea.hpp"
 #include "ui_ColorPaletteArea.h"
+#include "ui/widgets/delegates//ColorRectangleDelegate.hpp"
 
 namespace capy::ui {
 ColorPaletteArea::ColorPaletteArea(QWidget *parent) :
@@ -25,8 +26,15 @@ ColorPaletteArea::ColorPaletteArea(QWidget *parent) :
   _paletteModel(this),
   _colorTableModel(this) {
   ui->setupUi(this);
+
   ui->paletteComboBox->setModel(&_paletteModel);
+
   ui->colorTableView->setModel(&_colorTableModel);
+
+  auto* colorTableDelegate = new ColorRectangleDelegate(ui->colorTableView);
+  ui->colorTableView->setItemDelegateForColumn(
+    static_cast<int>(models::PaletteColorTableModel::ColumnName::Color),
+    colorTableDelegate);
 
   connect(ui->paletteComboBox, &QComboBox::currentIndexChanged, this,
     &ColorPaletteArea::currentColorPaletteChanged);
