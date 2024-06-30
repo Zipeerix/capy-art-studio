@@ -182,6 +182,7 @@ void Palette::removeColor(int index) {
                               "index {} from palette {}",
                               index, _name),
                   logger::Severity::Mild);
+    return;
   }
 
   _colors.erase(_colors.begin() + index);
