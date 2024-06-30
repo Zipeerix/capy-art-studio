@@ -62,6 +62,7 @@ set(APPLICATION_UI_FILES
         src/ui/docks/ToolsArea.ui
         src/ui/docks/LayersArea.ui
         src/ui/docks/ColorPaletteArea.ui
+        src/ui/docks/ColorPickerArea.ui
 )
 
 set(TEST_FILES

@@ -1,53 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>capy::ui::ColorPickerArea</class>
-    <widget class="QWidget" name="capy::ui::ColorPickerArea">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>411</width>
-                <height>510</height>
-            </rect>
-        </property>
-        <property name="windowTitle">
-            <string>Form</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                    <item>
-                        <widget class="QLabel" name="label">
-                            <property name="text">
-                                <string>Selector:</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QComboBox" name="selectorComboBox"/>
-                    </item>
-                </layout>
-            </item>
-            <item>
-                <widget class="Line" name="line">
-                    <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                    </property>
-                </widget>
-            </item>
-            <item>
-                <widget class="DefaultColorPicker" name="colorPickerWidget" native="true"/>
-            </item>
-        </layout>
+ <class>capy::ui::ColorPickerArea</class>
+ <widget class="QWidget" name="capy::ui::ColorPickerArea">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>411</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Selector:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="selectorComboBox"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
     </widget>
-    <customwidgets>
-        <customwidget>
-            <class>DefaultColorPicker</class>
-            <extends>QWidget</extends>
-            <header>ui/widgets/color-pickers/DefaultColorPicker.hpp</header>
-            <container>1</container>
-        </customwidget>
-    </customwidgets>
-    <resources/>
-    <connections/>
+   </item>
+   <item>
+    <widget class="DefaultColorPicker" name="colorPickerWidget" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DefaultColorPicker</class>
+   <extends>QWidget</extends>
+   <header>ui/widgets/color-pickers/DefaultColorPicker.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
 </ui>
