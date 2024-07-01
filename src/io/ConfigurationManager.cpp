@@ -21,8 +21,7 @@
 
 namespace capy {
 std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
-  static std::shared_ptr<ConfigurationManager> singletonEntity(
-      new ConfigurationManager());
+  static std::shared_ptr<ConfigurationManager> singletonEntity(new ConfigurationManager());
   return singletonEntity;
 }
 

@@ -18,11 +18,9 @@
 #include "ColorRectangleDelegate.hpp"
 
 namespace capy::ui {
-ColorRectangleDelegate::ColorRectangleDelegate(QWidget *parent)
-    : QStyledItemDelegate(parent) {}
+ColorRectangleDelegate::ColorRectangleDelegate(QWidget *parent) : QStyledItemDelegate(parent) {}
 
-void ColorRectangleDelegate::paint(QPainter *painter,
-                                   const QStyleOptionViewItem &option,
+void ColorRectangleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                                    const QModelIndex &index) const {
   painter->save();
 

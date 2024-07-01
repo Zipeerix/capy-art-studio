@@ -19,7 +19,7 @@
 
 #include <fmt/format.h>
 #include "algorithms/Bresenham.hpp"
-#include "utils/ConsoleLogger.hpp"
+#include "io/ConsoleLogger.hpp"
 #include "utils/Memory.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>

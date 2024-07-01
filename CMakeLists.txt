@@ -55,16 +55,18 @@ set(APPLICATION_SOURCE_FILES
         src/ui/dialogs/NewFileDialog.cpp
         src/ui/dialogs/NewFileDialog.hpp
         src/utils/TomlWrapper.hpp
-        src/utils/ConfigurationManager.hpp
-        src/utils/ConfigurationManager.cpp
-        src/utils/ConsoleLogger.hpp
-        src/utils/ConsoleLogger.cpp
+        src/io/ConfigurationManager.hpp
+        src/io/ConfigurationManager.cpp
+        src/io/ConsoleLogger.hpp
+        src/io/ConsoleLogger.cpp
         src/utils/Memory.cpp
         src/utils/Memory.hpp
         src/utils/General.hpp
         src/utils/General.cpp
         src/io/CapyFileManager.cpp
         src/io/CapyFileManager.hpp
+        src/io/ApplicationFilesystem.hpp
+        src/io/ApplicationFilesystem.cpp
 )
 
 set(APPLICATION_UI_FILES

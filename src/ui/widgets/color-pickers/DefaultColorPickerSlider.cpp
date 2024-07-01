@@ -22,8 +22,7 @@
 #include <QPainterPath>
 
 namespace capy::ui {
-DefaultColorPickerSlider::DefaultColorPickerSlider(Qt::Orientation orientation,
-                                                   QWidget* parent)
+DefaultColorPickerSlider::DefaultColorPickerSlider(Qt::Orientation orientation, QWidget* parent)
     : QSlider(orientation, parent) {}
 
 DefaultColorPickerSlider::DefaultColorPickerSlider(QWidget* parent)
@@ -58,10 +57,9 @@ void DefaultColorPickerSlider::paintEvent(QPaintEvent* event) {
       gradient = QLinearGradient(0, 0, drawingRect.width(), 0);
       roundRectRadius = drawingRect.height() / 2;
       handleRadius = height() / 2;
-      handlePos = {static_cast<qreal>(sliderPosition()) * drawingRect.width() /
-                           maximum() +
-                       height() / 2,
-                   static_cast<qreal>(height()) / 2};
+      handlePos = {
+          static_cast<qreal>(sliderPosition()) * drawingRect.width() / maximum() + height() / 2,
+          static_cast<qreal>(height()) / 2};
       break;
     }
 
@@ -70,10 +68,9 @@ void DefaultColorPickerSlider::paintEvent(QPaintEvent* event) {
       gradient = QLinearGradient(0, 0, 0, drawingRect.height());
       roundRectRadius = drawingRect.width() / 2;
       handleRadius = width() / 2;
-      handlePos = {static_cast<qreal>(width()) / 2,
-                   static_cast<qreal>(sliderPosition()) * drawingRect.width() /
-                           maximum() +
-                       width() / 2};
+      handlePos = {
+          static_cast<qreal>(width()) / 2,
+          static_cast<qreal>(sliderPosition()) * drawingRect.width() / maximum() + width() / 2};
       break;
     }
   };
@@ -91,18 +88,15 @@ void DefaultColorPickerSlider::paintEvent(QPaintEvent* event) {
   painter.drawRoundedRect(drawingRect, roundRectRadius, roundRectRadius);
 
   // find the 2 colors that are closest to the handle position
-  QColor leftColor =
-      _gradientStops.isEmpty() ? QColor() : _gradientStops.front().second;
-  QColor rightColor =
-      _gradientStops.isEmpty() ? QColor() : _gradientStops.back().second;
+  QColor leftColor = _gradientStops.isEmpty() ? QColor() : _gradientStops.front().second;
+  QColor rightColor = _gradientStops.isEmpty() ? QColor() : _gradientStops.back().second;
   float leftPos = 0;
   float rightPos = 1;
-  float valueFloat = static_cast<float>(value() - minimum()) /
-                     static_cast<float>(maximum() - minimum());
+  float valueFloat =
+      static_cast<float>(value() - minimum()) / static_cast<float>(maximum() - minimum());
 
   for (int i = 0; i < _gradientStops.size() - 1; ++i) {
-    if (_gradientStops[i].first <= valueFloat &&
-        _gradientStops[i + 1].first >= valueFloat) {
+    if (_gradientStops[i].first <= valueFloat && _gradientStops[i + 1].first >= valueFloat) {
       leftColor = _gradientStops[i].second;
       rightColor = _gradientStops[i + 1].second;
       leftPos = _gradientStops[i].first;
@@ -114,14 +108,10 @@ void DefaultColorPickerSlider::paintEvent(QPaintEvent* event) {
   // interpolate between the 2 colors
   float handlePosInGradient = (valueFloat - leftPos) / (rightPos - leftPos);
   QColor fill = QColor::fromRgbF(
-      leftColor.redF() +
-          (rightColor.redF() - leftColor.redF()) * handlePosInGradient,
-      leftColor.greenF() +
-          (rightColor.greenF() - leftColor.greenF()) * handlePosInGradient,
-      leftColor.blueF() +
-          (rightColor.blueF() - leftColor.blueF()) * handlePosInGradient,
-      leftColor.alphaF() +
-          (rightColor.alphaF() - leftColor.alphaF()) * handlePosInGradient);
+      leftColor.redF() + (rightColor.redF() - leftColor.redF()) * handlePosInGradient,
+      leftColor.greenF() + (rightColor.greenF() - leftColor.greenF()) * handlePosInGradient,
+      leftColor.blueF() + (rightColor.blueF() - leftColor.blueF()) * handlePosInGradient,
+      leftColor.alphaF() + (rightColor.alphaF() - leftColor.alphaF()) * handlePosInGradient);
 
   painter.setPen(QPen(palette().color(QPalette::Text), 2));
   painter.setBrush(fill);

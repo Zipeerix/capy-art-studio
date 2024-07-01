@@ -15,7 +15,15 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
+#include <QMessageBox>
+#include <QInputDialog>
 #include "ColorPaletteArea.hpp"
+
+#include <fmt/format.h>
+#include <filesystem>
+#include "io/ConsoleLogger.hpp"
+
+#include "io/ApplicationFilesystem.hpp"
 #include "ui_ColorPaletteArea.h"
 #include "ui/widgets/delegates//ColorRectangleDelegate.hpp"
 
@@ -38,16 +46,89 @@ ColorPaletteArea::ColorPaletteArea(QWidget *parent) :
 
   connect(ui->paletteComboBox, &QComboBox::currentIndexChanged, this,
     &ColorPaletteArea::currentColorPaletteChanged);
+  connect(ui->createPaletteButton, &QPushButton::clicked, this,
+    &ColorPaletteArea::createPaletteClicked);
+  connect(ui->removePaletteButton, &QPushButton::clicked, this,
+    &ColorPaletteArea::removePaletteClicked);
+
+  loadPalettesFromFilesystem();
 }
 
 ColorPaletteArea::~ColorPaletteArea() {
     delete ui;
 }
 
+void ColorPaletteArea::loadPalettesFromFilesystem() {
+  // TODO: load and _paleteModel.setPalettes() and if error then show error box
+  const auto paletteFileList = listFilesInPath(FilesystemPath::Palettes);
+
+  std::vector<Palette> palettes;
+  for (const auto& paletteFilePath : paletteFileList) {
+    const auto loadedPaletteOpt = Palette::fromJson(paletteFilePath);
+    if (!loadedPaletteOpt.has_value()) {
+      QMessageBox messageBox;
+      messageBox.warning(this,"Error",
+        "Error when loading palette: {}" + QString::fromStdString(loadedPaletteOpt.error()));
+      messageBox.setFixedSize(500,200);
+      messageBox.exec();
+      continue;
+    }
+
+    const auto loadedPalette = loadedPaletteOpt.value();
+    logger::info(fmt::format("Loaded new palette: {}", loadedPalette.getName()));
+    palettes.push_back(loadedPalette);
+  }
+
+  _paletteModel.setPalettes(std::move(palettes));
+}
+
+void ColorPaletteArea::createPaletteClicked() {
+  QString paletteName = QInputDialog::getText(this, "New Palette", "Palette name");
+  const auto newPalette = Palette(paletteName.toStdString());
+
+  const auto palettesPath = std::filesystem::path(getFilesystemPath(FilesystemPath::Palettes));
+  const auto newPaletteFilePath = palettesPath / (newPalette.getName() + ".json");
+
+  const auto saveResult = newPalette.saveToJson(newPaletteFilePath.string());
+  if (!saveResult.has_value()) {
+    QMessageBox messageBox;
+    messageBox.warning(this,"Error",
+      "Unable to save new palette, check filesystem permissions");
+    messageBox.setFixedSize(500,200);
+    messageBox.exec();
+  } else {
+    logger::info(fmt::format("Created new palette: {}", newPalette.getName()));
+    loadPalettesFromFilesystem();
+  }
+}
+
+void ColorPaletteArea::removePaletteClicked() {
+  const auto paletteIndex = ui->paletteComboBox->currentIndex();
+  if (paletteIndex == -1) {
+    return;
+  }
+
+  logger::info(fmt::format("Attempting to remove palette at index: {}", paletteIndex));
+
+  const auto& paletteToDelete = _paletteModel.getPalette(paletteIndex);
+  std::optional<std::string> pathToDeleteOpt = paletteToDelete.getPath();
+  if (!pathToDeleteOpt.has_value()) {
+    logger::error(fmt::format("Unable to remove palette: {} due to missing path", paletteToDelete.getName()), logger::Severity::Severe);
+    return;
+  }
+
+  const std::string pathToDelete = pathToDeleteOpt.value();
+  if (!std::filesystem::remove(pathToDelete)) {
+    logger::error(fmt::format("Unable to remove palette file at path: {}", pathToDelete), logger::Severity::Severe);
+    return;
+  }
+
+  logger::info(fmt::format("Deleted palette: {}", paletteToDelete.getName()));
+  loadPalettesFromFilesystem();
+}
+
 void ColorPaletteArea::currentColorPaletteChanged(int newPaletteIndex){
-  // TODO get data from model and update the widget in ui
   const auto colorsOfCurrentPalette = _paletteModel.getColors(newPaletteIndex);
   _colorTableModel.setColors(colorsOfCurrentPalette);
-  // update model? or is it updated
 }
 } // namespace capy::ui

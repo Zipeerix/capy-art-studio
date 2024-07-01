@@ -15,37 +15,52 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Application.hpp"
+#include "ApplicationFilesystem.hpp"
 
-#include "io/ApplicationFilesystem.hpp"
+#include <fmt/format.h>
+
+#include <QStandardPaths>
+#include <filesystem>
+#include <string>
+
 #include "io/ConsoleLogger.hpp"
-#include "ui/MainWindow.hpp"
 
 namespace capy {
-Application::Application(int argc, char** argv)
-    : _guiApplication(argc, argv), _configurationManager(ConfigurationManager::createInstance()) {
-  _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
+static std::filesystem::path getApplicationFilesystemBasePath() {
+  const auto path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+  return std::filesystem::path(path.toStdString()) / "capy-art-studio";
 }
 
-Application::~Application() { logger::cleanup(); }
+void initApplicationFilesystem() {
+  for (int i = 0; i < static_cast<int>(FilesystemPath::PathCount); i++) {
+    const auto path = getFilesystemPath(static_cast<FilesystemPath>(i));
+    logger::info(fmt::format("Creating folder if it doesnt exist: {}", path));
+    std::filesystem::create_directories(path);
+  }
+}
 
-int Application::start() {
-  if (_configurationManager->getEnableConsole()) {
-    logger::init();
-    logger::showConsoleWindow();
+std::string getFilesystemPath(FilesystemPath of) {
+  const auto basePath = getApplicationFilesystemBasePath();
+  switch (of) {
+    case FilesystemPath::Palettes: {
+      return basePath / "palettes";
+    }
+
+    default:
+      throw std::logic_error("Invalid option for getting filesystem path");
+  }
+}
+
+std::vector<std::string> listFilesInPath(FilesystemPath applicationPath) {
+  const auto path = getFilesystemPath(applicationPath);
+  std::vector<std::string> filePaths;
+
+  for (const auto& entry : std::filesystem::directory_iterator(path)) {
+    if (entry.is_regular_file()) {
+      filePaths.push_back(entry.path().string());
+    }
   }
 
-  initApplicationFilesystem();
-
-  ui::MainWindow mainWindow;
-  mainWindow.show();
-
-  return _guiApplication.exec();
-}
-
-void Application::registerMetadata() {
-  QCoreApplication::setOrganizationName("Zipeerix");
-  QCoreApplication::setOrganizationDomain("https://github.com/Zipeerix/capy-art-studio");
-  QCoreApplication::setApplicationName("CapyArt Studio");
+  return filePaths;
 }
 }  // namespace capy

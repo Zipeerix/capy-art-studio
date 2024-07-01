@@ -15,8 +15,19 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "AiServiceInterface.hpp"
+#ifndef APPLICATIONFILESYSTEM_HPP
+#define APPLICATIONFILESYSTEM_HPP
+
+#include <string>
+
+// TODO: Refactor? Maybe seperate file for listFilesInPath  cuz its utils
+// TODO: maybe io namespace
 
 namespace capy {
-AiServiceInterface::AiServiceInterface(std::optional<std::string> apiKey) : _apiKey(apiKey) {}
+enum class FilesystemPath : int { Palettes, PathCount };
+void initApplicationFilesystem();
+std::string getFilesystemPath(FilesystemPath of);
+std::vector<std::string> listFilesInPath(FilesystemPath applicationPath);
 }  // namespace capy
+
+#endif  // APPLICATIONFILESYSTEM_HPP

@@ -19,31 +19,15 @@
 
 #include <fmt/format.h>
 
-#include "utils/ConsoleLogger.hpp"
+#include "../io/ConsoleLogger.hpp"
 
 namespace capy::models {
-PaletteModel::PaletteModel(QObject* parent) : QAbstractListModel(parent) {
-  // TODO: Here for testing
-  Palette firstPallette;
-  firstPallette.setName("First Palette");
-  firstPallette.addColor(QColor(128, 255, 44, 255), "FirstFirst Color Hint");
-  firstPallette.addColor(QColor(255, 255, 0, 255), "FirstSecond Color Hint");
-
-  Palette secondPalette;
-  secondPalette.setName("Second Palette");
-  secondPalette.addColor(QColor(255, 0, 0, 255), "SecondFirst Color Hint");
-  secondPalette.addColor(QColor(0, 255, 0, 64), "SecondSecond Color Hint");
-
-  _palettes.push_back(firstPallette);
-  _palettes.push_back(secondPalette);
-}
+PaletteModel::PaletteModel(QObject* parent) : QAbstractListModel(parent) {}
 
 std::vector<PaletteColor> PaletteModel::getColors(int index) const {
   if (index >= _palettes.size()) {
     logger::error(
-        fmt::format(
-            "Attempting to get colors of non-existent palette with index {}",
-            index),
+        fmt::format("Attempting to get colors of non-existent palette with index {}", index),
         logger::Severity::Mild);
     return {};
   }
@@ -51,9 +35,15 @@ std::vector<PaletteColor> PaletteModel::getColors(int index) const {
   return _palettes.at(index).getAllColors();
 }
 
-int PaletteModel::rowCount(const QModelIndex& parent) const {
-  return _palettes.size();
+void PaletteModel::setPalettes(std::vector<Palette> palettes) {
+  beginResetModel();
+  _palettes = std::move(palettes);
+  endResetModel();
 }
+
+const Palette& PaletteModel::getPalette(int index) const { return _palettes.at(index); }
+
+int PaletteModel::rowCount(const QModelIndex& parent) const { return _palettes.size(); }
 
 QVariant PaletteModel::data(const QModelIndex& index, int role) const {
   // TODO: Maybe do QAbstractItemModel and have Palette's data as columns
@@ -71,8 +61,7 @@ QVariant PaletteModel::data(const QModelIndex& index, int role) const {
   }
 }
 
-QVariant PaletteModel::headerData(int section, Qt::Orientation orientation,
-                                  int role) const {
+QVariant PaletteModel::headerData(int section, Qt::Orientation orientation, int role) const {
   throw;
 }
 }  // namespace capy::models

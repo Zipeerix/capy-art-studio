@@ -19,20 +19,17 @@
 
 #include <fmt/format.h>
 
+#include "../io/ConsoleLogger.hpp"
 #include "dialogs/NewFileDialog.hpp"
 #include "ui_mainwindow.h"
-#include "utils/ConsoleLogger.hpp"
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow),
-      _drawingWidget(new DrawingWidget(this)) {
+    : QMainWindow(parent), ui(new Ui::MainWindow), _drawingWidget(new DrawingWidget(this)) {
   ui->setupUi(this);
 
-  connect(ui->actionFileNew, &QAction::triggered, this,
-          &MainWindow::menuBarFileNewClicked);
+  connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
@@ -54,8 +51,7 @@ void MainWindow::menuBarFileNewClicked() {
   // TODO: if exec() == accepted or something? Maybe no need for optional
   const auto newFileDialogResult = dialog.getResult();
   if (newFileDialogResult.has_value()) {
-    _drawingWidget->startNewDrawing(newFileDialogResult->width,
-                                    newFileDialogResult->height);
+    _drawingWidget->startNewDrawing(newFileDialogResult->width, newFileDialogResult->height);
   }
 }
 
@@ -83,9 +79,8 @@ void MainWindow::setupToolsDock() {
 }
 
 void MainWindow::colorPickerColorChanged(QColor newColor) {
-  logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(),
-                           newColor.green(), newColor.blue(),
-                           newColor.alpha()));
+  logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
+                           newColor.blue(), newColor.alpha()));
   _drawingWidget->setDrawingColor(newColor);
 }
 }  // namespace capy::ui

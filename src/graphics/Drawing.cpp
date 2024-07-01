@@ -30,13 +30,9 @@ int Drawing::getWidth() const { return _width; }
 
 int Drawing::getHeight() const { return _height; }
 
-const Layer& Drawing::getCurrentLayer() const {
-  return _layers.at(_currentLayer);
-}
+const Layer& Drawing::getCurrentLayer() const { return _layers.at(_currentLayer); }
 
-void Drawing::setCurrentLayer(int newCurrentLayer) {
-  _currentLayer = newCurrentLayer;
-}
+void Drawing::setCurrentLayer(int newCurrentLayer) { _currentLayer = newCurrentLayer; }
 
 void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
   auto& currentLayer = _layers.at(_currentLayer);
@@ -46,9 +42,8 @@ void Drawing::drawPixelOnCurrentLayer(int x, int y, const QColor& color) {
 QColor Drawing::calculateCombinedPixelColor(int x, int y) const {
   // TODO: Is it fine? Doesn't the lambda get fucked here?
   // TODO: if program crashes then its this retarded static here
-  static algorithms::AlphaBlender alphaBlender([&](int x, int y, int layer) {
-    return _layers.at(layer).getPixel(x, y);
-  });
+  static algorithms::AlphaBlender alphaBlender(
+      [&](int x, int y, int layer) { return _layers.at(layer).getPixel(x, y); });
   return alphaBlender.blend(x, y, _layers.size());
 }
 }  // namespace capy
