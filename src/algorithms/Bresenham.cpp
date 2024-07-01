@@ -54,7 +54,6 @@ void applyBresenham(int x0, int y0, int x1, int y1,
 
 void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
                     const CoordinateApplicationFunction& actionOnTarget) {
-  applyBresenham(firstPoint.x(), firstPoint.y(), secondPoint.x(),
-                 secondPoint.y(), actionOnTarget);
+  applyBresenham(firstPoint.x(), firstPoint.y(), secondPoint.x(), secondPoint.y(), actionOnTarget);
 }
 }  // namespace capy::algorithms

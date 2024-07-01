@@ -29,8 +29,7 @@ class DefaultColorPickerSlider final : public QSlider {
   Q_OBJECT
 
  public:
-  explicit DefaultColorPickerSlider(Qt::Orientation orientation,
-                                    QWidget* parent = nullptr);
+  explicit DefaultColorPickerSlider(Qt::Orientation orientation, QWidget* parent = nullptr);
   explicit DefaultColorPickerSlider(QWidget* parent = nullptr);
 
   ~DefaultColorPickerSlider() override;

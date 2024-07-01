@@ -35,11 +35,15 @@ public:
 
 public slots:
   void currentColorPaletteChanged(int newPaletteIndex);
+  void createPaletteClicked();
+  void removePaletteClicked();
 
 private:
     Ui::ColorPaletteArea* ui;
     models::PaletteModel _paletteModel;
     models::PaletteColorTableModel _colorTableModel;
+
+    void loadPalettesFromFilesystem();
 };
 
 } // namespace capy::ui

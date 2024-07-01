@@ -22,7 +22,7 @@
 
 #include <chrono>
 
-#include "ui/ConsoleWindow.hpp"
+#include "../ui/ConsoleWindow.hpp"
 
 namespace capy::logger {
 static bool isEnabled = false;
@@ -55,8 +55,8 @@ static void log(const std::string& message, const std::string& extraInfo) {
     return;
   }
 
-  const auto logMessage = fmt::format("[{}] <b>{}</b>: {}", getDateTimeString(),
-                                      extraInfo, message);
+  const auto logMessage =
+      fmt::format("[{}] <b>{}</b>: {}", getDateTimeString(), extraInfo, message);
   consoleWindow->log(QString::fromStdString(logMessage));
 }
 
@@ -89,12 +89,11 @@ void debug(const std::string& message, const std::string& module) {
 void info(const std::string& message) { log(message, "INFO"); }
 
 void warning(const std::string& message, Severity severity) {
-  log(message, fmt::format("<font color=\"yellow\">WARNING<{}></font>",
-                           severityToString(severity)));
+  log(message,
+      fmt::format("<font color=\"yellow\">WARNING<{}></font>", severityToString(severity)));
 }
 
 void error(const std::string& message, Severity severity) {
-  log(message, fmt::format("<font color=\"red\">ERROR<{}></font>",
-                           severityToString(severity)));
+  log(message, fmt::format("<font color=\"red\">ERROR<{}></font>", severityToString(severity)));
 }
 }  // namespace capy::logger

@@ -20,7 +20,7 @@
 
 #include <QApplication>
 
-#include "utils/ConfigurationManager.hpp"
+#include "io/ConfigurationManager.hpp"
 
 namespace capy {
 class Application {

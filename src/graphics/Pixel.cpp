@@ -18,8 +18,7 @@
 #include "Pixel.hpp"
 
 namespace capy {
-Pixel::Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b,
-             uint8_t alpha)
+Pixel::Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b, uint8_t alpha)
     : _r(r), _g(g), _b(b), _alpha(alpha) {}
 
 Pixel Pixel::white(uint8_t alpha) { return {255, 255, 255, alpha}; }
@@ -45,13 +44,9 @@ ColorChannelValue Pixel::getGreen() const { return _g; }
 
 ColorChannelValue Pixel::getAlpha() const { return _alpha; }
 
-bool Pixel::hasSomeTransparency() const {
-  return _alpha < constants::alpha::solidColor;
-}
+bool Pixel::hasSomeTransparency() const { return _alpha < constants::alpha::solidColor; }
 
 bool Pixel::isSolid() const { return _alpha == constants::alpha::solidColor; }
 
-bool Pixel::isTransparent() const {
-  return _alpha == constants::alpha::transparent;
-}
+bool Pixel::isTransparent() const { return _alpha == constants::alpha::transparent; }
 }  // namespace capy

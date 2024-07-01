@@ -25,8 +25,8 @@
 #include <QPainter>
 #include <QPushButton>
 
+#include "../../../io/ConsoleLogger.hpp"
 #include "DefaultColorPickerSlider.hpp"
-#include "utils/ConsoleLogger.hpp"
 
 // TODO: Rewrite constructor, break it down
 
@@ -63,15 +63,12 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
 
   connect(_hueSlider, &QSlider::valueChanged, this, [=](int value) {
     hueLabel->setText(QString::number(value));
-    _saturationSlider->setGradientStops(
-        {{0.0 / 255.0, QColor::fromHsv(value, 0, 255)},
-         {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
-    _brightnessSlider->setGradientStops(
-        {{0.0 / 255.0, QColor::fromHsv(value, 255, 0)},
-         {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
-    _alphaSlider->setGradientStops(
-        {{0.0 / 255.0, QColor::fromHsv(value, 255, 255, 0)},
-         {255.0 / 255.0, QColor::fromHsv(value, 255, 255, 255)}});
+    _saturationSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 0, 255)},
+                                         {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
+    _brightnessSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 255, 0)},
+                                         {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
+    _alphaSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 255, 255, 0)},
+                                    {255.0 / 255.0, QColor::fromHsv(value, 255, 255, 255)}});
     updateShownColor();
   });
   connect(_saturationSlider, &QSlider::valueChanged, this, [=](int value) {
@@ -93,12 +90,9 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
   alphaLabel->setText(QString::number(_alphaSlider->value()));
 
   hueLabel->setMinimumSize(hueLabel->fontMetrics().boundingRect("000").size());
-  saturationLabel->setMinimumSize(
-      saturationLabel->fontMetrics().boundingRect("000").size());
-  brightnessLabel->setMinimumSize(
-      brightnessLabel->fontMetrics().boundingRect("000").size());
-  alphaLabel->setMinimumSize(
-      alphaLabel->fontMetrics().boundingRect("000").size());
+  saturationLabel->setMinimumSize(saturationLabel->fontMetrics().boundingRect("000").size());
+  brightnessLabel->setMinimumSize(brightnessLabel->fontMetrics().boundingRect("000").size());
+  alphaLabel->setMinimumSize(alphaLabel->fontMetrics().boundingRect("000").size());
 
   hueLabel->setAlignment(Qt::AlignRight);
   saturationLabel->setAlignment(Qt::AlignRight);
@@ -146,16 +140,14 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
 
   auto* selectButton = new QPushButton("Add to current Palette");
 
-  connect(selectButton, &QPushButton::clicked, this,
-          &DefaultColorPicker::addToColorPaletteClicked);
+  connect(selectButton, &QPushButton::clicked, this, &DefaultColorPicker::addToColorPaletteClicked);
 
   QBoxLayout* buttons = new QHBoxLayout();
   buttons->addWidget(selectButton);
   subLayout->addLayout(buttons);
 
-  setColor(
-      QColor(0, 0, 0, 255));  // TODO: Maybe have a default color somewhere,
-                              // this is copied from canvas widget
+  setColor(QColor(0, 0, 0, 255));  // TODO: Maybe have a default color somewhere,
+                                   // this is copied from canvas widget
   updateShownColor();
 }
 
@@ -163,8 +155,8 @@ DefaultColorPicker::~DefaultColorPicker() = default;
 
 void DefaultColorPicker::updateShownColor() {
   QColor color;
-  color.setHsv(_hueSlider->value(), _saturationSlider->value(),
-               _brightnessSlider->value(), _alphaSlider->value());
+  color.setHsv(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+               _alphaSlider->value());
   _colorShowcase->setStyleSheet("background-color: " + color.name());
   _hexLabel->setText(color.name());
   _selectedColor = color;
@@ -172,9 +164,8 @@ void DefaultColorPicker::updateShownColor() {
 }
 
 void DefaultColorPicker::addToColorPaletteClicked() {
-  logger::info(fmt::format("Attempting to add color to palette: ({}, {}. {})",
-                           _selectedColor.red(), _selectedColor.green(),
-                           _selectedColor.blue()));
+  logger::info(fmt::format("Attempting to add color to palette: ({}, {}. {})", _selectedColor.red(),
+                           _selectedColor.green(), _selectedColor.blue()));
   // TODO
 }
 

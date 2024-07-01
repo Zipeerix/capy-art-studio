@@ -26,7 +26,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "utils/ConsoleLogger.hpp"
+#include "../io/ConsoleLogger.hpp"
 
 namespace capy {
 Palette::Palette(std::string name) : _name(std::move(name)) {
@@ -53,17 +53,16 @@ std::expected<Palette, std::string> Palette::fromJson(const std::string& path) {
   }
 
   Palette palette;
+  palette._path = path;
   const auto jsonParseResult = palette.importValuesFromJson(root);
   if (!jsonParseResult.has_value()) {
-    return std::unexpected("Error when parsing Palette JSON: " +
-                           jsonParseResult.error());
+    return std::unexpected("Error when parsing Palette JSON: " + jsonParseResult.error());
   }
 
   return palette;
 }
 
-std::expected<void, std::string> Palette::saveToJson(
-    std::optional<std::string> path) {
+std::expected<void, std::string> Palette::saveToJson(std::optional<std::string> path) const {
   using namespace rapidjson;
 
   Document root = exportValuesToJson();
@@ -73,10 +72,9 @@ std::expected<void, std::string> Palette::saveToJson(
   Writer writer(buffer);
   root.Accept(writer);
 
-  const std::string finalPath = path.has_value() ? path.value() : _path;
+  const std::string finalPath = path.has_value() ? path.value() : _path.value_or("");
   if (finalPath.empty()) {
-    return std::unexpected(
-        "Unable to save Palette JSON as no output path is given");
+    return std::unexpected("Unable to save Palette JSON as no output path is given");
   }
 
   std::ofstream file(finalPath);
@@ -90,8 +88,7 @@ std::expected<void, std::string> Palette::saveToJson(
   return {};
 }
 
-std::expected<void, std::string> Palette::importValuesFromJson(
-    const rapidjson::Document& root) {
+std::expected<void, std::string> Palette::importValuesFromJson(const rapidjson::Document& root) {
   if (!root.HasMember("name") || !root["name"].IsString()) {
     return std::unexpected("No 'name' member");
   }
@@ -106,24 +103,20 @@ std::expected<void, std::string> Palette::importValuesFromJson(
     PaletteColor paletteColorEntry;
     if (colorObject.HasMember("hint")) {
       if (!colorObject["hint"].IsString()) {
-        return std::unexpected(
-            "Invalid 'hint' value");  // TOOD: add index value for error
+        return std::unexpected("Invalid 'hint' value");  // TOOD: add index value for error
       }
 
       paletteColorEntry.hint = colorObject["hint"].GetString();
     }
 
     if (!colorObject.HasMember("color") || !colorObject["color"].IsObject()) {
-      return std::unexpected(
-          "No inner color for color object");  // TODO: add index value for
-                                               // error
+      return std::unexpected("No inner color for color object");  // TODO: add index value for error
     }
 
     const auto innerColor = colorObject["color"].GetObject();
-    if (!innerColor.HasMember("r") || !innerColor.HasMember("g") ||
-        !innerColor.HasMember("b") || !innerColor.HasMember("alpha")) {
-      return std::unexpected(
-          "Incomplete inner color");  // TODO: add index value for error
+    if (!innerColor.HasMember("r") || !innerColor.HasMember("g") || !innerColor.HasMember("b") ||
+        !innerColor.HasMember("alpha")) {
+      return std::unexpected("Incomplete inner color");  // TODO: add index value for error
     }
 
     paletteColorEntry.color.setRed(innerColor["r"].GetInt());
@@ -142,15 +135,13 @@ rapidjson::Document Palette::exportValuesToJson() const {
   document.SetObject();
   auto& allocator = document.GetAllocator();
 
-  document.AddMember("name", rapidjson::Value(_name.c_str(), allocator),
-                     allocator);
+  document.AddMember("name", rapidjson::Value(_name.c_str(), allocator), allocator);
 
   rapidjson::Value colorsArray(rapidjson::kArrayType);
   for (const auto& colorEntry : _colors) {
     rapidjson::Value colorObject(rapidjson::kObjectType);
 
-    const auto hint =
-        colorEntry.hint.has_value() ? colorEntry.hint->c_str() : "";
+    const auto hint = colorEntry.hint.has_value() ? colorEntry.hint->c_str() : "";
     colorObject.AddMember("hint", rapidjson::Value(hint, allocator), allocator);
 
     rapidjson::Value colorValues(rapidjson::kObjectType);
@@ -171,8 +162,7 @@ rapidjson::Document Palette::exportValuesToJson() const {
 
 bool Palette::wasEditedFromLastLoad() const { return _wasEdited; }
 
-void Palette::addColor(const QColor& color,
-                       const std::optional<std::string>& hint) {
+void Palette::addColor(const QColor& color, const std::optional<std::string>& hint) {
   _colors.push_back({color, hint});
 }
 
@@ -189,6 +179,8 @@ void Palette::removeColor(int index) {
 }
 
 std::string Palette::getName() const { return _name; }
+
+std::optional<std::string> Palette::getPath() const { return _path; }
 
 void Palette::setName(std::string newName) { _name = std::move(newName); }
 

@@ -26,8 +26,7 @@
 namespace capy {
 class Pixel {
  public:
-  Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b,
-        uint8_t alpha);
+  Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b, uint8_t alpha);
 
   static Pixel white(uint8_t alpha = constants::alpha::solidColor);
   static Pixel black(uint8_t alpha = constants::alpha::solidColor);

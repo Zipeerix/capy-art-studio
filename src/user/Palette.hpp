@@ -35,12 +35,14 @@ class Palette {
   explicit Palette(std::string name);
 
   static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path);
+  std::expected<void, std::string> saveToJson(std::optional<std::string> path) const;
 
   [[nodiscard]] bool wasEditedFromLastLoad() const;
 
   [[nodiscard]] std::string getName() const;
   void setName(std::string newName);
+
+  [[nodiscard]] std::optional<std::string> getPath() const;
 
   [[nodiscard]] int colorCount() const;
   [[nodiscard]] QColor getColor(int index) const;
@@ -50,12 +52,11 @@ class Palette {
 
  private:
   std::string _name;
-  std::string _path;
+  std::optional<std::string> _path;
   bool _wasEdited = false;
   std::vector<PaletteColor> _colors;
 
-  std::expected<void, std::string> importValuesFromJson(
-      const rapidjson::Document& root);
+  std::expected<void, std::string> importValuesFromJson(const rapidjson::Document& root);
   [[nodiscard]] rapidjson::Document exportValuesToJson() const;
 };
 }  // namespace capy
