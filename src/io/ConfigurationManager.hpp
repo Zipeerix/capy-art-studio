@@ -24,22 +24,43 @@
 namespace capy {
 class ConfigurationManager {
  public:
+  enum class DebugSetting : int {
+    ShowConsole,
+  };
+
+  enum class GraphicsSetting : int {
+    DrawGrid,
+    GridWidth,
+  };
+
   ConfigurationManager(ConfigurationManager&) = delete;
   void operator=(const ConfigurationManager&) = delete;
 
   static std::shared_ptr<ConfigurationManager> createInstance();
 
-  // TODO This is a placeholder, think of a way how to get/set settings
-  [[nodiscard]] bool getShouldDrawGrid() const;
-  [[nodiscard]] double getGridWidth() const;
-  [[nodiscard]] bool getEnableConsole() const;
+  template <typename SettingValueType>
+  SettingValueType getDebugSetting(DebugSetting setting) const;
+
+  template <typename SettingValueType>
+  void setDebugSetting(DebugSetting setting, SettingValueType value);
+
+  template <typename SettingValueType>
+  SettingValueType getGraphicsSetting(GraphicsSetting setting) const;
+
+  template <typename SettingValueType>
+  void setGraphicsSetting(GraphicsSetting setting, SettingValueType value);
 
  protected:
   ConfigurationManager() = default;
 
  private:
   QSettings _settings{};
+
+  [[nodiscard]] static QString getDebugSettingPath(DebugSetting setting);
+  [[nodiscard]] static QString getGraphicsSettingPath(GraphicsSetting setting);
 };
 }  // namespace capy
+
+#include "ConfigurationManager.tpp"
 
 #endif  // CONFIGURATIONMANAGER_HPP
