@@ -56,6 +56,7 @@ set(APPLICATION_SOURCE_FILES
         src/ui/dialogs/NewFileDialog.hpp
         src/utils/TomlWrapper.hpp
         src/io/ConfigurationManager.hpp
+        src/io/ConfigurationManager.tpp
         src/io/ConfigurationManager.cpp
         src/io/ConsoleLogger.hpp
         src/io/ConsoleLogger.cpp

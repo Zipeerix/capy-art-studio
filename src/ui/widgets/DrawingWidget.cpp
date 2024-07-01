@@ -59,12 +59,12 @@ void DrawingWidget::startNewDrawing(int width, int height) {
   _drawingCanvasItem = new DrawingCanvasItem(width, height);
   _scene->addItem(_drawingCanvasItem);
 
-  if (_settings->getShouldDrawGrid()) {
+  if (_settings->getGraphicsSetting<bool>(ConfigurationManager::GraphicsSetting::DrawGrid)) {
     const int totalDrawingWidth = width;
     const int totalDrawingHeight = height;
 
     auto pen = QPen(Qt::lightGray);
-    pen.setWidthF(_settings->getGridWidth());
+    pen.setWidthF(_settings->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
     pen.setCosmetic(true);
 
     for (int y = 0; y <= totalDrawingHeight; y += 1)

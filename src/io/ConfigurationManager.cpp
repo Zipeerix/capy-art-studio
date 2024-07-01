@@ -25,16 +25,26 @@ std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
   return singletonEntity;
 }
 
-bool ConfigurationManager::getShouldDrawGrid() const {
-  return _settings.value("general/drawGrid", true).toBool();
+QString ConfigurationManager::getDebugSettingPath(DebugSetting setting) {
+  switch (setting) {
+    case DebugSetting::ShowConsole:
+      return "Debug/ShowConsole";
+
+    default:
+      throw std::logic_error("Invalid setting requested");
+  }
 }
 
-double ConfigurationManager::getGridWidth() const {
-  // also do color
-  return _settings.value("general/gridWidth", 0.3).toDouble();
-}
+QString ConfigurationManager::getGraphicsSettingPath(GraphicsSetting setting) {
+  switch (setting) {
+    case GraphicsSetting::DrawGrid:
+      return "Graphics/DrawGrid";
 
-bool ConfigurationManager::getEnableConsole() const {
-  return _settings.value("general/showConsole", true).toBool();
+    case GraphicsSetting::GridWidth:
+      return "Graphics/GridWidth";
+
+    default:
+      throw std::logic_error("Invalid setting requested");
+  }
 }
 }  // namespace capy

@@ -30,7 +30,8 @@ Application::Application(int argc, char** argv)
 Application::~Application() { logger::cleanup(); }
 
 int Application::start() {
-  if (_configurationManager->getEnableConsole()) {
+  if (_configurationManager->getDebugSetting<bool>(
+          ConfigurationManager::DebugSetting::ShowConsole)) {
     logger::init();
     logger::showConsoleWindow();
   }
