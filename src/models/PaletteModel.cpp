@@ -60,8 +60,4 @@ QVariant PaletteModel::data(const QModelIndex& index, int role) const {
       return QVariant();
   }
 }
-
-QVariant PaletteModel::headerData(int section, Qt::Orientation orientation, int role) const {
-  throw;
-}
 }  // namespace capy::models

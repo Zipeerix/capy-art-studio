@@ -31,8 +31,6 @@ class PaletteModel final : public QAbstractListModel {
 
   [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
   [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
-                                    int role) const override;
 
   [[nodiscard]] std::vector<PaletteColor> getColors(int index) const;
 
