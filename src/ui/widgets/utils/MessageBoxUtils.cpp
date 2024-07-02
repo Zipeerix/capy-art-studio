@@ -15,25 +15,15 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ColorPickerArea.hpp"
-#include "ui_ColorPickerArea.h"
+#include "MessageBoxUtils.hpp"
+#include <QMessageBox>
 
 namespace capy::ui {
-ColorPickerArea::ColorPickerArea(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ColorPickerArea) {
-  ui->setupUi(this);
-  _colorPicker = ui->colorPickerWidget;
+bool showConfirmationDialog(QWidget* parent, const std::string& message) {
+  QMessageBox::StandardButton reply = QMessageBox::question(parent, "Confirmation", QString::fromStdString(message),
+                                QMessageBox::Yes | QMessageBox::No);
 
-  _colorPicker->setColor(QColor(0, 0, 0, 255)); // TODO: prob delete this and sync on startup
-  connect(_colorPicker, &DefaultColorPicker::colorChanged, this,
-    // TODO: Maybe can connect straight to signal slot?
-          [&](const QColor& color) {
-            emit colorPickerColorChanged(color);
-          });
-}
 
-ColorPickerArea::~ColorPickerArea() {
-    delete ui;
+  return reply == QMessageBox::Yes;
 }
-} // namespace capy::ui
+}

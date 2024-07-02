@@ -18,11 +18,17 @@
 #include "PaletteModel.hpp"
 
 #include <fmt/format.h>
-
-#include "../io/ConsoleLogger.hpp"
+#include <ranges>
+#include "io/ConsoleLogger.hpp"
 
 namespace capy::models {
 PaletteModel::PaletteModel(QObject* parent) : QAbstractListModel(parent) {}
+
+bool PaletteModel::doesPaletteExist(const std::string& name) const {
+  return std::ranges::any_of(_palettes, [name](const auto& palette) {
+    return palette.getName() == name;
+  });
+}
 
 std::vector<PaletteColor> PaletteModel::getColors(int index) const {
   if (index >= _palettes.size()) {
@@ -33,6 +39,76 @@ std::vector<PaletteColor> PaletteModel::getColors(int index) const {
   }
 
   return _palettes.at(index).getAllColors();
+}
+
+PaletteColor PaletteModel::getColor(int index, int colorIndex) const {
+  if (index >= _palettes.size()) {
+    logger::error(
+        fmt::format("Attempting to get colors of non-existent palette with index {}", index),
+        logger::Severity::Mild);
+    return PaletteColor{QColor(0, 0, 0, 255), "ERROR"};
+  }
+
+  const auto& palette = _palettes.at(index);
+  return palette.getColor(colorIndex);
+}
+
+std::expected<void, std::string> PaletteModel::addColorToPalette(int paletteIndex, QColor color, std::optional<std::string> hint) {
+  if (paletteIndex >= _palettes.size()) {
+    logger::error(
+        fmt::format("Attempting to add color to non-existent palette with index {}", paletteIndex),
+        logger::Severity::Mild);
+    return {};
+  }
+
+  auto& palette = _palettes.at(paletteIndex);
+  palette.addColor(color, hint);
+  // TODO: use updatePaletteFile method instead as it does the same
+  const auto paletteSaveRes = palette.saveToJson(std::nullopt);
+  if (!paletteSaveRes.has_value()) {
+    return std::unexpected("Unable to save palette due to: " + paletteSaveRes.error());
+    // TODO: if unable to save then remove the color from model
+  } else {
+    emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
+  }
+
+  return {};
+}
+
+std::expected<void, std::string> PaletteModel::removeColorFromPalette(int paletteIndex, int colorIndex) {
+  if (paletteIndex >= _palettes.size()) {
+    logger::error(
+        fmt::format("Attempting to remove color from non-existent palette with index {}", paletteIndex),
+        logger::Severity::Mild);
+    return {};
+  }
+
+  auto& palette = _palettes.at(paletteIndex);
+  palette.removeColor(colorIndex);
+  // TODO: use updatePaletteFile method instead as it does the same
+  const auto paletteSaveRes = palette.saveToJson(std::nullopt);
+  if (!paletteSaveRes.has_value()) {
+    return std::unexpected("Unable to save palette due to: " + paletteSaveRes.error());
+    // TODO: if unable to save then remove the color from model
+  } else {
+    emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
+  }
+
+  return {};
+}
+
+std::expected<void, std::string> PaletteModel::updatePaletteFile(int paletteIndex, bool emitDataChanged) {
+  auto& palette = _palettes.at(paletteIndex);
+  const auto paletteSaveRes = palette.saveToJson(std::nullopt);
+  if (!paletteSaveRes.has_value()) {
+    return std::unexpected("Unable to save palette due to: " + paletteSaveRes.error());
+  } else {
+    if (emitDataChanged) {
+      emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
+    }
+  }
+
+  return {};
 }
 
 void PaletteModel::setPalettes(std::vector<Palette> palettes) {

@@ -15,33 +15,14 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_COLORPICKERAREA_H
-#define CAPY_UI_COLORPICKERAREA_H
+#ifndef MESSAGEBOXUTILS_HPP
+#define MESSAGEBOXUTILS_HPP
 
+#include <string>
 #include <QWidget>
 
-#include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
-
 namespace capy::ui {
-namespace Ui {
-class ColorPickerArea;
+bool showConfirmationDialog(QWidget* parent = nullptr, const std::string& message = "Are you sure you want to do this?");
 }
 
-class ColorPickerArea final : public QWidget {
-    Q_OBJECT
-
-public:
-    explicit ColorPickerArea(QWidget *parent = nullptr);
-    ~ColorPickerArea() override;
-
-signals:
-    void colorPickerColorChanged(QColor color);
-
-private:
-    Ui::ColorPickerArea* ui;
-    DefaultColorPicker* _colorPicker;
-};
-
-} // namespace capy::ui
-
-#endif // CAPY_UI_COLORPICKERAREA_H
+#endif //MESSAGEBOXUTILS_HPP

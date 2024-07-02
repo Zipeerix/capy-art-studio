@@ -186,16 +186,16 @@ void Palette::setName(std::string newName) { _name = std::move(newName); }
 
 int Palette::colorCount() const { return _colors.size(); }
 
-QColor Palette::getColor(int index) const {
+PaletteColor Palette::getColor(int index) const {
   if (index >= _colors.size()) {
     logger::error(fmt::format("Attempting to get non-existent color at "
                               "index {} from palette {}",
                               index, _name),
                   logger::Severity::Mild);
-    return QColor(0, 0, 0, 255);
+    return PaletteColor{QColor(0, 0, 0, 255), "Error"};
   }
 
-  return _colors.at(index).color;
+  return _colors.at(index);
 }
 
 std::vector<PaletteColor> Palette::getAllColors() const { return _colors; }

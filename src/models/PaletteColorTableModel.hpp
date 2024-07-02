@@ -36,6 +36,8 @@ class PaletteColorTableModel final : public QAbstractTableModel {
   [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
                                     int role) const override;
 
+  void notifyThatColorWasRemovedFromThePalette(int colorIndex);
+
   void setColors(std::vector<PaletteColor> colors);
 
  private:

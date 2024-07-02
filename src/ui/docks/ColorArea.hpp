@@ -15,37 +15,47 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_COLORPALETTEAREA_HPP
-#define CAPY_UI_COLORPALETTEAREA_HPP
+#ifndef COLORAREA_HPP
+#define COLORAREA_HPP
 
 #include <QWidget>
-#include "models/PaletteColorTableModel.hpp"
 #include "models/PaletteModel.hpp"
+#include "models/PaletteColorTableModel.hpp"
+#include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
 
 namespace capy::ui {
 namespace Ui {
-class ColorPaletteArea;
+class ColorArea;
 }
 
-class ColorPaletteArea final : public QWidget {
-    Q_OBJECT
+class ColorArea final : public QWidget {
+  Q_OBJECT
 public:
-    explicit ColorPaletteArea(QWidget *parent = nullptr);
-    ~ColorPaletteArea() override;
+  explicit ColorArea(QWidget *parent = nullptr);
+  ~ColorArea() override;
 
 public slots:
   void currentColorPaletteChanged(int newPaletteIndex);
+  void userCurrentColorPaletteChanged(int newPaletteIndex);
+  void colorClicked(const QModelIndex& index);
+  void addColorToPaletteClicked();
   void createPaletteClicked();
   void removePaletteClicked();
+  void createColorClicked();
+  void removeColorClicked();
+
+signals:
+    void colorPickerColorChanged(QColor color);
 
 private:
-    Ui::ColorPaletteArea* ui;
-    models::PaletteModel _paletteModel;
-    models::PaletteColorTableModel _colorTableModel;
+  Ui::ColorArea *ui;
+  models::PaletteModel _paletteModel;
+  models::PaletteColorTableModel _colorTableModel;
+  DefaultColorPicker* _colorPicker;
+  int _savedPaletteComboBoxIndex = -1;
 
-    void loadPalettesFromFilesystem();
+  void loadPalettesFromFilesystem();
 };
+}
 
-} // namespace capy::ui
-
-#endif // CAPY_UI_COLORPALETTEAREA_HPP
+#endif // COLORAREA_HPP

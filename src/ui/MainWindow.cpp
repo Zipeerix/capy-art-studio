@@ -37,8 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
   // something
   // TODO: so that singlas can be passed there instead of doing a lot on
   // MainWindow
-  setupColorPickerDock();
-  setupColorPaletteDock();
+  setupColorDock();
   setupLayersDock();
   setupToolsDock();
 }
@@ -55,18 +54,18 @@ void MainWindow::menuBarFileNewClicked() {
   }
 }
 
-void MainWindow::setupColorPickerDock() {
-  _colorPickerDockArea = new ColorPickerArea(this);
-  connect(_colorPickerDockArea, &ColorPickerArea::colorPickerColorChanged, this,
+void MainWindow::setupColorDock() {
+  _colorDockArea = new ColorArea(this);
+  connect(_colorDockArea, &ColorArea::colorPickerColorChanged, this,
           &MainWindow::colorPickerColorChanged);
 
-  ui->colorPickerDock->setWidget(_colorPickerDockArea);
+  ui->colorDock->setWidget(_colorDockArea);
 }
 
-void MainWindow::setupColorPaletteDock() {
+/*void MainWindow::setupColorPaletteDock() {
   _colorPaletteDockArea = new ColorPaletteArea(this);
   ui->colorPaletteDock->setWidget(_colorPaletteDockArea);
-}
+}*/
 
 void MainWindow::setupLayersDock() {
   _layersDockArea = new LayersArea(this);

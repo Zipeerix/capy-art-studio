@@ -20,8 +20,7 @@
 
 #include <QMainWindow>
 
-#include "docks/ColorPaletteArea.hpp"
-#include "docks/ColorPickerArea.hpp"
+#include "docks/ColorArea.hpp"
 #include "docks/LayersArea.hpp"
 #include "docks/ToolsArea.hpp"
 #include "widgets/DrawingWidget.hpp"
@@ -47,13 +46,11 @@ class MainWindow final : public QMainWindow {
   Ui::MainWindow* ui;
   DrawingWidget* _drawingWidget;
 
-  ColorPickerArea* _colorPickerDockArea;
-  ColorPaletteArea* _colorPaletteDockArea;
+  ColorArea* _colorDockArea;
   LayersArea* _layersDockArea;
   ToolsArea* _toolsDockArea;
 
-  void setupColorPickerDock();
-  void setupColorPaletteDock();
+  void setupColorDock();
   void setupLayersDock();
   void setupToolsDock();
 };

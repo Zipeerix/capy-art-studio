@@ -38,10 +38,10 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/delegates/ColorRectangleDelegate.cpp
         src/ui/widgets/utils/CheckerboardPixmap.hpp
         src/ui/widgets/utils/CheckerboardPixmap.cpp
-        src/ui/docks/ColorPickerArea.cpp
-        src/ui/docks/ColorPickerArea.hpp
-        src/ui/docks/ColorPaletteArea.cpp
-        src/ui/docks/ColorPaletteArea.hpp
+        src/ui/widgets/utils/MessageBoxUtils.cpp
+        src/ui/widgets/utils/MessageBoxUtils.hpp
+        src/ui/docks/ColorArea.hpp
+        src/ui/docks/ColorArea.cpp
         src/ui/docks/ToolsArea.cpp
         src/ui/docks/ToolsArea.hpp
         src/ui/docks/LayersArea.cpp
@@ -81,8 +81,7 @@ set(APPLICATION_UI_FILES
         src/ui/dialogs/NewFileDialog.ui
         src/ui/docks/ToolsArea.ui
         src/ui/docks/LayersArea.ui
-        src/ui/docks/ColorPaletteArea.ui
-        src/ui/docks/ColorPickerArea.ui
+        src/ui/docks/ColorArea.ui
 )
 
 set(TEST_FILES
