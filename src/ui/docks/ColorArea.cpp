@@ -93,13 +93,13 @@ void ColorArea::addColorToPaletteClicked() {
 
   const QColor colorToAdd = _colorPicker->getColor();
   const QString hint = QInputDialog::getText(this, "Add new Color to palette", "Color hint");
-  const auto colorAddingRes = _paletteModel.addColorToPalette(currentPaltteIndex, colorToAdd, hint.isEmpty() ? std::nullopt : std::optional(hint.toStdString()));
-  if (!colorAddingRes.has_value()) {
+  const auto colorAddingError = _paletteModel.addColorToPalette(currentPaltteIndex, colorToAdd, hint.isEmpty() ? std::nullopt : std::optional(hint.toStdString()));
+  if (colorAddingError.has_value()) {
     QMessageBox messageBox(this);
     messageBox.setIcon(QMessageBox::Warning);
     messageBox.setFixedSize(500,200);
     messageBox.setWindowTitle("Error");
-    messageBox.setText("Error when adding color to palette: " + QString::fromStdString(colorAddingRes.error()));
+    messageBox.setText("Error when adding color to palette: " + QString::fromStdString(colorAddingError.value()));
     messageBox.exec();
     return;
   }
@@ -159,8 +159,8 @@ void ColorArea::createPaletteClicked() {
   const auto palettesPath = std::filesystem::path(getFilesystemPath(FilesystemPath::Palettes));
   const auto newPaletteFilePath = palettesPath / (newPalette.getName() + ".json");
 
-  const auto saveResult = newPalette.saveToJson(newPaletteFilePath.string());
-  if (!saveResult.has_value()) {
+  const auto saveError = newPalette.saveToJson(newPaletteFilePath.string());
+  if (saveError.has_value()) {
     QMessageBox messageBox;
     messageBox.setIcon(QMessageBox::Warning);
     messageBox.setFixedSize(500,200);
@@ -223,15 +223,15 @@ void ColorArea::removeColorClicked() {
     const auto selectedRows = selectionModel->selectedRows();
     for (const auto selectedRow : selectedRows) {
       const auto colorIndex = selectedRow.row();
-      const auto removeRes = _paletteModel.removeColorFromPalette(paletteIndex, colorIndex);
+      const auto removeError = _paletteModel.removeColorFromPalette(paletteIndex, colorIndex);
       // TODO: Below -> maybe add a signal from colorTableModel to paletteModel or other way around to signal this without calling this method
       _colorTableModel.notifyThatColorWasRemovedFromThePalette(colorIndex);
-      if (!removeRes.has_value()) {
+      if (removeError.has_value()) {
         QMessageBox messageBox(this);
         messageBox.setIcon(QMessageBox::Warning);
         messageBox.setFixedSize(500,200);
         messageBox.setWindowTitle("Error");
-        messageBox.setText("Error when updating palette after removing color: " + QString::fromStdString(removeRes.error()));
+        messageBox.setText("Error when updating palette after removing color: " + QString::fromStdString(removeError.value()));
         messageBox.exec();
 
         // TODO: Readd colors? So there is no discrepancy between ui and file

@@ -68,6 +68,7 @@ set(APPLICATION_SOURCE_FILES
         src/utils/Memory.hpp
         src/utils/General.hpp
         src/utils/General.cpp
+        src/utils/ErrorHandling.hpp
         src/plugin/DynamicLibrary.cpp
         src/plugin/DynamicLibrary.hpp
         src/plugin/DynamicLibrary.tpp

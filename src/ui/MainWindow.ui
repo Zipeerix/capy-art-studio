@@ -1,327 +1,328 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>capy::ui::MainWindow</class>
- <widget class="QMainWindow" name="capy::ui::MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1112</width>
-    <height>879</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>CapyArt Studio</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="../../resources/resources.qrc">
-    <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>1040</width>
-         <height>783</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="leftMargin">
-         <number>0</number>
+    <class>capy::ui::MainWindow</class>
+    <widget class="QMainWindow" name="capy::ui::MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>1112</width>
+                <height>879</height>
+            </rect>
         </property>
-        <property name="topMargin">
-         <number>0</number>
+        <property name="windowTitle">
+            <string>CapyArt Studio</string>
         </property>
-        <property name="rightMargin">
-         <number>0</number>
+        <property name="windowIcon">
+            <iconset resource="../../resources/resources.qrc">
+                <normaloff>:/icon.png</normaloff>:/icon.png
+            </iconset>
         </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1112</width>
-     <height>43</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionFileNew"/>
-    <addaction name="actionFileOpen"/>
-    <addaction name="actionSave"/>
-    <addaction name="separator"/>
-    <addaction name="actionFileExport"/>
-    <addaction name="actionFileImport"/>
-    <addaction name="separator"/>
-    <addaction name="actionClose"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="actionCopy"/>
-    <addaction name="actionCut"/>
-    <addaction name="actionPaste"/>
-   </widget>
-   <widget class="QMenu" name="menuImage">
-    <property name="title">
-     <string>Image</string>
-    </property>
-    <addaction name="actionRotate"/>
-    <addaction name="actionMirror"/>
-    <addaction name="actionMirror_Verically"/>
-    <addaction name="separator"/>
-    <addaction name="actionResize"/>
-    <addaction name="actionOffset"/>
-   </widget>
-   <widget class="QMenu" name="menuLayer">
-    <property name="title">
-     <string>Layer</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-    <addaction name="actionAI_Generation"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <addaction name="actionEditor"/>
-    <addaction name="actionGeneral"/>
-    <addaction name="actionPerformance"/>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout"/>
-    <addaction name="actionWebsite"/>
-   </widget>
-   <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
-    <addaction name="actionNew_Window"/>
-    <addaction name="actionClose_2"/>
-   </widget>
-   <widget class="QMenu" name="menuPalette">
-    <property name="title">
-     <string>Palette</string>
-    </property>
-    <addaction name="actionManage"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuImage"/>
-   <addaction name="menuPalette"/>
-   <addaction name="menuLayer"/>
-   <addaction name="menuTools"/>
-   <addaction name="menuSettings"/>
-   <addaction name="menuWindow"/>
-   <addaction name="menuHelp"/>
-  </widget>
-  <widget class="DockableWidget" name="toolsDock">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle">
-    <string>Tools</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="toolsDockLayout"/>
-  </widget>
-  <widget class="DockableWidget" name="colorDock">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle">
-    <string>Color</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="colorPickerDockLayout"/>
-  </widget>
-  <widget class="DockableWidget" name="layersDock">
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle">
-    <string>Layers</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="layersDockLayout"/>
-  </widget>
-  <action name="actionFileNew">
-   <property name="text">
-    <string>New</string>
-   </property>
-  </action>
-  <action name="actionFileOpen">
-   <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
-  <action name="actionFileExport">
-   <property name="text">
-    <string>Export</string>
-   </property>
-  </action>
-  <action name="actionFileImport">
-   <property name="text">
-    <string>Import</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionDocument_Information">
-   <property name="text">
-    <string>Document Information</string>
-   </property>
-  </action>
-  <action name="actionClose">
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionCopy">
-   <property name="text">
-    <string>Copy</string>
-   </property>
-  </action>
-  <action name="actionCut">
-   <property name="text">
-    <string>Cut</string>
-   </property>
-  </action>
-  <action name="actionPaste">
-   <property name="text">
-    <string>Paste</string>
-   </property>
-  </action>
-  <action name="actionRotate">
-   <property name="text">
-    <string>Rotate</string>
-   </property>
-  </action>
-  <action name="actionMirror">
-   <property name="text">
-    <string>Mirror Horizontally</string>
-   </property>
-  </action>
-  <action name="actionMirror_Verically">
-   <property name="text">
-    <string>Mirror Verically</string>
-   </property>
-  </action>
-  <action name="actionResize">
-   <property name="text">
-    <string>Resize</string>
-   </property>
-  </action>
-  <action name="actionOffset">
-   <property name="text">
-    <string>Offset</string>
-   </property>
-  </action>
-  <action name="actionAI_Generation">
-   <property name="text">
-    <string>AI Generation</string>
-   </property>
-  </action>
-  <action name="actionAbout">
-   <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionWebsite">
-   <property name="text">
-    <string>Website</string>
-   </property>
-  </action>
-  <action name="actionNew_Window">
-   <property name="text">
-    <string>New Window</string>
-   </property>
-  </action>
-  <action name="actionClose_2">
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </action>
-  <action name="actionGeneral">
-   <property name="text">
-    <string>General</string>
-   </property>
-  </action>
-  <action name="actionPerformance">
-   <property name="text">
-    <string>Performance</string>
-   </property>
-  </action>
-  <action name="actionEditor">
-   <property name="text">
-    <string>Editor</string>
-   </property>
-  </action>
-  <action name="actionManage">
-   <property name="text">
-    <string>Manage</string>
-   </property>
-  </action>
- </widget>
- <customwidgets>
-  <customwidget>
-   <class>DockableWidget</class>
-   <extends>QDockWidget</extends>
-   <header>ui/widgets/DockableWidget.hpp</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
- <resources>
-  <include location="../../resources/resources.qrc"/>
- </resources>
- <connections/>
+        <widget class="QWidget" name="centralwidget">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+                <item>
+                    <widget class="QScrollArea" name="scrollArea">
+                        <property name="widgetResizable">
+                            <bool>true</bool>
+                        </property>
+                        <widget class="QWidget" name="scrollAreaWidgetContents">
+                            <property name="geometry">
+                                <rect>
+                                    <x>0</x>
+                                    <y>0</y>
+                                    <width>1040</width>
+                                    <height>783</height>
+                                </rect>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_2">
+                                <property name="leftMargin">
+                                    <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                    <number>0</number>
+                                </property>
+                                <property name="rightMargin">
+                                    <number>0</number>
+                                </property>
+                                <property name="bottomMargin">
+                                    <number>0</number>
+                                </property>
+                            </layout>
+                        </widget>
+                    </widget>
+                </item>
+            </layout>
+        </widget>
+        <widget class="QStatusBar" name="statusBar"/>
+        <widget class="QMenuBar" name="menuBar">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>1112</width>
+                    <height>43</height>
+                </rect>
+            </property>
+            <widget class="QMenu" name="menuFile">
+                <property name="title">
+                    <string>File</string>
+                </property>
+                <addaction name="actionFileNew"/>
+                <addaction name="actionFileOpen"/>
+                <addaction name="actionSave"/>
+                <addaction name="separator"/>
+                <addaction name="actionFileExport"/>
+                <addaction name="actionFileImport"/>
+                <addaction name="separator"/>
+                <addaction name="actionClose"/>
+                <addaction name="actionExit"/>
+            </widget>
+            <widget class="QMenu" name="menuEdit">
+                <property name="title">
+                    <string>Edit</string>
+                </property>
+                <addaction name="actionCopy"/>
+                <addaction name="actionCut"/>
+                <addaction name="actionPaste"/>
+            </widget>
+            <widget class="QMenu" name="menuImage">
+                <property name="title">
+                    <string>Image</string>
+                </property>
+                <addaction name="actionRotate"/>
+                <addaction name="actionMirror"/>
+                <addaction name="actionMirror_Verically"/>
+                <addaction name="separator"/>
+                <addaction name="actionResize"/>
+                <addaction name="actionOffset"/>
+            </widget>
+            <widget class="QMenu" name="menuLayer">
+                <property name="title">
+                    <string>Layer</string>
+                </property>
+            </widget>
+            <widget class="QMenu" name="menuTools">
+                <property name="title">
+                    <string>Tools</string>
+                </property>
+                <addaction name="actionAI_Generation"/>
+            </widget>
+            <widget class="QMenu" name="menuSettings">
+                <property name="title">
+                    <string>Settings</string>
+                </property>
+                <addaction name="actionEditor"/>
+                <addaction name="actionGeneral"/>
+                <addaction name="actionPerformance"/>
+            </widget>
+            <widget class="QMenu" name="menuHelp">
+                <property name="title">
+                    <string>Help</string>
+                </property>
+                <addaction name="actionAbout"/>
+                <addaction name="actionWebsite"/>
+            </widget>
+            <widget class="QMenu" name="menuWindow">
+                <property name="title">
+                    <string>Window</string>
+                </property>
+                <addaction name="actionNew_Window"/>
+                <addaction name="actionClose_2"/>
+            </widget>
+            <widget class="QMenu" name="menuPalette">
+                <property name="title">
+                    <string>Palette</string>
+                </property>
+                <addaction name="actionManage"/>
+            </widget>
+            <addaction name="menuFile"/>
+            <addaction name="menuEdit"/>
+            <addaction name="menuImage"/>
+            <addaction name="menuPalette"/>
+            <addaction name="menuLayer"/>
+            <addaction name="menuTools"/>
+            <addaction name="menuSettings"/>
+            <addaction name="menuWindow"/>
+            <addaction name="menuHelp"/>
+        </widget>
+        <widget class="DockableWidget" name="toolsDock">
+            <property name="floating">
+                <bool>false</bool>
+            </property>
+            <property name="features">
+                <set>QDockWidget::NoDockWidgetFeatures</set>
+            </property>
+            <property name="windowTitle">
+                <string>Tools</string>
+            </property>
+            <attribute name="dockWidgetArea">
+                <number>1</number>
+            </attribute>
+            <widget class="QWidget" name="toolsDockLayout"/>
+        </widget>
+        <widget class="DockableWidget" name="colorDock">
+            <property name="floating">
+                <bool>false</bool>
+            </property>
+            <property name="features">
+                <set>QDockWidget::NoDockWidgetFeatures</set>
+            </property>
+            <property name="windowTitle">
+                <string>Color</string>
+            </property>
+            <attribute name="dockWidgetArea">
+                <number>2</number>
+            </attribute>
+            <widget class="QWidget" name="colorPickerDockLayout"/>
+        </widget>
+        <widget class="DockableWidget" name="layersDock">
+            <property name="features">
+                <set>QDockWidget::NoDockWidgetFeatures</set>
+            </property>
+            <property name="windowTitle">
+                <string>Layers</string>
+            </property>
+            <attribute name="dockWidgetArea">
+                <number>1</number>
+            </attribute>
+            <widget class="QWidget" name="layersDockLayout"/>
+        </widget>
+        <action name="actionFileNew">
+            <property name="text">
+                <string>New</string>
+            </property>
+        </action>
+        <action name="actionFileOpen">
+            <property name="text">
+                <string>Open</string>
+            </property>
+        </action>
+        <action name="actionFileExport">
+            <property name="text">
+                <string>Export</string>
+            </property>
+        </action>
+        <action name="actionFileImport">
+            <property name="text">
+                <string>Import</string>
+            </property>
+        </action>
+        <action name="actionExit">
+            <property name="text">
+                <string>Exit</string>
+            </property>
+        </action>
+        <action name="actionDocument_Information">
+            <property name="text">
+                <string>Document Information</string>
+            </property>
+        </action>
+        <action name="actionClose">
+            <property name="text">
+                <string>Close</string>
+            </property>
+        </action>
+        <action name="actionSave">
+            <property name="text">
+                <string>Save</string>
+            </property>
+        </action>
+        <action name="actionCopy">
+            <property name="text">
+                <string>Copy</string>
+            </property>
+        </action>
+        <action name="actionCut">
+            <property name="text">
+                <string>Cut</string>
+            </property>
+        </action>
+        <action name="actionPaste">
+            <property name="text">
+                <string>Paste</string>
+            </property>
+        </action>
+        <action name="actionRotate">
+            <property name="text">
+                <string>Rotate</string>
+            </property>
+        </action>
+        <action name="actionMirror">
+            <property name="text">
+                <string>Mirror Horizontally</string>
+            </property>
+        </action>
+        <action name="actionMirror_Verically">
+            <property name="text">
+                <string>Mirror Verically</string>
+            </property>
+        </action>
+        <action name="actionResize">
+            <property name="text">
+                <string>Resize</string>
+            </property>
+        </action>
+        <action name="actionOffset">
+            <property name="text">
+                <string>Offset</string>
+            </property>
+        </action>
+        <action name="actionAI_Generation">
+            <property name="text">
+                <string>AI Generation</string>
+            </property>
+        </action>
+        <action name="actionAbout">
+            <property name="text">
+                <string>About</string>
+            </property>
+        </action>
+        <action name="actionWebsite">
+            <property name="text">
+                <string>Website</string>
+            </property>
+        </action>
+        <action name="actionNew_Window">
+            <property name="text">
+                <string>New Window</string>
+            </property>
+        </action>
+        <action name="actionClose_2">
+            <property name="text">
+                <string>Close</string>
+            </property>
+        </action>
+        <action name="actionGeneral">
+            <property name="text">
+                <string>General</string>
+            </property>
+        </action>
+        <action name="actionPerformance">
+            <property name="text">
+                <string>Performance</string>
+            </property>
+        </action>
+        <action name="actionEditor">
+            <property name="text">
+                <string>Editor</string>
+            </property>
+        </action>
+        <action name="actionManage">
+            <property name="text">
+                <string>Manage</string>
+            </property>
+        </action>
+    </widget>
+    <customwidgets>
+        <customwidget>
+            <class>DockableWidget</class>
+            <extends>QDockWidget</extends>
+            <header>ui/widgets/DockableWidget.hpp</header>
+            <container>1</container>
+        </customwidget>
+    </customwidgets>
+    <resources>
+        <include location="../../resources/resources.qrc"/>
+    </resources>
+    <connections/>
 </ui>

@@ -41,7 +41,7 @@ DynamicLibrary::~DynamicLibrary() {
 
 bool DynamicLibrary::isValid() const { return _libHandle != nullptr; }
 
-std::expected<DynamicLibrary, std::string> DynamicLibrary::fromFile(const std::string& path) {
+Result<DynamicLibrary, std::string> DynamicLibrary::fromFile(const std::string& path) {
 #if defined(__linux__) || defined(__APPLE__)
   const auto libHandle = dlopen(path.c_str(), RTLD_NOW);
 #elif defined(_WIN32)

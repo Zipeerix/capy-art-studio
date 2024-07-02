@@ -54,8 +54,8 @@ PaletteColor PaletteModel::getColor(int index, int colorIndex) const {
   return palette.getColor(colorIndex);
 }
 
-std::expected<void, std::string> PaletteModel::addColorToPalette(int paletteIndex, QColor color,
-                                                                 std::optional<std::string> hint) {
+PotentialError<std::string> PaletteModel::addColorToPalette(int paletteIndex, QColor color,
+                                                            std::optional<std::string> hint) {
   if (paletteIndex >= _palettes.size()) {
     logger::error(
         fmt::format("Attempting to add color to non-existent palette with index {}", paletteIndex),
@@ -66,19 +66,18 @@ std::expected<void, std::string> PaletteModel::addColorToPalette(int paletteInde
   auto& palette = _palettes.at(paletteIndex);
   palette.addColor(color, hint);
   // TODO: use updatePaletteFile method instead as it does the same
-  const auto paletteSaveRes = palette.saveToJson(std::nullopt);
-  if (!paletteSaveRes.has_value()) {
-    return std::unexpected("Unable to save palette due to: " + paletteSaveRes.error());
+  const auto paletteSaveError = palette.saveToJson(std::nullopt);
+  if (paletteSaveError.has_value()) {
+    return "Unable to save palette due to: " + paletteSaveError.value();
     // TODO: if unable to save then remove the color from model
   } else {
     emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
   }
 
-  return {};
+  return std::nullopt;
 }
 
-std::expected<void, std::string> PaletteModel::removeColorFromPalette(int paletteIndex,
-                                                                      int colorIndex) {
+PotentialError<std::string> PaletteModel::removeColorFromPalette(int paletteIndex, int colorIndex) {
   if (paletteIndex >= _palettes.size()) {
     logger::error(fmt::format("Attempting to remove color from non-existent palette with index {}",
                               paletteIndex),
@@ -89,23 +88,23 @@ std::expected<void, std::string> PaletteModel::removeColorFromPalette(int palett
   auto& palette = _palettes.at(paletteIndex);
   palette.removeColor(colorIndex);
   // TODO: use updatePaletteFile method instead as it does the same
-  const auto paletteSaveRes = palette.saveToJson(std::nullopt);
-  if (!paletteSaveRes.has_value()) {
-    return std::unexpected("Unable to save palette due to: " + paletteSaveRes.error());
+  const auto paletteSaveError = palette.saveToJson(std::nullopt);
+  if (paletteSaveError.has_value()) {
+    return "Unable to save palette due to: " + paletteSaveError.value();
     // TODO: if unable to save then remove the color from model
   } else {
     emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
   }
 
-  return {};
+  return std::nullopt;
 }
 
-std::expected<void, std::string> PaletteModel::updatePaletteFile(int paletteIndex,
-                                                                 bool emitDataChanged) {
+PotentialError<std::string> PaletteModel::updatePaletteFile(int paletteIndex,
+                                                            bool emitDataChanged) {
   auto& palette = _palettes.at(paletteIndex);
-  const auto paletteSaveRes = palette.saveToJson(std::nullopt);
-  if (!paletteSaveRes.has_value()) {
-    return std::unexpected("Unable to save palette due to: " + paletteSaveRes.error());
+  const auto paletteSaveError = palette.saveToJson(std::nullopt);
+  if (paletteSaveError.has_value()) {
+    return "Unable to save palette due to: " + paletteSaveError.value();
   } else {
     if (emitDataChanged) {
       emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});

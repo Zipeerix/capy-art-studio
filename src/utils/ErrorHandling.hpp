@@ -15,27 +15,18 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ExternalPlugin.hpp"
+#ifndef ERRORHANDLING_HPP
+#define ERRORHANDLING_HPP
+
+#include <expected>
+#include <optional>
 
 namespace capy {
-ExternalPlugin::ExternalPlugin(const DynamicLibrary& dynLib) : _dynLib(dynLib) {
-  if (!_dynLib.isValid()) {
-    throw std::logic_error(
-        "Attempting to create plugin with invalid dynamib library, check error handling");
-  }
-}
+template <typename SuccessType, typename ErrorType>
+using Result = std::expected<SuccessType, ErrorType>;
 
-Result<ExternalPlugin, std::string> ExternalPlugin::fromFile(const std::string& path) {
-  const auto dynLibLoadRes = DynamicLibrary::fromFile(path);
-  if (!dynLibLoadRes.has_value()) {
-    return std::unexpected("Unable to load plugin as its file is invalid/corrupted");
-  }
-
-  const DynamicLibrary& dynLib = dynLibLoadRes.value();
-
-  // TODO: Validte dynlib has all the needed functions in order to be a plugin in helper fns when
-  // API decided
-
-  return ExternalPlugin(dynLib);
-}
+template <typename ErrorType>
+using PotentialError = std::optional<ErrorType>;
 }  // namespace capy
+
+#endif  // ERRORHANDLING_HPP

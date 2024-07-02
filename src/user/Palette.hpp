@@ -23,6 +23,8 @@
 #include <QColor>
 #include <expected>
 
+#include "utils/ErrorHandling.hpp"
+
 namespace capy {
 struct PaletteColor {
   QColor color;
@@ -34,8 +36,8 @@ class Palette {
   Palette() = default;
   explicit Palette(std::string name);
 
-  static std::expected<Palette, std::string> fromJson(const std::string& path);
-  std::expected<void, std::string> saveToJson(std::optional<std::string> path) const;
+  [[nodiscard]] static Result<Palette, std::string> fromJson(const std::string& path);
+  [[nodiscard]] PotentialError<std::string> saveToJson(std::optional<std::string> path) const;
 
   [[nodiscard]] bool wasEditedFromLastLoad() const;
 
@@ -56,7 +58,7 @@ class Palette {
   bool _wasEdited = false;
   std::vector<PaletteColor> _colors;
 
-  std::expected<void, std::string> importValuesFromJson(const rapidjson::Document& root);
+  [[nodiscard]] PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root);
   [[nodiscard]] rapidjson::Document exportValuesToJson() const;
 };
 }  // namespace capy

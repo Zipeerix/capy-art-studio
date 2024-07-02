@@ -27,7 +27,7 @@ namespace capy {
 class ExternalPlugin {
  public:
   ExternalPlugin() = delete;
-  static std::expected<ExternalPlugin, std::string> fromFile(const std::string& path);
+  [[nodiscard]] static Result<ExternalPlugin, std::string> fromFile(const std::string& path);
 
  private:
   explicit ExternalPlugin(const DynamicLibrary& dynLib);

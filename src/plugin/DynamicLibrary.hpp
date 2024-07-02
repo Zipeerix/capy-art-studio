@@ -32,6 +32,8 @@
 #include <functional>
 #include <string>
 
+#include "utils/ErrorHandling.hpp"
+
 namespace capy {
 class DynamicLibrary {
  public:
@@ -43,12 +45,12 @@ class DynamicLibrary {
 
   ~DynamicLibrary();
 
-  static std::expected<DynamicLibrary, std::string> fromFile(const std::string& path);
+  [[nodiscard]] static Result<DynamicLibrary, std::string> fromFile(const std::string& path);
 
   [[nodiscard]] bool isValid() const;
 
   template <typename SymbolType>
-  [[nodiscard]] std::expected<SymbolType, std::string> getSymbol(const std::string& name);
+  [[nodiscard]] Result<SymbolType, std::string> getSymbol(const std::string& name);
 
  private:
   std::string _libPath;
