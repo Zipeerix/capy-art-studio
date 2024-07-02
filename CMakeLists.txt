@@ -60,14 +60,19 @@ set(APPLICATION_SOURCE_FILES
         src/io/ConfigurationManager.cpp
         src/io/ConsoleLogger.hpp
         src/io/ConsoleLogger.cpp
-        src/utils/Memory.cpp
-        src/utils/Memory.hpp
-        src/utils/General.hpp
-        src/utils/General.cpp
         src/io/CapyFileManager.cpp
         src/io/CapyFileManager.hpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
+        src/utils/Memory.cpp
+        src/utils/Memory.hpp
+        src/utils/General.hpp
+        src/utils/General.cpp
+        src/plugin/DynamicLibrary.cpp
+        src/plugin/DynamicLibrary.hpp
+        src/plugin/DynamicLibrary.tpp
+        src/plugin/ExternalPlugin.hpp
+        src/plugin/ExternalPlugin.cpp
 )
 
 set(APPLICATION_UI_FILES
