@@ -22,7 +22,7 @@
 
 namespace capy {
 template <typename SymbolType>
-std::expected<SymbolType, std::string> DynamicLibrary::getSymbol(const std::string& name) {
+Result<SymbolType, std::string> DynamicLibrary::getSymbol(const std::string& name) {
   if (_libHandle == nullptr || _libPath.empty()) {
     throw std::logic_error("Attempting to find symbol '" + name +
                            "' from dynamic library that was not loaded");

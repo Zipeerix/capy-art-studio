@@ -33,7 +33,7 @@ Palette::Palette(std::string name) : _name(std::move(name)) {
   _wasEdited = true;  // Created = edited
 }
 
-std::expected<Palette, std::string> Palette::fromJson(const std::string& path) {
+Result<Palette, std::string> Palette::fromJson(const std::string& path) {
   using namespace rapidjson;
 
   std::ifstream file(path);
