@@ -26,6 +26,12 @@ void PaletteColorTableModel::setColors(std::vector<PaletteColor> colors) {
   endResetModel();
 }
 
+void PaletteColorTableModel::notifyThatColorWasRemovedFromThePalette(int colorIndex) {
+  beginRemoveRows(QModelIndex(), colorIndex, colorIndex);
+  _colors.erase(_colors.begin() + colorIndex);
+  endRemoveRows();
+}
+
 int PaletteColorTableModel::rowCount(const QModelIndex& parent) const { return _colors.size(); }
 
 int PaletteColorTableModel::columnCount(const QModelIndex& parent) const {
@@ -69,6 +75,9 @@ QVariant PaletteColorTableModel::headerData(int section, Qt::Orientation orienta
 
     case static_cast<int>(ColumnName::Hex):
       return "Hex";
+
+    case static_cast<int>(ColumnName::Hint):
+      return "Hint";
 
     default:
       return QVariant();

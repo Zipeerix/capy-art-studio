@@ -15,25 +15,47 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ColorPickerArea.hpp"
-#include "ui_ColorPickerArea.h"
+#ifndef COLORAREA_HPP
+#define COLORAREA_HPP
+
+#include <QWidget>
+#include "models/PaletteModel.hpp"
+#include "models/PaletteColorTableModel.hpp"
+#include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
 
 namespace capy::ui {
-ColorPickerArea::ColorPickerArea(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ColorPickerArea) {
-  ui->setupUi(this);
-  _colorPicker = ui->colorPickerWidget;
-
-  _colorPicker->setColor(QColor(0, 0, 0, 255)); // TODO: prob delete this and sync on startup
-  connect(_colorPicker, &DefaultColorPicker::colorChanged, this,
-    // TODO: Maybe can connect straight to signal slot?
-          [&](const QColor& color) {
-            emit colorPickerColorChanged(color);
-          });
+namespace Ui {
+class ColorArea;
 }
 
-ColorPickerArea::~ColorPickerArea() {
-    delete ui;
+class ColorArea final : public QWidget {
+  Q_OBJECT
+public:
+  explicit ColorArea(QWidget *parent = nullptr);
+  ~ColorArea() override;
+
+public slots:
+  void currentColorPaletteChanged(int newPaletteIndex);
+  void userCurrentColorPaletteChanged(int newPaletteIndex);
+  void colorClicked(const QModelIndex& index);
+  void addColorToPaletteClicked();
+  void createPaletteClicked();
+  void removePaletteClicked();
+  void createColorClicked();
+  void removeColorClicked();
+
+signals:
+    void colorPickerColorChanged(QColor color);
+
+private:
+  Ui::ColorArea *ui;
+  models::PaletteModel _paletteModel;
+  models::PaletteColorTableModel _colorTableModel;
+  DefaultColorPicker* _colorPicker;
+  int _savedPaletteComboBoxIndex = -1;
+
+  void loadPalettesFromFilesystem();
+};
 }
-} // namespace capy::ui
+
+#endif // COLORAREA_HPP

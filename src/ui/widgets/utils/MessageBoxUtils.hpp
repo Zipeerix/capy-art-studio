@@ -15,37 +15,15 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_COLORPALETTEAREA_HPP
-#define CAPY_UI_COLORPALETTEAREA_HPP
+#ifndef MESSAGEBOXUTILS_HPP
+#define MESSAGEBOXUTILS_HPP
 
 #include <QWidget>
-#include "models/PaletteColorTableModel.hpp"
-#include "models/PaletteModel.hpp"
+#include <string>
 
 namespace capy::ui {
-namespace Ui {
-class ColorPaletteArea;
+bool showConfirmationDialog(QWidget* parent = nullptr,
+                            const std::string& message = "Are you sure you want to do this?");
 }
 
-class ColorPaletteArea final : public QWidget {
-    Q_OBJECT
-public:
-    explicit ColorPaletteArea(QWidget *parent = nullptr);
-    ~ColorPaletteArea() override;
-
-public slots:
-  void currentColorPaletteChanged(int newPaletteIndex);
-  void createPaletteClicked();
-  void removePaletteClicked();
-
-private:
-    Ui::ColorPaletteArea* ui;
-    models::PaletteModel _paletteModel;
-    models::PaletteColorTableModel _colorTableModel;
-
-    void loadPalettesFromFilesystem();
-};
-
-} // namespace capy::ui
-
-#endif // CAPY_UI_COLORPALETTEAREA_HPP
+#endif  // MESSAGEBOXUTILS_HPP

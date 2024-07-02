@@ -32,7 +32,15 @@ class PaletteModel final : public QAbstractListModel {
   [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
   [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
 
+  // TODO: Should three methdos below be hre?
   [[nodiscard]] std::vector<PaletteColor> getColors(int index) const;
+  [[nodiscard]] PaletteColor getColor(int index, int colorIndex) const;
+  [[nodiscard]] std::expected<void, std::string> removeColorFromPalette(int index, int colorIndex);
+  [[nodiscard]] std::expected<void, std::string> addColorToPalette(int index, QColor color,
+                                                                   std::optional<std::string> hint);
+  [[nodiscard]] std::expected<void, std::string> updatePaletteFile(int index, bool emitDataChanged);
+
+  [[nodiscard]] bool doesPaletteExist(const std::string& name) const;
 
   void setPalettes(std::vector<Palette> palettes);
   [[nodiscard]] const Palette& getPalette(int index) const;

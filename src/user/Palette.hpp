@@ -45,7 +45,7 @@ class Palette {
   [[nodiscard]] std::optional<std::string> getPath() const;
 
   [[nodiscard]] int colorCount() const;
-  [[nodiscard]] QColor getColor(int index) const;
+  [[nodiscard]] PaletteColor getColor(int index) const;
   [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
   void addColor(const QColor& color, const std::optional<std::string>& hint);
   void removeColor(int index);

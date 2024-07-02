@@ -69,19 +69,23 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
                                          {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
     _alphaSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 255, 255, 0)},
                                     {255.0 / 255.0, QColor::fromHsv(value, 255, 255, 255)}});
-    updateShownColor();
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
   connect(_saturationSlider, &QSlider::valueChanged, this, [=](int value) {
     saturationLabel->setText(QString::number(value));
-    updateShownColor();
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
   connect(_brightnessSlider, &QSlider::valueChanged, this, [=](int value) {
     brightnessLabel->setText(QString::number(value));
-    updateShownColor();
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
   connect(_alphaSlider, &QSlider::valueChanged, this, [=](int value) {
     alphaLabel->setText(QString::number(value));
-    updateShownColor();
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
 
   hueLabel->setText(QString::number(_hueSlider->value()));
@@ -138,39 +142,34 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
 
   subLayout->addLayout(colorSliders);
 
-  auto* selectButton = new QPushButton("Add to current Palette");
+  setColor(QColor(0, 0, 0, 255));  // TODO: Maybe have a default color somewhere
 
-  connect(selectButton, &QPushButton::clicked, this, &DefaultColorPicker::addToColorPaletteClicked);
-
-  QBoxLayout* buttons = new QHBoxLayout();
-  buttons->addWidget(selectButton);
-  subLayout->addLayout(buttons);
-
-  setColor(QColor(0, 0, 0, 255));  // TODO: Maybe have a default color somewhere,
-                                   // this is copied from canvas widget
   updateShownColor();
 }
 
 DefaultColorPicker::~DefaultColorPicker() = default;
 
 void DefaultColorPicker::updateShownColor() {
-  QColor color;
-  color.setHsv(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
-               _alphaSlider->value());
-  _colorShowcase->setStyleSheet("background-color: " + color.name());
-  _hexLabel->setText(color.name());
-  _selectedColor = color;
-  emit colorChanged(_selectedColor);
-}
+  const auto hsvColor = _selectedColor.toHsv();
+  _hueSlider->setValue(hsvColor.hue());
+  _saturationSlider->setValue(hsvColor.saturation());
+  _brightnessSlider->setValue(hsvColor.value());
+  _alphaSlider->setValue(hsvColor.alpha());
 
-void DefaultColorPicker::addToColorPaletteClicked() {
-  logger::info(fmt::format("Attempting to add color to palette: ({}, {}. {})", _selectedColor.red(),
-                           _selectedColor.green(), _selectedColor.blue()));
-  // TODO
+  _colorShowcase->setStyleSheet("background-color: " + _selectedColor.name());
 }
 
 void DefaultColorPicker::setColor(QColor color) {
   _selectedColor = color;
   updateShownColor();
+  emit colorChanged(_selectedColor);
 }
+
+void DefaultColorPicker::setColor(int hue, int saturation, int brightness, int alpha) {
+  _selectedColor.setHsv(hue, saturation, brightness, alpha);
+  updateShownColor();
+  emit colorChanged(_selectedColor);
+}
+
+QColor DefaultColorPicker::getColor() const { return _selectedColor; }
 }  // namespace capy::ui

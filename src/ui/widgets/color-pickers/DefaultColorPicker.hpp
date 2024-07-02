@@ -32,11 +32,10 @@ class DefaultColorPicker final : public QWidget {
   ~DefaultColorPicker() override;
 
   void setColor(QColor color);
+  void setColor(int hue, int saturation, int brightness, int alpha);
+  [[nodiscard]] QColor getColor() const;
 
   void updateShownColor();
-
- public slots:
-  void addToColorPaletteClicked();
 
  signals:
   void colorChanged(QColor newColor);
