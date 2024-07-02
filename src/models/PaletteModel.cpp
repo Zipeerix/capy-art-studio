@@ -18,16 +18,17 @@
 #include "PaletteModel.hpp"
 
 #include <fmt/format.h>
+
 #include <ranges>
+
 #include "io/ConsoleLogger.hpp"
 
 namespace capy::models {
 PaletteModel::PaletteModel(QObject* parent) : QAbstractListModel(parent) {}
 
 bool PaletteModel::doesPaletteExist(const std::string& name) const {
-  return std::ranges::any_of(_palettes, [name](const auto& palette) {
-    return palette.getName() == name;
-  });
+  return std::ranges::any_of(_palettes,
+                             [name](const auto& palette) { return palette.getName() == name; });
 }
 
 std::vector<PaletteColor> PaletteModel::getColors(int index) const {
@@ -53,7 +54,8 @@ PaletteColor PaletteModel::getColor(int index, int colorIndex) const {
   return palette.getColor(colorIndex);
 }
 
-std::expected<void, std::string> PaletteModel::addColorToPalette(int paletteIndex, QColor color, std::optional<std::string> hint) {
+std::expected<void, std::string> PaletteModel::addColorToPalette(int paletteIndex, QColor color,
+                                                                 std::optional<std::string> hint) {
   if (paletteIndex >= _palettes.size()) {
     logger::error(
         fmt::format("Attempting to add color to non-existent palette with index {}", paletteIndex),
@@ -75,11 +77,12 @@ std::expected<void, std::string> PaletteModel::addColorToPalette(int paletteInde
   return {};
 }
 
-std::expected<void, std::string> PaletteModel::removeColorFromPalette(int paletteIndex, int colorIndex) {
+std::expected<void, std::string> PaletteModel::removeColorFromPalette(int paletteIndex,
+                                                                      int colorIndex) {
   if (paletteIndex >= _palettes.size()) {
-    logger::error(
-        fmt::format("Attempting to remove color from non-existent palette with index {}", paletteIndex),
-        logger::Severity::Mild);
+    logger::error(fmt::format("Attempting to remove color from non-existent palette with index {}",
+                              paletteIndex),
+                  logger::Severity::Mild);
     return {};
   }
 
@@ -97,7 +100,8 @@ std::expected<void, std::string> PaletteModel::removeColorFromPalette(int palett
   return {};
 }
 
-std::expected<void, std::string> PaletteModel::updatePaletteFile(int paletteIndex, bool emitDataChanged) {
+std::expected<void, std::string> PaletteModel::updatePaletteFile(int paletteIndex,
+                                                                 bool emitDataChanged) {
   auto& palette = _palettes.at(paletteIndex);
   const auto paletteSaveRes = palette.saveToJson(std::nullopt);
   if (!paletteSaveRes.has_value()) {

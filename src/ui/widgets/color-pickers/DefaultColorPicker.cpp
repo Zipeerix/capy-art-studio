@@ -69,19 +69,23 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
                                          {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
     _alphaSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 255, 255, 0)},
                                     {255.0 / 255.0, QColor::fromHsv(value, 255, 255, 255)}});
-    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(), _alphaSlider->value());
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
   connect(_saturationSlider, &QSlider::valueChanged, this, [=](int value) {
     saturationLabel->setText(QString::number(value));
-    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(), _alphaSlider->value());
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
   connect(_brightnessSlider, &QSlider::valueChanged, this, [=](int value) {
     brightnessLabel->setText(QString::number(value));
-    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(), _alphaSlider->value());
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
   connect(_alphaSlider, &QSlider::valueChanged, this, [=](int value) {
     alphaLabel->setText(QString::number(value));
-    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(), _alphaSlider->value());
+    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+             _alphaSlider->value());
   });
 
   hueLabel->setText(QString::number(_hueSlider->value()));
@@ -162,7 +166,7 @@ void DefaultColorPicker::setColor(QColor color) {
 }
 
 void DefaultColorPicker::setColor(int hue, int saturation, int brightness, int alpha) {
-   _selectedColor.setHsv(hue, saturation, brightness, alpha);
+  _selectedColor.setHsv(hue, saturation, brightness, alpha);
   updateShownColor();
   emit colorChanged(_selectedColor);
 }

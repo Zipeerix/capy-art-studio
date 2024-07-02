@@ -36,7 +36,8 @@ class PaletteModel final : public QAbstractListModel {
   [[nodiscard]] std::vector<PaletteColor> getColors(int index) const;
   [[nodiscard]] PaletteColor getColor(int index, int colorIndex) const;
   [[nodiscard]] std::expected<void, std::string> removeColorFromPalette(int index, int colorIndex);
-  [[nodiscard]] std::expected<void, std::string> addColorToPalette(int index, QColor color, std::optional<std::string> hint);
+  [[nodiscard]] std::expected<void, std::string> addColorToPalette(int index, QColor color,
+                                                                   std::optional<std::string> hint);
   [[nodiscard]] std::expected<void, std::string> updatePaletteFile(int index, bool emitDataChanged);
 
   [[nodiscard]] bool doesPaletteExist(const std::string& name) const;

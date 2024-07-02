@@ -16,14 +16,14 @@
 *******************************************************************************/
 
 #include "MessageBoxUtils.hpp"
+
 #include <QMessageBox>
 
 namespace capy::ui {
 bool showConfirmationDialog(QWidget* parent, const std::string& message) {
-  QMessageBox::StandardButton reply = QMessageBox::question(parent, "Confirmation", QString::fromStdString(message),
-                                QMessageBox::Yes | QMessageBox::No);
-
+  QMessageBox::StandardButton reply = QMessageBox::question(
+      parent, "Confirmation", QString::fromStdString(message), QMessageBox::Yes | QMessageBox::No);
 
   return reply == QMessageBox::Yes;
 }
-}
+}  // namespace capy::ui
