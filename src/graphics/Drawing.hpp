@@ -33,12 +33,8 @@ class Drawing {
   [[nodiscard]] const Layer& getCurrentLayer() const;
   void setCurrentLayer(int newCurrentLayer);
 
-  //[[nodiscard]] QPixmap combineLayersIntoPixmap() const;
   void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
   [[nodiscard]] QColor calculateCombinedPixelColor(int x, int y) const;
-
-  // TODO: Methods to add and remove layers, remember that there has to be at
-  // least one layer
 
  private:
   std::vector<Layer> _layers;

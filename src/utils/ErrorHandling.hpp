@@ -27,6 +27,6 @@ using Result = std::expected<SuccessType, ErrorType>;
 
 template <typename ErrorType>
 using PotentialError = std::optional<ErrorType>;
-}
+}  // namespace capy
 
 #endif  // ERRORHANDLING_HPP

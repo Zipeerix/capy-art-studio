@@ -45,7 +45,7 @@ class DynamicLibrary {
 
   ~DynamicLibrary();
 
-  [[nodsicard]] static Result<DynamicLibrary, std::string> fromFile(const std::string& path);
+  [[nodiscard]] static Result<DynamicLibrary, std::string> fromFile(const std::string& path);
 
   [[nodiscard]] bool isValid() const;
 

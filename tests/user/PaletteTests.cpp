@@ -34,13 +34,13 @@ TEST(user, palette_json_loading) {
   ASSERT_EQ(palette.getName(), "MyPalette");
   ASSERT_EQ(palette.colorCount(), 2);
 
-  const auto firstColor = palette.getColor(0);
+  const auto firstColor = palette.getColor(0).color;
   ASSERT_EQ(firstColor.red(), 255);
   ASSERT_EQ(firstColor.green(), 128);
   ASSERT_EQ(firstColor.blue(), 64);
   ASSERT_EQ(firstColor.alpha(), 44);
 
-  const auto secondColor = palette.getColor(1);
+  const auto secondColor = palette.getColor(1).color;
   ASSERT_EQ(secondColor.red(), 255);
   ASSERT_EQ(secondColor.green(), 0);
   ASSERT_EQ(secondColor.blue(), 0);
@@ -57,8 +57,8 @@ TEST(user, palette_json_exporting) {
   auto palette = paletteOpt.value();
   palette.setName("NewName");
 
-  const auto saveResult = palette.saveToJson(testJsonPathOut);
-  EXPECT_TRUE(saveResult.has_value());
+  const auto saveError = palette.saveToJson(testJsonPathOut);
+  EXPECT_TRUE(!saveError.has_value());
 
   const auto savedPaletteOpt = capy::Palette::fromJson(testJsonPathOut);
   ASSERT_TRUE(savedPaletteOpt.has_value());
@@ -67,13 +67,13 @@ TEST(user, palette_json_exporting) {
   ASSERT_EQ(savedPalette.getName(), "NewName");
   ASSERT_EQ(savedPalette.colorCount(), 2);
 
-  const auto firstColor = savedPalette.getColor(0);
+  const auto firstColor = savedPalette.getColor(0).color;
   ASSERT_EQ(firstColor.red(), 255);
   ASSERT_EQ(firstColor.green(), 128);
   ASSERT_EQ(firstColor.blue(), 64);
   ASSERT_EQ(firstColor.alpha(), 44);
 
-  const auto secondColor = savedPalette.getColor(1);
+  const auto secondColor = savedPalette.getColor(1).color;
   ASSERT_EQ(secondColor.red(), 255);
   ASSERT_EQ(secondColor.green(), 0);
   ASSERT_EQ(secondColor.blue(), 0);
