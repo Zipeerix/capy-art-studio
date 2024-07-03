@@ -18,12 +18,13 @@
 #include "Pixel.hpp"
 
 namespace capy {
-Pixel::Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b, uint8_t alpha)
+Pixel::Pixel(const ColorChannelValue r, const ColorChannelValue g, const ColorChannelValue b,
+             const uint8_t alpha)
     : _r(r), _g(g), _b(b), _alpha(alpha) {}
 
-Pixel Pixel::white(uint8_t alpha) { return {255, 255, 255, alpha}; }
+Pixel Pixel::white(const uint8_t alpha) { return {255, 255, 255, alpha}; }
 
-Pixel Pixel::black(uint8_t alpha) { return {0, 0, 0, alpha}; }
+Pixel Pixel::black(const uint8_t alpha) { return {0, 0, 0, alpha}; }
 
 void Pixel::updateFromQColor(const QColor& color) {
   _r = color.red();

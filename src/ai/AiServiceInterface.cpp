@@ -17,6 +17,9 @@
 
 #include "AiServiceInterface.hpp"
 
+#include <utility>
+
 namespace capy {
-AiServiceInterface::AiServiceInterface(std::optional<std::string> apiKey) : _apiKey(apiKey) {}
+AiServiceInterface::AiServiceInterface(std::optional<std::string> apiKey)
+    : _apiKey(std::move(apiKey)) {}
 }  // namespace capy

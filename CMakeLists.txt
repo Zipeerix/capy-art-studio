@@ -64,10 +64,9 @@ set(APPLICATION_SOURCE_FILES
         src/io/CapyFileManager.hpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
-        src/utils/Memory.cpp
-        src/utils/Memory.hpp
         src/utils/General.hpp
         src/utils/General.cpp
+        src/utils/General.tpp
         src/utils/ErrorHandling.hpp
         src/plugin/DynamicLibrary.cpp
         src/plugin/DynamicLibrary.hpp
@@ -118,6 +117,18 @@ find_package(RapidJSON REQUIRED)
 find_package(libzippp REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
+
+if (SKIP_COMPILER_FLAGS)
+    message("Skipping compiler flags")
+else ()
+    if (MSVC)
+        add_compile_options("/W4" "$<$<CONFIG:RELEASE>:/O2>")
+    else ()
+        add_compile_options("-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
+                "-Wstrict-prototypes" "-Wstrict-overflow=4" "-Wwrite-strings" "-Waggregate-return" "-Wcast-qual" "-Wswitch-enum"
+                "$<$<CONFIG:RELEASE>:-O3>")
+    endif ()
+endif ()
 
 qt_add_executable(CapyArtStudio
         src/main.cpp

@@ -39,16 +39,16 @@ class Palette {
   [[nodiscard]] static Result<Palette, std::string> fromJson(const std::string& path);
   [[nodiscard]] PotentialError<std::string> saveToJson(std::optional<std::string> path) const;
 
-  [[nodiscard]] bool wasEditedFromLastLoad() const;
+  bool wasEditedFromLastLoad() const;
 
-  [[nodiscard]] std::string getName() const;
+  std::string getName() const;
   void setName(std::string newName);
 
-  [[nodiscard]] std::optional<std::string> getPath() const;
+  std::optional<std::string> getPath() const;
 
-  [[nodiscard]] int colorCount() const;
-  [[nodiscard]] PaletteColor getColor(int index) const;
-  [[nodiscard]] std::vector<PaletteColor> getAllColors() const;
+  int colorCount() const;
+  PaletteColor getColor(int index) const;
+  std::vector<PaletteColor> getAllColors() const;
   void addColor(const QColor& color, const std::optional<std::string>& hint);
   void removeColor(int index);
 
@@ -59,7 +59,9 @@ class Palette {
   std::vector<PaletteColor> _colors;
 
   [[nodiscard]] PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root);
-  [[nodiscard]] rapidjson::Document exportValuesToJson() const;
+  rapidjson::Document exportValuesToJson() const;
+
+  bool isIndexOutsideColors(int index) const;
 };
 }  // namespace capy
 

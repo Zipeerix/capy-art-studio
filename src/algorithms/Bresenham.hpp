@@ -26,7 +26,7 @@ using CoordinateApplicationFunction = std::function<void(int x, int y)>;
 
 void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
                     const CoordinateApplicationFunction& actionOnTarget);
-void applyBresenham(int x1, int y1, int x2, int y2,
+void applyBresenham(int x0, int y0, int x1, int y1,
                     const CoordinateApplicationFunction& actionOnTarget);
 }  // namespace capy::algorithms
 

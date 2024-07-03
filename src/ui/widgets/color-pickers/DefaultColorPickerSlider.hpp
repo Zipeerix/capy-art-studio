@@ -31,8 +31,7 @@ class DefaultColorPickerSlider final : public QSlider {
  public:
   explicit DefaultColorPickerSlider(Qt::Orientation orientation, QWidget* parent = nullptr);
   explicit DefaultColorPickerSlider(QWidget* parent = nullptr);
-
-  ~DefaultColorPickerSlider() override;
+  ~DefaultColorPickerSlider() override = default;
 
   void setGradientStops(QGradientStops gradientStops);
   void setRenderCheckerboard(bool renderCheckerboard);
@@ -41,8 +40,8 @@ class DefaultColorPickerSlider final : public QSlider {
 
  private:
   QGradientStops _gradientStops;
-  bool _renderCheckerboard = false;
   CheckerboardPixmap _checkerboardPixmap;
+  bool _renderCheckerboard = false;
 };
 }  // namespace capy::ui
 

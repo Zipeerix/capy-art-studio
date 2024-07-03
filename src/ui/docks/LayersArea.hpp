@@ -27,7 +27,6 @@ class LayersArea;
 
 class LayersArea final : public QWidget {
     Q_OBJECT
-
 public:
     explicit LayersArea(QWidget *parent = nullptr);
     ~LayersArea() override;

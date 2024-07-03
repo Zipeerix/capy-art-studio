@@ -27,7 +27,6 @@ class ToolsArea;
 
 class ToolsArea final : public QWidget {
     Q_OBJECT
-
 public:
     explicit ToolsArea(QWidget *parent = nullptr);
     ~ToolsArea() override;

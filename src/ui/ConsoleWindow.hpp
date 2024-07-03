@@ -27,7 +27,6 @@ class ConsoleWindow;
 
 class ConsoleWindow final : public QMainWindow {
   Q_OBJECT
-
  public:
   explicit ConsoleWindow(QWidget* parent = nullptr);
   ~ConsoleWindow() override;

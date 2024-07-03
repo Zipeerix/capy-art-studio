@@ -18,8 +18,7 @@
 #ifndef COLORS_HPP
 #define COLORS_HPP
 
-// TODO: move colorchannelvalue somewhere else and create constants.hpp for
-// values
+// TODO: move colorchannelvalue somewhere else and create constants.hpp for values
 namespace capy {
 using ColorChannelValue = uint8_t;
 

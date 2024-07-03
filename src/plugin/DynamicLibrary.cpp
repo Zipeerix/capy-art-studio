@@ -17,11 +17,13 @@
 
 #include "DynamicLibrary.hpp"
 
+#include <utility>
+
 #include "io/ConsoleLogger.hpp"
 
 namespace capy {
-DynamicLibrary::DynamicLibrary(const std::string& path, HandleType libHandle)
-    : _libPath(path), _libHandle(libHandle) {}
+DynamicLibrary::DynamicLibrary(std::string path, HandleType libHandle)
+    : _libPath(std::move(path)), _libHandle(libHandle) {}
 
 DynamicLibrary::~DynamicLibrary() {
   if (_libHandle != nullptr) {

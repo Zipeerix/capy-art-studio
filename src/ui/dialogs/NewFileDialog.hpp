@@ -38,7 +38,7 @@ public:
   explicit NewFileDialog(QWidget* parent = nullptr);
   ~NewFileDialog() override;
 
-  // TODO: This is a placeholder
+  // TODO: This is a placeholder, change to Result if not a placeholder
   [[nodiscard]] std::optional<NewFileDialogResult> getResult() const;
 
 public slots:

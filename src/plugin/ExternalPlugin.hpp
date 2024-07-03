@@ -27,6 +27,7 @@ namespace capy {
 class ExternalPlugin {
  public:
   ExternalPlugin() = delete;
+
   [[nodiscard]] static Result<ExternalPlugin, std::string> fromFile(const std::string& path);
 
  private:

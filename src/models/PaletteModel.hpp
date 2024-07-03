@@ -29,24 +29,30 @@ class PaletteModel final : public QAbstractListModel {
  public:
   explicit PaletteModel(QObject* parent = nullptr);
 
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
+  int rowCount(const QModelIndex& parent) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
 
   // TODO: Should three methdos below be hre?
-  [[nodiscard]] std::vector<PaletteColor> getColors(int index) const;
-  [[nodiscard]] PaletteColor getColor(int index, int colorIndex) const;
-  [[nodiscard]] PotentialError<std::string> removeColorFromPalette(int index, int colorIndex);
-  [[nodiscard]] PotentialError<std::string> addColorToPalette(int index, QColor color,
-                                                              std::optional<std::string> hint);
-  [[nodiscard]] PotentialError<std::string> updatePaletteFile(int index, bool emitDataChanged);
+  std::vector<PaletteColor> getColors(int index) const;
+  PaletteColor getColor(int paletteIndex, int colorIndex) const;
 
-  [[nodiscard]] bool doesPaletteExist(const std::string& name) const;
+  [[nodiscard]] PotentialError<std::string> removeColorFromPalette(int paletteIndex,
+                                                                   int colorIndex);
+  [[nodiscard]] PotentialError<std::string> addColorToPalette(
+      int paletteIndex, QColor color, const std::optional<std::string>& hint);
+  [[nodiscard]] PotentialError<std::string> updatePaletteFile(int paletteIndex,
+                                                              bool emitDataChanged);
+
+  bool doesPaletteExist(const std::string& name) const;
 
   void setPalettes(std::vector<Palette> palettes);
-  [[nodiscard]] const Palette& getPalette(int index) const;
+  const Palette& getPalette(int index) const;
 
  private:
   std::vector<Palette> _palettes;
+
+  bool isRowOutsideModel(const QModelIndex& index) const;
+  bool isRowOutsideModel(int index) const;
 };
 }  // namespace capy::models
 

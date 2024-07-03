@@ -22,7 +22,7 @@ namespace capy::ui {
 ToolsArea::ToolsArea(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::ToolsArea) {
-    ui->setupUi(this);
+  ui->setupUi(this);
 }
 
 ToolsArea::~ToolsArea() {

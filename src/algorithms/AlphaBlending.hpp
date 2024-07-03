@@ -23,8 +23,6 @@
 #include "graphics/Pixel.hpp"
 
 namespace capy::algorithms {
-QColor alphaBlend(QColor bottomPixel, QColor topPixel);
-
 class AlphaBlender {
  public:
   using PixelColorGettingFunction = std::function<const Pixel&(int, int, int)>;

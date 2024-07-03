@@ -33,17 +33,17 @@ class Pixel {
 
   void updateFromQColor(const QColor& color);
 
-  [[nodiscard]] QColor convertToQColor() const;
-  [[nodiscard]] QBrush convertToQBrush() const;
+  QColor convertToQColor() const;
+  QBrush convertToQBrush() const;
 
-  [[nodiscard]] ColorChannelValue getRed() const;
-  [[nodiscard]] ColorChannelValue getGreen() const;
-  [[nodiscard]] ColorChannelValue getBlue() const;
-  [[nodiscard]] ColorChannelValue getAlpha() const;
+  ColorChannelValue getRed() const;
+  ColorChannelValue getGreen() const;
+  ColorChannelValue getBlue() const;
+  ColorChannelValue getAlpha() const;
 
-  [[nodiscard]] bool hasSomeTransparency() const;
-  [[nodiscard]] bool isSolid() const;
-  [[nodiscard]] bool isTransparent() const;
+  bool hasSomeTransparency() const;
+  bool isSolid() const;
+  bool isTransparent() const;
 
  private:
   ColorChannelValue _r;

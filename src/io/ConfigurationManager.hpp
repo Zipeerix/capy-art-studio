@@ -56,8 +56,8 @@ class ConfigurationManager {
  private:
   QSettings _settings{};
 
-  [[nodiscard]] static QString getDebugSettingPath(DebugSetting setting);
-  [[nodiscard]] static QString getGraphicsSettingPath(GraphicsSetting setting);
+  static QString getDebugSettingPath(DebugSetting setting);
+  static QString getGraphicsSettingPath(GraphicsSetting setting);
 };
 }  // namespace capy
 

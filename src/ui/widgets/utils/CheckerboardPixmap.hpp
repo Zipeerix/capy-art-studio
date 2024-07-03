@@ -26,8 +26,8 @@ class CheckerboardPixmap final : public QPixmap {
   CheckerboardPixmap();
 
  private:
-  [[nodiscard]] static QColor getCheckerboardFillColor();
-  [[nodiscard]] static QColor getCheckerboardRectangleColor();
+  static QColor getCheckerboardFillColor();
+  static QColor getCheckerboardRectangleColor();
 };
 }  // namespace capy::ui
 

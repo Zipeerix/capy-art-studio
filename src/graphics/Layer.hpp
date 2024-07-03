@@ -27,23 +27,22 @@ class Layer {
  public:
   Layer(int width, int height);
 
-  [[nodiscard]] bool isVisible() const;
-
-  [[nodiscard]] const Pixel& getPixel(int x, int y) const;
-
-  void drawPixel(int x, int y, const QColor& color);
-
+  bool isVisible() const;
   void hide();
   void show();
+
+  const Pixel& getPixel(int x, int y) const;
+  void drawPixel(int x, int y, const QColor& color);
 
  private:
   std::vector<Pixel> _pixels;
   bool _visible = false;
 
-  int _width;
-  int _height;
+  // TODO: remove when used
+  [[maybe_unused]] int _width;
+  [[maybe_unused]] int _height;
 
-  [[nodiscard]] Pixel& getMutablePixel(int x, int y);
+  Pixel& getMutablePixel(int x, int y);
 };
 }  // namespace capy
 

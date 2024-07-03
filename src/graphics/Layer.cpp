@@ -20,7 +20,7 @@
 #include "utils/General.hpp"
 
 namespace capy {
-Layer::Layer(int width, int height) : _width(width), _height(height) {
+Layer::Layer(const int width, const int height) : _width(width), _height(height) {
   _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
 }
 
@@ -30,16 +30,16 @@ void Layer::show() { _visible = true; }
 
 void Layer::hide() { _visible = false; }
 
-void Layer::drawPixel(int x, int y, const QColor& color) {
+void Layer::drawPixel(const int x, const int y, const QColor& color) {
   auto& targetPixel = getMutablePixel(x, y);
   targetPixel.updateFromQColor(color);
 }
 
-const Pixel& Layer::getPixel(int x, int y) const {
+const Pixel& Layer::getPixel(const int x, const int y) const {
   return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
 }
 
-Pixel& Layer::getMutablePixel(int x, int y) {
+Pixel& Layer::getMutablePixel(const int x, const int y) {
   return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
 }
 }  // namespace capy

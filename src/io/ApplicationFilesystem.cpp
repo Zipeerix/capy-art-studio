@@ -39,19 +39,20 @@ void initApplicationFilesystem() {
   }
 }
 
-std::string getFilesystemPath(FilesystemPath of) {
+std::string getFilesystemPath(const FilesystemPath of) {
   const auto basePath = getApplicationFilesystemBasePath();
   switch (of) {
     case FilesystemPath::Palettes: {
       return basePath / "palettes";
     }
 
+    case FilesystemPath::PathCount:
     default:
       throw std::logic_error("Invalid option for getting filesystem path");
   }
 }
 
-std::vector<std::string> listFilesInPath(FilesystemPath applicationPath) {
+std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
   const auto path = getFilesystemPath(applicationPath);
   std::vector<std::string> filePaths;
 

@@ -22,9 +22,9 @@
 namespace capy::ui {
 DockableWidget::DockableWidget(QWidget* parent) :
   QDockWidget(parent) {
-  const auto palette = this->palette();
-  const QColor backgroundColor = palette.color(QPalette::Window);
-  const QColor borderColor = palette.color(QPalette::Shadow);
+  const QPalette palette = this->palette();
+  const auto backgroundColor = palette.color(QPalette::Window);
+  const auto borderColor = palette.color(QPalette::Shadow);
   setStyleSheet(QString("QDockWidget::title {"
                                     "    background: %1;"
                                     "    border: 1px solid %2;"

@@ -20,11 +20,12 @@
 
 namespace capy::ui {
 NewFileDialog::NewFileDialog(QWidget* parent) :
-  QDialog(parent), ui(new Ui::NewFileDialog) {
+  QDialog(parent),
+  ui(new Ui::NewFileDialog) {
   ui->setupUi(this);
 
-  connect(ui->buttonBox, SIGNAL(accepted()), this,
-          SLOT(okClicked()));
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
+          &NewFileDialog::okClicked);
 }
 
 NewFileDialog::~NewFileDialog() {

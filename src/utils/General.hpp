@@ -21,6 +21,11 @@
 // TODO: Change this and 'Memory.hpp' namespace to capy::utils?
 namespace capy {
 int convert2DIndexto1DIndex(int x, int y, int width);
-}
+
+template <typename T, typename U>
+static void compileTimeTypeCheck();
+}  // namespace capy
+
+#include "General.tpp"
 
 #endif  // GENERAL_HPP

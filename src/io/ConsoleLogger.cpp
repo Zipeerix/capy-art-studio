@@ -22,7 +22,7 @@
 
 #include <chrono>
 
-#include "../ui/ConsoleWindow.hpp"
+#include "ui/ConsoleWindow.hpp"
 
 namespace capy::logger {
 static bool isEnabled = false;
@@ -32,14 +32,19 @@ static std::string severityToString(Severity severity) {
   switch (severity) {
     case Severity::Default:
       return "";
+
     case Severity::Expected:
       return "Expected";
+
     case Severity::Mild:
       return "Mild";
+
     case Severity::Severe:
       return "Severe";
+
     case Severity::Fatal:
       return "Fatal";
+
     default:
       throw std::runtime_error("Unhandled severity->string conversion");
   }
@@ -88,12 +93,12 @@ void debug(const std::string& message, const std::string& module) {
 
 void info(const std::string& message) { log(message, "INFO"); }
 
-void warning(const std::string& message, Severity severity) {
+void warning(const std::string& message, const Severity severity) {
   log(message,
       fmt::format("<font color=\"yellow\">WARNING<{}></font>", severityToString(severity)));
 }
 
-void error(const std::string& message, Severity severity) {
+void error(const std::string& message, const Severity severity) {
   log(message, fmt::format("<font color=\"red\">ERROR<{}></font>", severityToString(severity)));
 }
 }  // namespace capy::logger

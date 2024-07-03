@@ -28,7 +28,7 @@ class Application {
   Application(int argc, char** argv);
   ~Application();
 
-  [[nodiscard]] int start();
+  [[nodiscard]] int start() const;
 
  private:
   std::shared_ptr<ConfigurationManager> _configurationManager;

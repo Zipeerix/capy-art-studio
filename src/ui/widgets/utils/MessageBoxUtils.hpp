@@ -18,12 +18,14 @@
 #ifndef MESSAGEBOXUTILS_HPP
 #define MESSAGEBOXUTILS_HPP
 
+#include <QMessageBox>
 #include <QWidget>
 #include <string>
 
 namespace capy::ui {
 bool showConfirmationDialog(QWidget* parent = nullptr,
                             const std::string& message = "Are you sure you want to do this?");
-}
+void execMessageBox(QWidget* parent, QMessageBox::Icon type, const QString& text);
+}  // namespace capy::ui
 
 #endif  // MESSAGEBOXUTILS_HPP

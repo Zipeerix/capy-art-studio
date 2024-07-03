@@ -41,7 +41,7 @@ class AiServiceInterface {
 
   virtual Layer query(AiPromptData promptData) = 0;
 
-  // TODO: Export label/line edit list for ui settings?
+  // TODO: Export settings list etc
 
  protected:
   std::optional<std::string> _apiKey;
