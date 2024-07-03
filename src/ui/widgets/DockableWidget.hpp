@@ -21,7 +21,7 @@
 #include <QDockWidget>
 
 namespace capy::ui {
-class DockableWidget : public QDockWidget {
+class DockableWidget final : public QDockWidget {
   Q_OBJECT
 public:
   explicit DockableWidget(QWidget* parent = nullptr);

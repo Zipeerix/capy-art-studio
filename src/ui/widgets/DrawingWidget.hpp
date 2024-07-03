@@ -35,15 +35,17 @@ public:
   explicit DrawingWidget(QWidget* parent);
 
   void startNewDrawing(int width, int height);
+
   void setCurrentLayer(int newLayer);
-  [[nodiscard]] QColor getDrawingColor();
+
+  QColor getDrawingColor() const;
   void setDrawingColor(QColor color);
 
   void drawBackground(QPainter* painter, const QRectF& rect) override;
 
 private:
-  CheckerboardPixmap _checkerboardPixmap;
   std::shared_ptr<ConfigurationManager> _settings;
+  CheckerboardPixmap _checkerboardPixmap;
   QColor _drawingColor = QColor(0, 0, 0, 255);
 
   DrawingCanvasItem* _drawingCanvasItem = nullptr;
@@ -58,8 +60,7 @@ private:
   int _panStartX = 0;
   int _panStartY = 0;
 
-  std::optional<QPoint> mapPositionOfEventToScene(
-      const QMouseEvent* event) const;
+  std::optional<QPoint> mapPositionOfEventToScene(const QMouseEvent* event) const;
 
   void mousePressEvent(QMouseEvent* event) override;
   void mouseReleaseEvent(QMouseEvent* event) override;

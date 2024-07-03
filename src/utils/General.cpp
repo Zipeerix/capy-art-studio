@@ -18,5 +18,9 @@
 #include "General.hpp"
 
 namespace capy {
-int convert2DIndexto1DIndex(int x, int y, int width) { return y * width + x; }
+int convert2DIndexto1DIndex(const int x, const int y, const int width) { return y * width + x; }
+
+uint64_t calculateInMemorySizeOfImage(const int width, const int height, const int layers) {
+  return width * height * layers;
+}
 }  // namespace capy

@@ -21,8 +21,6 @@
 #include <fmt/format.h>
 #include "io/ConsoleLogger.hpp"
 #include "ui/widgets/delegates/ColorRectangleDelegate.hpp"
-#include <QPushButton>
-#include <QComboBox>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <filesystem>
@@ -82,26 +80,15 @@ ColorArea::~ColorArea() {
 void ColorArea::addColorToPaletteClicked() {
   const auto currentPaltteIndex = ui->paletteComboBox->currentIndex();
   if (currentPaltteIndex == -1) {
-    QMessageBox messageBox(this);
-    messageBox.setIcon(QMessageBox::Warning);
-    messageBox.setFixedSize(500,200);
-    messageBox.setWindowTitle("Error");
-    messageBox.setText("Please create a palette first before adding colors");
-    messageBox.exec();
-    return;
+    return execMessageBox(this, QMessageBox::Warning, "Please create a palette first before adding colors");
   }
 
   const QColor colorToAdd = _colorPicker->getColor();
   const QString hint = QInputDialog::getText(this, "Add new Color to palette", "Color hint");
   const auto colorAddingError = _paletteModel.addColorToPalette(currentPaltteIndex, colorToAdd, hint.isEmpty() ? std::nullopt : std::optional(hint.toStdString()));
   if (colorAddingError.has_value()) {
-    QMessageBox messageBox(this);
-    messageBox.setIcon(QMessageBox::Warning);
-    messageBox.setFixedSize(500,200);
-    messageBox.setWindowTitle("Error");
-    messageBox.setText("Error when adding color to palette: " + QString::fromStdString(colorAddingError.value()));
-    messageBox.exec();
-    return;
+    return execMessageBox(this, QMessageBox::Critical,
+      "Error when adding color to palette: " + QString::fromStdString(colorAddingError.value()));
   }
 
   loadPalettesFromFilesystem();
@@ -116,13 +103,8 @@ void ColorArea::loadPalettesFromFilesystem() {
   for (const auto& paletteFilePath : paletteFileList) {
     const auto loadedPaletteOpt = Palette::fromJson(paletteFilePath);
     if (!loadedPaletteOpt.has_value()) {
-      // TODO: utils function to show title and text
-      QMessageBox messageBox(this);
-      messageBox.setIcon(QMessageBox::Warning);
-      messageBox.setFixedSize(500,200);
-      messageBox.setWindowTitle("Error");
-      messageBox.setText("Error when loading palette: " + QString::fromStdString(loadedPaletteOpt.error()));
-      messageBox.exec();
+      execMessageBox(this, QMessageBox::Critical,
+        "Error when loading palette: " + QString::fromStdString(loadedPaletteOpt.error()));
       continue;
     }
 
@@ -133,7 +115,7 @@ void ColorArea::loadPalettesFromFilesystem() {
 
   _paletteModel.setPalettes(std::move(palettes));
 
-  if (_savedPaletteComboBoxIndex != -1 && _savedPaletteComboBoxIndex < ui->paletteComboBox->count()) {
+  if (isPaletteComboBoxIndexRestorable()) {
     ui->paletteComboBox->setCurrentIndex(_savedPaletteComboBoxIndex);
   }
 }
@@ -145,13 +127,7 @@ void ColorArea::createPaletteClicked() {
   }
 
   if (_paletteModel.doesPaletteExist(paletteName.toStdString())) {
-    QMessageBox messageBox;
-    messageBox.setIcon(QMessageBox::Warning);
-    messageBox.setFixedSize(500,200);
-    messageBox.setWindowTitle("Error");
-    messageBox.setText("Palette with this name already exists");
-    messageBox.exec();
-    return;
+    return execMessageBox(this, QMessageBox::Warning, "Palette with this name already exists");
   }
 
   const auto newPalette = Palette(paletteName.toStdString());
@@ -162,11 +138,8 @@ void ColorArea::createPaletteClicked() {
   const auto saveError = newPalette.saveToJson(newPaletteFilePath.string());
   if (saveError.has_value()) {
     QMessageBox messageBox;
-    messageBox.setIcon(QMessageBox::Warning);
-    messageBox.setFixedSize(500,200);
-    messageBox.setWindowTitle("Error");
-    messageBox.setText("Unable to save new palette, check filesystem permissions");
-    messageBox.exec();
+    return execMessageBox(this, QMessageBox::Critical,
+      "Unable to save new palette, check filesystem permissions");
   } else {
     logger::info(fmt::format("Created new palette: {}", newPalette.getName()));
     loadPalettesFromFilesystem();
@@ -204,7 +177,7 @@ void ColorArea::removePaletteClicked() {
   loadPalettesFromFilesystem();
 }
 
-void ColorArea::createColorClicked() {
+void ColorArea::createColorClicked() const {
   // TODO
 }
 
@@ -227,30 +200,29 @@ void ColorArea::removeColorClicked() {
       // TODO: Below -> maybe add a signal from colorTableModel to paletteModel or other way around to signal this without calling this method
       _colorTableModel.notifyThatColorWasRemovedFromThePalette(colorIndex);
       if (removeError.has_value()) {
-        QMessageBox messageBox(this);
-        messageBox.setIcon(QMessageBox::Warning);
-        messageBox.setFixedSize(500,200);
-        messageBox.setWindowTitle("Error");
-        messageBox.setText("Error when updating palette after removing color: " + QString::fromStdString(removeError.value()));
-        messageBox.exec();
-
+        return execMessageBox(this, QMessageBox::Critical,
+          "Error when updating palette after removing color: " + QString::fromStdString(removeError.value()));
         // TODO: Readd colors? So there is no discrepancy between ui and file
       }
     }
   }
 }
 
-void ColorArea::userCurrentColorPaletteChanged(int newPaletteIndex){
+void ColorArea::userCurrentColorPaletteChanged(const int newPaletteIndex){
   _savedPaletteComboBoxIndex = newPaletteIndex;
 }
 
-void ColorArea::colorClicked(const QModelIndex& index) {
+void ColorArea::colorClicked(const QModelIndex& index) const {
   const auto color = _paletteModel.getColor(ui->paletteComboBox->currentIndex(), index.row());
   _colorPicker->setColor(color.color);
 }
 
-void ColorArea::currentColorPaletteChanged(int newPaletteIndex){
+void ColorArea::currentColorPaletteChanged(const int newPaletteIndex){
   const auto colorsOfCurrentPalette = _paletteModel.getColors(newPaletteIndex);
   _colorTableModel.setColors(colorsOfCurrentPalette);
+}
+
+bool ColorArea::isPaletteComboBoxIndexRestorable() const {
+  return _savedPaletteComboBoxIndex != -1 && _savedPaletteComboBoxIndex < ui->paletteComboBox->count();
 }
 }

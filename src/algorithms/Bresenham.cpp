@@ -20,13 +20,13 @@
 #include <cmath>
 
 namespace capy::algorithms {
-static std::pair<int, int> calculateAbosluteDifference(int n0, int n1) {
-  const int dn = n1 - n0;
-  const int multiplicator = dn > 0 ? 1 : -1;
-  return {multiplicator, std::abs(dn)};
+static std::pair<int, int> calculateAbosluteDifference(const int n0, const int n1) {
+  const int diffN = n1 - n0;
+  const int multiplicator = diffN > 0 ? 1 : -1;
+  return {multiplicator, std::abs(diffN)};
 }
 
-void applyBresenham(int x0, int y0, int x1, int y1,
+void applyBresenham(const int x0, const int y0, const int x1, const int y1,
                     const CoordinateApplicationFunction& actionOnTarget) {
   const auto [sx, dx] = calculateAbosluteDifference(x0, x1);
   const auto [sy, dy] = calculateAbosluteDifference(y0, y1);

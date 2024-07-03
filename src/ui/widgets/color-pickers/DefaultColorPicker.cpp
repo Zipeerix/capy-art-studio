@@ -32,6 +32,7 @@
 
 namespace capy::ui {
 DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
+  // TODO: Breakup into methods
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -149,7 +150,7 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
 
 DefaultColorPicker::~DefaultColorPicker() = default;
 
-void DefaultColorPicker::updateShownColor() {
+void DefaultColorPicker::updateShownColor() const {
   const auto hsvColor = _selectedColor.toHsv();
   _hueSlider->setValue(hsvColor.hue());
   _saturationSlider->setValue(hsvColor.saturation());
@@ -159,13 +160,14 @@ void DefaultColorPicker::updateShownColor() {
   _colorShowcase->setStyleSheet("background-color: " + _selectedColor.name());
 }
 
-void DefaultColorPicker::setColor(QColor color) {
+void DefaultColorPicker::setColor(const QColor color) {
   _selectedColor = color;
   updateShownColor();
   emit colorChanged(_selectedColor);
 }
 
-void DefaultColorPicker::setColor(int hue, int saturation, int brightness, int alpha) {
+void DefaultColorPicker::setColor(const int hue, const int saturation, const int brightness,
+                                  const int alpha) {
   _selectedColor.setHsv(hue, saturation, brightness, alpha);
   updateShownColor();
   emit colorChanged(_selectedColor);

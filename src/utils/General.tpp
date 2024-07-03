@@ -15,10 +15,21 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Memory.hpp"
+#ifndef GENERAL_TPP
+#define GENERAL_TPP
+
+#include <memory>
 
 namespace capy {
-uint64_t calculateInMemorySizeOfImage(int width, int height, int layers) {
-  return width * height * layers;
+uint64_t calculateInMemorySizeOfImage(int width, int height, int layers = 1);
+
+template <typename T, typename U>
+static void compileTimeTypeCheck() {
+  // TODO: This probably doesn't work, check, maybe don't do any checks
+  if (!std::is_same<T, U>::value) {
+    throw std::logic_error("Compile type type check failed");
+  }
 }
 }  // namespace capy
+
+#endif  // GENERAL_TPP

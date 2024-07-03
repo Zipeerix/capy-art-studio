@@ -47,7 +47,7 @@ class DynamicLibrary {
 
   [[nodiscard]] static Result<DynamicLibrary, std::string> fromFile(const std::string& path);
 
-  [[nodiscard]] bool isValid() const;
+  bool isValid() const;
 
   template <typename SymbolType>
   [[nodiscard]] Result<SymbolType, std::string> getSymbol(const std::string& name);
@@ -56,7 +56,7 @@ class DynamicLibrary {
   std::string _libPath;
   HandleType _libHandle;
 
-  DynamicLibrary(const std::string& path, HandleType libHandle);
+  DynamicLibrary(std::string path, HandleType libHandle);
 
   static std::string getErrorMessage();
 };

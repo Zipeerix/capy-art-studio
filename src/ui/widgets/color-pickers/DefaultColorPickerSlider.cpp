@@ -28,19 +28,17 @@ DefaultColorPickerSlider::DefaultColorPickerSlider(Qt::Orientation orientation, 
 DefaultColorPickerSlider::DefaultColorPickerSlider(QWidget* parent)
     : DefaultColorPickerSlider(Qt::Vertical, parent) {}
 
-DefaultColorPickerSlider::~DefaultColorPickerSlider() = default;
-
 void DefaultColorPickerSlider::setGradientStops(QGradientStops gradientStops) {
-  _gradientStops = gradientStops;
+  _gradientStops = std::move(gradientStops);
   update();
 }
 
-void DefaultColorPickerSlider::setRenderCheckerboard(bool renderCheckerboard) {
+void DefaultColorPickerSlider::setRenderCheckerboard(const bool renderCheckerboard) {
   _renderCheckerboard = renderCheckerboard;
   update();
 }
 
-void DefaultColorPickerSlider::paintEvent(QPaintEvent* event) {
+void DefaultColorPickerSlider::paintEvent([[maybe_unused]] QPaintEvent* event) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
 

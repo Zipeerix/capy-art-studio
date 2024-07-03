@@ -26,16 +26,15 @@
 namespace capy::ui {
 class DefaultColorPicker final : public QWidget {
   Q_OBJECT
-
  public:
   explicit DefaultColorPicker(QWidget* parent = nullptr);
   ~DefaultColorPicker() override;
 
   void setColor(QColor color);
   void setColor(int hue, int saturation, int brightness, int alpha);
-  [[nodiscard]] QColor getColor() const;
+  QColor getColor() const;
 
-  void updateShownColor();
+  void updateShownColor() const;
 
  signals:
   void colorChanged(QColor newColor);

@@ -22,7 +22,7 @@ namespace capy::ui {
 LayersArea::LayersArea(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::LayersArea) {
-    ui->setupUi(this);
+  ui->setupUi(this);
 }
 
 LayersArea::~LayersArea() {

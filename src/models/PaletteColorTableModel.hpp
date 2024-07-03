@@ -30,11 +30,10 @@ class PaletteColorTableModel final : public QAbstractTableModel {
 
   explicit PaletteColorTableModel(QObject* parent);
 
-  [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
-  [[nodiscard]] int columnCount(const QModelIndex& parent) const override;
-  [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
-  [[nodiscard]] QVariant headerData(int section, Qt::Orientation orientation,
-                                    int role) const override;
+  int rowCount(const QModelIndex& parent) const override;
+  int columnCount(const QModelIndex& parent) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
   void notifyThatColorWasRemovedFromThePalette(int colorIndex);
 
@@ -42,6 +41,9 @@ class PaletteColorTableModel final : public QAbstractTableModel {
 
  private:
   std::vector<PaletteColor> _colors;
+
+  bool isRowOutsideModel(const QModelIndex& index) const;
+  bool isRowOutsideModel(int index) const;
 };
 }  // namespace capy::models
 

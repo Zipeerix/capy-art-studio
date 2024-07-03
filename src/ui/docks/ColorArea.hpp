@@ -37,11 +37,11 @@ public:
 public slots:
   void currentColorPaletteChanged(int newPaletteIndex);
   void userCurrentColorPaletteChanged(int newPaletteIndex);
-  void colorClicked(const QModelIndex& index);
+  void colorClicked(const QModelIndex& index) const;
   void addColorToPaletteClicked();
   void createPaletteClicked();
   void removePaletteClicked();
-  void createColorClicked();
+  void createColorClicked() const;
   void removeColorClicked();
 
 signals:
@@ -55,6 +55,7 @@ private:
   int _savedPaletteComboBoxIndex = -1;
 
   void loadPalettesFromFilesystem();
+  bool isPaletteComboBoxIndexRestorable() const;
 };
 }
 

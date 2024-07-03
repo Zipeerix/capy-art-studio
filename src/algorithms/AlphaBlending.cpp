@@ -28,11 +28,11 @@ namespace capy::algorithms {
 AlphaBlender::AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction)
     : _pixelColorGettingFunction(std::move(pixelColorGettingFunction)) {}
 
-static ColorChannelValue getBlendChannelValue(ColorChannelValue currentColor,
-                                              ColorChannelValue addedColor,
-                                              double alphaPercentage) {
-  const auto fromAdded = addedColor * alphaPercentage;
-  const auto fromCurrent = currentColor * (1.0 - alphaPercentage);
+static ColorChannelValue getBlendChannelValue(const ColorChannelValue currentColor,
+                                              const ColorChannelValue addedColor,
+                                              const double alphaPercentage) {
+  const double fromAdded = addedColor * alphaPercentage;
+  const double fromCurrent = currentColor * (1.0 - alphaPercentage);
 
   return static_cast<ColorChannelValue>(std::round(fromAdded + fromCurrent));
 }
@@ -50,7 +50,7 @@ static QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor,
   return {red, green, blue, alpha};
 }
 
-QColor AlphaBlender::blend(int x, int y, int layerCount) const {
+QColor AlphaBlender::blend(const int x, const int y, const int layerCount) const {
   // find first solid color to use as base
   std::optional<int> optIndexOfFirstSolidColor = std::nullopt;
   for (int currentLayerIndex = 0; currentLayerIndex < layerCount; currentLayerIndex++) {
@@ -61,9 +61,9 @@ QColor AlphaBlender::blend(int x, int y, int layerCount) const {
   }
 
   // TODO: Maybe dont find first? since there is chance for double iteration
-  int indexOfFirstSolidColor = optIndexOfFirstSolidColor.value_or(0);
+  const auto indexOfFirstSolidColor = optIndexOfFirstSolidColor.value_or(0);
 
-  auto currentlyCalculatePixelValue =
+  auto currentlyCalculatedPixelValue =
       _pixelColorGettingFunction(x, y, indexOfFirstSolidColor).convertToQColor();
 
   // apply blending to remaining layers
@@ -77,15 +77,16 @@ QColor AlphaBlender::blend(int x, int y, int layerCount) const {
       continue;
     }
 
-    auto currentPixel = pixel.convertToQColor();
+    auto currentPixelColor = pixel.convertToQColor();
     if (!optIndexOfFirstSolidColor.has_value() && currentLayerIndex == 0) {
-      currentPixel.setAlpha(constants::alpha::solidColor);
+      // Pretend base layer has solid alpha
+      currentPixelColor.setAlpha(constants::alpha::solidColor);
     }
 
-    currentlyCalculatePixelValue =
-        applyAlphaBlendBetweenTwoPixels(currentlyCalculatePixelValue, currentPixel);
+    currentlyCalculatedPixelValue =
+        applyAlphaBlendBetweenTwoPixels(currentlyCalculatedPixelValue, currentPixelColor);
   }
 
-  return currentlyCalculatePixelValue;
+  return currentlyCalculatedPixelValue;
 }
 }  // namespace capy::algorithms

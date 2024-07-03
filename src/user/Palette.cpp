@@ -66,7 +66,6 @@ PotentialError<std::string> Palette::saveToJson(std::optional<std::string> path)
   using namespace rapidjson;
 
   Document root = exportValuesToJson();
-  Document::AllocatorType& allocator = root.GetAllocator();
 
   StringBuffer buffer;
   Writer writer(buffer);
@@ -163,11 +162,11 @@ rapidjson::Document Palette::exportValuesToJson() const {
 bool Palette::wasEditedFromLastLoad() const { return _wasEdited; }
 
 void Palette::addColor(const QColor& color, const std::optional<std::string>& hint) {
-  _colors.push_back({color, hint});
+  _colors.push_back(PaletteColor{color, hint});
 }
 
 void Palette::removeColor(int index) {
-  if (index >= _colors.size()) {
+  if (isIndexOutsideColors(index)) {
     logger::error(fmt::format("Attempting to remove non-existent color at "
                               "index {} from palette {}",
                               index, _name),
@@ -186,8 +185,8 @@ void Palette::setName(std::string newName) { _name = std::move(newName); }
 
 int Palette::colorCount() const { return _colors.size(); }
 
-PaletteColor Palette::getColor(int index) const {
-  if (index >= _colors.size()) {
+PaletteColor Palette::getColor(const int index) const {
+  if (isIndexOutsideColors(index)) {
     logger::error(fmt::format("Attempting to get non-existent color at "
                               "index {} from palette {}",
                               index, _name),
@@ -199,4 +198,8 @@ PaletteColor Palette::getColor(int index) const {
 }
 
 std::vector<PaletteColor> Palette::getAllColors() const { return _colors; }
+
+bool Palette::isIndexOutsideColors(const int index) const {
+  return index < 0 || static_cast<size_t>(index) >= _colors.size();
+}
 }  // namespace capy

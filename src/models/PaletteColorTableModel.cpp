@@ -17,6 +17,10 @@
 
 #include "PaletteColorTableModel.hpp"
 
+#include <fmt/format.h>
+
+#include "io/ConsoleLogger.hpp"
+
 namespace capy::models {
 PaletteColorTableModel::PaletteColorTableModel(QObject* parent) : QAbstractTableModel(parent) {}
 
@@ -26,36 +30,38 @@ void PaletteColorTableModel::setColors(std::vector<PaletteColor> colors) {
   endResetModel();
 }
 
-void PaletteColorTableModel::notifyThatColorWasRemovedFromThePalette(int colorIndex) {
+void PaletteColorTableModel::notifyThatColorWasRemovedFromThePalette(const int colorIndex) {
   beginRemoveRows(QModelIndex(), colorIndex, colorIndex);
   _colors.erase(_colors.begin() + colorIndex);
   endRemoveRows();
 }
 
-int PaletteColorTableModel::rowCount(const QModelIndex& parent) const { return _colors.size(); }
+int PaletteColorTableModel::rowCount([[maybe_unused]] const QModelIndex& parent) const {
+  return _colors.size();
+}
 
-int PaletteColorTableModel::columnCount(const QModelIndex& parent) const {
+int PaletteColorTableModel::columnCount([[maybe_unused]] const QModelIndex& parent) const {
   return static_cast<int>(ColumnName::ColumnCount);
 }
 
-QVariant PaletteColorTableModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid()) return QVariant();
+QVariant PaletteColorTableModel::data(const QModelIndex& index, const int role) const {
+  if (!index.isValid() || isRowOutsideModel(index)) {
+    return QVariant();
+  }
 
-  if (index.row() >= _colors.size() || index.row() < 0) return QVariant();
-
-  const auto& color = _colors.at(index.row());
-  const auto actualColor = color.color;
+  const auto& paletteColor = _colors.at(index.row());
+  const auto color = paletteColor.color;
   switch (role) {
     case Qt::DisplayRole: {
       switch (index.column()) {
         case static_cast<int>(ColumnName::Color):
-          return actualColor;
+          return color;
 
         case static_cast<int>(ColumnName::Hex):
-          return actualColor.name();
+          return color.name();
 
         case static_cast<int>(ColumnName::Hint):
-          return QString::fromStdString(color.hint.value_or(""));
+          return QString::fromStdString(paletteColor.hint.value_or(""));
 
         default:
           return QVariant();
@@ -67,8 +73,9 @@ QVariant PaletteColorTableModel::data(const QModelIndex& index, int role) const 
   }
 }
 
-QVariant PaletteColorTableModel::headerData(int section, Qt::Orientation orientation,
-                                            int role) const {
+QVariant PaletteColorTableModel::headerData(const int section,
+                                            [[maybe_unused]] const Qt::Orientation orientation,
+                                            [[maybe_unused]] const int role) const {
   switch (section) {
     case static_cast<int>(ColumnName::Color):
       return "Color";
@@ -82,5 +89,13 @@ QVariant PaletteColorTableModel::headerData(int section, Qt::Orientation orienta
     default:
       return QVariant();
   }
+}
+
+bool PaletteColorTableModel::isRowOutsideModel(const QModelIndex& index) const {
+  return isRowOutsideModel(index.row());
+}
+
+bool PaletteColorTableModel::isRowOutsideModel(const int index) const {
+  return index < 0 || static_cast<size_t>(index) >= _colors.size();
 }
 }  // namespace capy::models

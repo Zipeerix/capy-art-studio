@@ -32,15 +32,13 @@ class MainWindow;
 
 class MainWindow final : public QMainWindow {
   Q_OBJECT
-
  public:
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
  public slots:
   void menuBarFileNewClicked();
-
-  void colorPickerColorChanged(QColor newColor);
+  void colorPickerColorChanged(QColor newColor) const;
 
  private:
   Ui::MainWindow* ui;

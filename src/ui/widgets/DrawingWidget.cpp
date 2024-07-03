@@ -20,7 +20,7 @@
 #include <fmt/format.h>
 #include "algorithms/Bresenham.hpp"
 #include "io/ConsoleLogger.hpp"
-#include "utils/Memory.hpp"
+#include "utils/General.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
@@ -34,22 +34,23 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
   setScene(_scene);
 }
 
-void DrawingWidget::drawBackground(QPainter* painter, const QRectF& rect) {
+void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect) {
   painter->save();
   painter->resetTransform();
+  // TODO: Below maybe change to rect?
   painter->drawTiledPixmap(viewport()->rect(), _checkerboardPixmap);
   painter->restore();
 }
 
-void DrawingWidget::setDrawingColor(QColor color){
+void DrawingWidget::setDrawingColor(const QColor color) {
   _drawingColor = color;
 }
 
-QColor DrawingWidget::getDrawingColor(){
+QColor DrawingWidget::getDrawingColor() const {
   return _drawingColor;
 }
 
-void DrawingWidget::startNewDrawing(int width, int height) {
+void DrawingWidget::startNewDrawing(const int width, const int height) {
   logger::info(fmt::format(
       "Creating new image with dimensions {}x{} with per layer size of {} bytes",
       width, height, calculateInMemorySizeOfImage(width, height)));
@@ -67,15 +68,17 @@ void DrawingWidget::startNewDrawing(int width, int height) {
     pen.setWidthF(_settings->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
     pen.setCosmetic(true);
 
-    for (int y = 0; y <= totalDrawingHeight; y += 1)
+    for (int y = 0; y <= totalDrawingHeight; y += 1) {
       _scene->addLine(0, y, totalDrawingHeight, y, pen);
+    }
 
-    for (int x = 0; x <= totalDrawingWidth; x += 1)
+    for (int x = 0; x <= totalDrawingWidth; x += 1) {
       _scene->addLine(x, 0, x, totalDrawingWidth, pen);
+    }
   }
 }
 
-void DrawingWidget::setCurrentLayer(int newLayer) {
+void DrawingWidget::setCurrentLayer(const int newLayer) {
   _drawing.setCurrentLayer(newLayer);
 }
 
@@ -98,14 +101,15 @@ std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
 
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {
   const auto clickedPixel = mapPositionOfEventToScene(event);
+  const QPointF eventPosition = event->position();
 
   // TODO: Maybe make tools their own objects and pass clickedPixel and other data to them
   switch (_tool) {
     case DrawingTool::Hand: {
       if (event->button() == Qt::LeftButton) {
         _leftMouseButtonPressed = true;
-        _panStartX = event->x();
-        _panStartY = event->y();
+        _panStartX = static_cast<int>(eventPosition.x());
+        _panStartY = static_cast<int>(eventPosition.y());
         setCursor(Qt::ClosedHandCursor);
         event->accept();
         return;
@@ -130,8 +134,10 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
 
     case DrawingTool::Eraser: // same as pen but set to invisible
       break;
+
     case DrawingTool::Rectangle:
       break;
+
     case DrawingTool::Circle:
       break;
   }
@@ -156,8 +162,10 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
     }
     case DrawingTool::Eraser:
       break;
+
     case DrawingTool::Rectangle:
       break;
+
     case DrawingTool::Circle:
       break;
   }
@@ -168,16 +176,17 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
 
 void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
   const auto movingThroughPixel = mapPositionOfEventToScene(event);
+  const QPointF eventPosition = event->position();
 
   switch (_tool) {
     case DrawingTool::Hand: {
       if (_leftMouseButtonPressed) {
         horizontalScrollBar()->setValue(
-            horizontalScrollBar()->value() - (event->x() - _panStartX));
+            static_cast<int>(horizontalScrollBar()->value() - (eventPosition.x() - _panStartX)));
         verticalScrollBar()->setValue(
-            verticalScrollBar()->value() - (event->y() - _panStartY));
-        _panStartX = event->x();
-        _panStartY = event->y();
+            static_cast<int>(verticalScrollBar()->value() - (eventPosition.y() - _panStartY)));
+        _panStartX = static_cast<int>(eventPosition.x());
+        _panStartY = static_cast<int>(eventPosition.y());
         event->accept();
         return;
       }
@@ -192,7 +201,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
           // TODO: Move this to a method or cleanup/tool_to_class seperation
           static const auto pixelDrawingAction = [&](int x, int y) {
             _drawing.drawPixelOnCurrentLayer(x, y, _drawingColor);
-            auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
+            const auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
             _drawingCanvasItem->updateCanvasPixel(x, y, combinedColor);
           };
 
@@ -204,7 +213,6 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
         }
 
         _lastContinousDrawingPoint = movingThroughPixel.value();
-
         // pixelDrawingAction(clickedPixelX, clickedPixelY...)
       }
       return;
@@ -212,8 +220,10 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
 
     case DrawingTool::Eraser:
       break;
+
     case DrawingTool::Rectangle:
       break;
+
     case DrawingTool::Circle:
       break;
   }
@@ -227,8 +237,8 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
     const double angle = event->angleDelta().y();
     const double factor = qPow(1.0015, angle);
 
-    const auto targetViewportPos = event->position();
-    const auto targetScenePos = mapToScene(event->position().toPoint());
+    const QPointF targetViewportPos = event->position();
+    const QPointF targetScenePos = mapToScene(event->position().toPoint());
 
     scale(factor, factor);
     centerOn(targetScenePos);

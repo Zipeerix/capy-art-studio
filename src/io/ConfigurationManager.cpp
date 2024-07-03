@@ -25,7 +25,7 @@ std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
   return singletonEntity;
 }
 
-QString ConfigurationManager::getDebugSettingPath(DebugSetting setting) {
+QString ConfigurationManager::getDebugSettingPath(const DebugSetting setting) {
   switch (setting) {
     case DebugSetting::ShowConsole:
       return "Debug/ShowConsole";
@@ -35,7 +35,7 @@ QString ConfigurationManager::getDebugSettingPath(DebugSetting setting) {
   }
 }
 
-QString ConfigurationManager::getGraphicsSettingPath(GraphicsSetting setting) {
+QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setting) {
   switch (setting) {
     case GraphicsSetting::DrawGrid:
       return "Graphics/DrawGrid";

@@ -19,7 +19,7 @@
 #include "DrawingCanvasItem.hpp"
 
 namespace capy::ui {
-DrawingCanvasItem::DrawingCanvasItem(int width, int height) {
+DrawingCanvasItem::DrawingCanvasItem(const int width, const int height) {
   _canvasRepresentation = QImage(width, height, QImage::Format_RGBA8888);
   fillCanvas();
   update();
@@ -31,12 +31,12 @@ QRectF DrawingCanvasItem::boundingRect() const {
 }
 
 void DrawingCanvasItem::paint(QPainter* painter,
-                              const QStyleOptionGraphicsItem* option,
-                              QWidget* widget) {
+                              [[maybe_unused]] const QStyleOptionGraphicsItem* option,
+                              [[maybe_unused]] QWidget* widget) {
   painter->drawImage(0, 0, _canvasRepresentation);
 }
 
-void DrawingCanvasItem::updateCanvasPixel(int x, int y, const QColor& color) {
+void DrawingCanvasItem::updateCanvasPixel(const int x, const int y, const QColor& color) {
   _canvasRepresentation.setPixelColor(x, y, color);
   update();
 }

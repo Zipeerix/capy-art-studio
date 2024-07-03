@@ -19,19 +19,11 @@
 #define CONFIGURATIONMANAGER_TPP
 
 #include "ConfigurationManager.hpp"
+#include "utils/General.hpp"
 
 namespace capy {
-// TODO: Move to utils
-template <typename T, typename U>
-static void compileTimeTypeCheck() {
-  // TODO: This probably doesn't work, check, maybe don't do any checks
-  if (!std::is_same<T, U>::value) {
-    throw std::logic_error("Compile type type check failed");
-  }
-}
-
 template <typename SettingValueType>
-SettingValueType ConfigurationManager::getDebugSetting(DebugSetting setting) const {
+SettingValueType ConfigurationManager::getDebugSetting(const DebugSetting setting) const {
   switch (setting) {
     case DebugSetting::ShowConsole:
       compileTimeTypeCheck<SettingValueType, bool>();
@@ -43,7 +35,8 @@ SettingValueType ConfigurationManager::getDebugSetting(DebugSetting setting) con
 }
 
 template <typename SettingValueType>
-void ConfigurationManager::setDebugSetting(DebugSetting setting, SettingValueType value) {
+void ConfigurationManager::setDebugSetting(const DebugSetting setting,
+                                           const SettingValueType value) {
   switch (setting) {
     case DebugSetting::ShowConsole:
       compileTimeTypeCheck<SettingValueType, bool>();
@@ -58,7 +51,7 @@ void ConfigurationManager::setDebugSetting(DebugSetting setting, SettingValueTyp
 }
 
 template <typename SettingValueType>
-SettingValueType ConfigurationManager::getGraphicsSetting(GraphicsSetting setting) const {
+SettingValueType ConfigurationManager::getGraphicsSetting(const GraphicsSetting setting) const {
   switch (setting) {
     case GraphicsSetting::DrawGrid:
       compileTimeTypeCheck<SettingValueType, bool>();
@@ -74,7 +67,8 @@ SettingValueType ConfigurationManager::getGraphicsSetting(GraphicsSetting settin
 }
 
 template <typename SettingValueType>
-void ConfigurationManager::setGraphicsSetting(GraphicsSetting setting, SettingValueType value) {
+void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
+                                              const SettingValueType value) {
   switch (setting) {
     case GraphicsSetting::DrawGrid:
       compileTimeTypeCheck<SettingValueType, bool>();

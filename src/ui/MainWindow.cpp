@@ -29,9 +29,9 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), _drawingWidget(new DrawingWidget(this)) {
   ui->setupUi(this);
 
-  connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
-
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
+
+  connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
 
   setupColorDock();
   setupLayersDock();
@@ -58,11 +58,6 @@ void MainWindow::setupColorDock() {
   ui->colorDock->setWidget(_colorDockArea);
 }
 
-/*void MainWindow::setupColorPaletteDock() {
-  _colorPaletteDockArea = new ColorPaletteArea(this);
-  ui->colorPaletteDock->setWidget(_colorPaletteDockArea);
-}*/
-
 void MainWindow::setupLayersDock() {
   _layersDockArea = new LayersArea(this);
   ui->layersDock->setWidget(_layersDockArea);
@@ -73,7 +68,7 @@ void MainWindow::setupToolsDock() {
   ui->toolsDock->setWidget(_toolsDockArea);
 }
 
-void MainWindow::colorPickerColorChanged(QColor newColor) {
+void MainWindow::colorPickerColorChanged(QColor newColor) const {
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
                            newColor.blue(), newColor.alpha()));
   _drawingWidget->setDrawingColor(newColor);

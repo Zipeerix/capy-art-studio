@@ -23,13 +23,14 @@
 
 namespace capy {
 Application::Application(int argc, char** argv)
-    : _guiApplication(argc, argv), _configurationManager(ConfigurationManager::createInstance()) {
-  _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);
+    : _configurationManager(ConfigurationManager::createInstance()), _guiApplication(argc, argv) {
+  _guiApplication.setAttribute(
+      Qt::AA_DontUseNativeMenuBar);  // NOLINT(*-static-accessed-through-instance)
 }
 
 Application::~Application() { logger::cleanup(); }
 
-int Application::start() {
+int Application::start() const {
   if (_configurationManager->getDebugSetting<bool>(
           ConfigurationManager::DebugSetting::ShowConsole)) {
     logger::init();
@@ -41,7 +42,7 @@ int Application::start() {
   ui::MainWindow mainWindow;
   mainWindow.show();
 
-  return _guiApplication.exec();
+  return _guiApplication.exec();  // NOLINT(*-static-accessed-through-instance)
 }
 
 void Application::registerMetadata() {
