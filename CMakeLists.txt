@@ -82,7 +82,7 @@ set(APPLICATION_SOURCE_FILES
 )
 
 set(APPLICATION_UI_FILES
-        src/ui/mainwindow.ui
+        src/ui/MainWindow.ui
         src/ui/ConsoleWindow.ui
         src/ui/dialogs/NewFileDialog.ui
         src/ui/docks/ToolsArea.ui
@@ -127,7 +127,7 @@ else ()
         add_compile_options("/W4" "$<$<CONFIG:RELEASE>:/O2>")
     else ()
         add_compile_options("-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
-                "-Wstrict-prototypes" "-Wstrict-overflow=4" "-Wwrite-strings" "-Waggregate-return" "-Wcast-qual" "-Wswitch-enum"
+                "-Wstrict-overflow=4" "-Wwrite-strings" "-Waggregate-return" "-Wcast-qual" "-Wswitch-enum"
                 "$<$<CONFIG:RELEASE>:-O3>")
     endif ()
 endif ()
