@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.16)
 
 project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 set(APPLICATION_SOURCE_FILES
         src/Application.cpp
         src/Application.hpp
@@ -105,11 +109,7 @@ set(LIBS_TO_LINK
         rapidjson
 )
 
-set(Qt6_DIR /opt/homebrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6)
-
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+#set(Qt6_DIR /opt/homebrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 find_package(spdlog REQUIRED)
