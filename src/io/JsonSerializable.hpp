@@ -15,48 +15,37 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef COLORAREA_HPP
-#define COLORAREA_HPP
+#ifndef JSONSERIALIZABLE_HPP
+#define JSONSERIALIZABLE_HPP
 
-#include <QWidget>
-#include "models/PaletteModel.hpp"
-#include "models/PaletteColorTableModel.hpp"
-#include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
+#include <rapidjson/document.h>
+#include "utils/ErrorHandling.hpp"
 
-namespace capy::ui {
-namespace Ui {
-class ColorArea;
-}
-
-class ColorArea final : public QWidget {
-  Q_OBJECT
+namespace capy {
+template <class Derived>
+class JsonSerializable {
 public:
-  explicit ColorArea(QWidget *parent = nullptr);
-  ~ColorArea() override;
+  virtual ~JsonSerializable() = default;
 
-public slots:
-  void currentColorPaletteChanged(int newPaletteIndex);
-  void userCurrentColorPaletteChanged(int newPaletteIndex);
-  void colorClicked(const QModelIndex& index) const;
-  void addColorToPaletteClicked();
-  void createPaletteClicked();
-  void removePaletteClicked();
-  void createColorClicked() const;
-  void removeColorClicked();
+  static Result<Derived, std::string> createFromJson(const std::string& path);
+  // TODO: Only save when _wasEdited=true
+  PotentialError<std::string> saveToJson(std::optional<std::string> path);
 
-signals:
-    void colorPickerColorChanged(QColor color);
+  std::optional<std::string> getPath() const;
+  bool wasEditedFromLastSave() const;
+
+protected:
+  void markAsEdited();
 
 private:
-  Ui::ColorArea* ui;
-  models::PaletteModel _paletteModel;
-  models::PaletteColorTableModel _colorTableModel;
-  DefaultColorPicker* _colorPicker;
-  int _savedPaletteComboBoxIndex = -1;
+  std::optional<std::string> _path;
+  bool _wasEdited = false;
 
-  void loadPalettesFromFilesystem();
-  bool isPaletteComboBoxIndexRestorable() const;
+  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
+  virtual rapidjson::Document exportValuesToJson() const = 0;
 };
-}
+} // capy
 
-#endif // COLORAREA_HPP
+#include "JsonSerializable.tpp"
+
+#endif //JSONSERIALIZABLE_HPP

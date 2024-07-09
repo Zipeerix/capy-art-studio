@@ -101,14 +101,14 @@ void ColorArea::loadPalettesFromFilesystem() {
 
   std::vector<Palette> palettes;
   for (const auto& paletteFilePath : paletteFileList) {
-    const auto loadedPaletteOpt = Palette::fromJson(paletteFilePath);
+    const auto loadedPaletteOpt = Palette::createFromJson(paletteFilePath);
     if (!loadedPaletteOpt.has_value()) {
       execMessageBox(this, QMessageBox::Critical,
         "Error when loading palette: " + QString::fromStdString(loadedPaletteOpt.error()));
       continue;
     }
 
-    const auto loadedPalette = loadedPaletteOpt.value();
+    const auto& loadedPalette = loadedPaletteOpt.value();
     logger::info(fmt::format("Loaded new palette: {}", loadedPalette.getName()));
     palettes.push_back(loadedPalette);
   }
@@ -130,7 +130,7 @@ void ColorArea::createPaletteClicked() {
     return execMessageBox(this, QMessageBox::Warning, "Palette with this name already exists");
   }
 
-  const auto newPalette = Palette(paletteName.toStdString());
+  auto newPalette = Palette(paletteName.toStdString());
 
   const auto palettesPath = std::filesystem::path(getFilesystemPath(FilesystemPath::Palettes));
   const auto newPaletteFilePath = palettesPath / (newPalette.getName() + ".json");

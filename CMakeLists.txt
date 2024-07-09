@@ -64,6 +64,8 @@ set(APPLICATION_SOURCE_FILES
         src/io/CapyFileManager.hpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
+        src/io/JsonSerializable.hpp
+        src/io/JsonSerializable.tpp
         src/utils/General.hpp
         src/utils/General.cpp
         src/utils/General.tpp
