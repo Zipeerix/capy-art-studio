@@ -106,7 +106,7 @@ TEST(algorithms, bresenham_straight_line_upwards) {
 
   ASSERT_EQ(points.size(), expectedPoints.size());
 
-  for (int i = 0; i < points.size(); i++) {
+  for (size_t i = 0; i < points.size(); i++) {
     auto actualPoint = points.at(i);
     auto expectedPoint = expectedPoints.at(i);
 
@@ -126,7 +126,7 @@ TEST(algorithms, bresenham_straight_line_downwards) {
 
   ASSERT_EQ(points.size(), expectedPoints.size());
 
-  for (int i = 0; i < points.size(); i++) {
+  for (size_t i = 0; i < points.size(); i++) {
     auto actualPoint = points.at(i);
     auto expectedPoint = expectedPoints.at(i);
 
@@ -144,7 +144,7 @@ TEST(algorithms, bresenham_curved_line_upwards) {
 
   ASSERT_EQ(points.size(), expectedPoints.size());
 
-  for (int i = 0; i < points.size(); i++) {
+  for (size_t i = 0; i < points.size(); i++) {
     auto actualPoint = points.at(i);
     auto expectedPoint = expectedPoints.at(i);
 
@@ -162,7 +162,7 @@ TEST(algorithms, bresenham_curved_line_downwards) {
 
   ASSERT_EQ(points.size(), expectedPoints.size());
 
-  for (int i = 0; i < points.size(); i++) {
+  for (size_t i = 0; i < points.size(); i++) {
     auto actualPoint = points.at(i);
     auto expectedPoint = expectedPoints.at(i);
 

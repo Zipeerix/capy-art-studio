@@ -20,71 +20,14 @@
 #include <fmt/format.h>
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
-
 #include <fstream>
-#include <sstream>
 
 #include "../io/ConsoleLogger.hpp"
 
 namespace capy {
-Palette::Palette(std::string name) : _name(std::move(name)) {
-  _wasEdited = true;  // Created = edited
-}
-
-Result<Palette, std::string> Palette::fromJson(const std::string& path) {
-  using namespace rapidjson;
-
-  std::ifstream file(path);
-  if (!file.is_open()) {
-    return std::unexpected("Unable to open Palette JSON file at path: " + path);
-  }
-
-  std::stringstream buffer;
-  buffer << file.rdbuf();
-
-  std::string jsonContent = buffer.str();
-  file.close();
-
-  Document root;
-  if (root.Parse(jsonContent.c_str()).HasParseError()) {
-    return std::unexpected("Invalid Palette JSON file at path: " + path);
-  }
-
-  Palette palette;
-  palette._path = path;
-  const auto jsonParseError = palette.importValuesFromJson(root);
-  if (jsonParseError.has_value()) {
-    return std::unexpected("Error when parsing Palette JSON: " + jsonParseError.value());
-  }
-
-  return palette;
-}
-
-PotentialError<std::string> Palette::saveToJson(std::optional<std::string> path) const {
-  using namespace rapidjson;
-
-  Document root = exportValuesToJson();
-
-  StringBuffer buffer;
-  Writer writer(buffer);
-  root.Accept(writer);
-
-  const std::string finalPath = path.has_value() ? path.value() : _path.value_or("");
-  if (finalPath.empty()) {
-    return "Unable to save Palette JSON as no output path is given";
-  }
-
-  std::ofstream file(finalPath);
-  if (!file.is_open()) {
-    return "Unable to open Palette JSON file to writing";
-  }
-
-  file << buffer.GetString();
-  file.close();
-
-  return std::nullopt;
+Palette::Palette(std::string name) :
+  JsonSerializable(),
+  _name(std::move(name)) {
 }
 
 PotentialError<std::string> Palette::importValuesFromJson(const rapidjson::Document& root) {
@@ -159,8 +102,6 @@ rapidjson::Document Palette::exportValuesToJson() const {
   return document;
 }
 
-bool Palette::wasEditedFromLastLoad() const { return _wasEdited; }
-
 void Palette::addColor(const QColor& color, const std::optional<std::string>& hint) {
   _colors.push_back(PaletteColor{color, hint});
 }
@@ -175,13 +116,15 @@ void Palette::removeColor(int index) {
   }
 
   _colors.erase(_colors.begin() + index);
+  markAsEdited();
 }
 
 std::string Palette::getName() const { return _name; }
 
-std::optional<std::string> Palette::getPath() const { return _path; }
-
-void Palette::setName(std::string newName) { _name = std::move(newName); }
+void Palette::setName(std::string newName) {
+  _name = std::move(newName);
+  markAsEdited();
+}
 
 int Palette::colorCount() const { return _colors.size(); }
 

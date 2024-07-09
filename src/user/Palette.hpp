@@ -24,27 +24,22 @@
 #include <expected>
 
 #include "utils/ErrorHandling.hpp"
+#include "io/JsonSerializable.hpp"
 
 namespace capy {
+// TODO: Derive from JsonSerializable and append document to other document?
 struct PaletteColor {
   QColor color;
   std::optional<std::string> hint;
 };
 
-class Palette {
+class Palette final : public JsonSerializable<Palette> {
  public:
   Palette() = default;
   explicit Palette(std::string name);
 
-  [[nodiscard]] static Result<Palette, std::string> fromJson(const std::string& path);
-  [[nodiscard]] PotentialError<std::string> saveToJson(std::optional<std::string> path) const;
-
-  bool wasEditedFromLastLoad() const;
-
   std::string getName() const;
   void setName(std::string newName);
-
-  std::optional<std::string> getPath() const;
 
   int colorCount() const;
   PaletteColor getColor(int index) const;
@@ -54,12 +49,10 @@ class Palette {
 
  private:
   std::string _name;
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
   std::vector<PaletteColor> _colors;
 
-  [[nodiscard]] PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root);
-  rapidjson::Document exportValuesToJson() const;
+  [[nodiscard]] PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) override;
+  rapidjson::Document exportValuesToJson() const override;
 
   bool isIndexOutsideColors(int index) const;
 };
