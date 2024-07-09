@@ -21,13 +21,15 @@
 #include <fmt/format.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+
 #include <fstream>
 #include <sstream>
+
 #include "JsonSerializable.hpp"
 
 namespace capy {
 template <class Derived>
-void JsonSerializable<Derived>::markAsEdited(){
+void JsonSerializable<Derived>::markAsEdited() {
   _wasEdited = true;
 }
 
@@ -45,7 +47,8 @@ template <class Derived>
 Result<Derived, std::string> JsonSerializable<Derived>::createFromJson(const std::string& path) {
   using namespace rapidjson;
 
-  static_assert(std::is_base_of_v<JsonSerializable, Derived>, "Derived must be a subclass of JsonSerializable");
+  static_assert(std::is_base_of_v<JsonSerializable, Derived>,
+                "Derived must be a subclass of JsonSerializable");
 
   std::ifstream file(path);
   if (!file.is_open()) {
@@ -79,7 +82,8 @@ template <class Derived>
 PotentialError<std::string> JsonSerializable<Derived>::saveToJson(std::optional<std::string> path) {
   using namespace rapidjson;
 
-  static_assert(std::is_base_of_v<JsonSerializable, Derived>, "Derived must be a subclass of JsonSerializable");
+  static_assert(std::is_base_of_v<JsonSerializable, Derived>,
+                "Derived must be a subclass of JsonSerializable");
 
   Document root = exportValuesToJson();
 
@@ -103,7 +107,6 @@ PotentialError<std::string> JsonSerializable<Derived>::saveToJson(std::optional<
   _wasEdited = false;
   return std::nullopt;
 }
-}
+}  // namespace capy
 
-
-#endif //JSONSERIALIZABLE_TPP
+#endif  // JSONSERIALIZABLE_TPP

@@ -23,8 +23,8 @@
 #include <QColor>
 #include <expected>
 
-#include "utils/ErrorHandling.hpp"
 #include "io/JsonSerializable.hpp"
+#include "utils/ErrorHandling.hpp"
 
 namespace capy {
 // TODO: Derive from JsonSerializable and append document to other document?
@@ -51,7 +51,8 @@ class Palette final : public JsonSerializable<Palette> {
   std::string _name;
   std::vector<PaletteColor> _colors;
 
-  [[nodiscard]] PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) override;
+  [[nodiscard]] PotentialError<std::string> importValuesFromJson(
+      const rapidjson::Document& root) override;
   rapidjson::Document exportValuesToJson() const override;
 
   bool isIndexOutsideColors(int index) const;

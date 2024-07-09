@@ -20,15 +20,13 @@
 #include <fmt/format.h>
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
+
 #include <fstream>
 
 #include "../io/ConsoleLogger.hpp"
 
 namespace capy {
-Palette::Palette(std::string name) :
-  JsonSerializable(),
-  _name(std::move(name)) {
-}
+Palette::Palette(std::string name) : JsonSerializable(), _name(std::move(name)) {}
 
 PotentialError<std::string> Palette::importValuesFromJson(const rapidjson::Document& root) {
   if (!root.HasMember("name") || !root["name"].IsString()) {

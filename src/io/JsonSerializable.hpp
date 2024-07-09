@@ -19,12 +19,13 @@
 #define JSONSERIALIZABLE_HPP
 
 #include <rapidjson/document.h>
+
 #include "utils/ErrorHandling.hpp"
 
 namespace capy {
 template <class Derived>
 class JsonSerializable {
-public:
+ public:
   virtual ~JsonSerializable() = default;
 
   static Result<Derived, std::string> createFromJson(const std::string& path);
@@ -34,18 +35,18 @@ public:
   std::optional<std::string> getPath() const;
   bool wasEditedFromLastSave() const;
 
-protected:
+ protected:
   void markAsEdited();
 
-private:
+ private:
   std::optional<std::string> _path;
   bool _wasEdited = false;
 
   virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
   virtual rapidjson::Document exportValuesToJson() const = 0;
 };
-} // capy
+}  // namespace capy
 
 #include "JsonSerializable.tpp"
 
-#endif //JSONSERIALIZABLE_HPP
+#endif  // JSONSERIALIZABLE_HPP
