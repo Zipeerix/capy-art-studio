@@ -127,7 +127,7 @@ else ()
         add_compile_options("/W4" "$<$<CONFIG:RELEASE>:/O2>")
     else ()
         add_compile_options("-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
-                "-Wstrict-overflow=4" "-Wwrite-strings" "-Waggregate-return" "-Wcast-qual" "-Wswitch-enum"
+                "-Wstrict-overflow=4" "-Wwrite-strings" "-Wcast-qual" "-Wswitch-enum"
                 "$<$<CONFIG:RELEASE>:-O3>")
     endif ()
 endif ()
