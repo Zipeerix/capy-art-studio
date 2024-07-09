@@ -120,24 +120,24 @@ find_package(libzippp REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-if (SKIP_COMPILER_FLAGS)
-    message("Skipping compiler flags")
-else ()
-    if (MSVC)
-        add_compile_options("/W4" "$<$<CONFIG:RELEASE>:/O2>")
-    else ()
-        add_compile_options("-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
-                "-Wstrict-overflow=4" "-Wwrite-strings" "-Wcast-qual" "-Wswitch-enum"
-                "$<$<CONFIG:RELEASE>:-O3>")
-    endif ()
-endif ()
-
 qt_add_executable(CapyArtStudio
         src/main.cpp
         ${APPLICATION_SOURCE_FILES}
         ${APPLICATION_UI_FILES}
         resources/resources.qrc
 )
+
+if (SKIP_COMPILER_FLAGS)
+    message("Skipping compiler flags")
+else ()
+    if (MSVC)
+        target_compile_options(CapyArtStudio PUBLIC "/W4" "$<$<CONFIG:RELEASE>:/O2>")
+    else ()
+        target_compile_options(CapyArtStudio PUBLIC "-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
+                "-Wstrict-overflow=4" "-Wwrite-strings" "-Wcast-qual" "-Wswitch-enum"
+                "$<$<CONFIG:RELEASE>:-O3>")
+    endif ()
+endif ()
 
 set_target_properties(CapyArtStudio PROPERTIES
         # C++ Settings
