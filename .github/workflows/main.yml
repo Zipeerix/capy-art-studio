@@ -57,6 +57,7 @@ jobs:
           install-deps: 'true'
           dir: '${{ github.workspace }}/qt/'
           modules: 'qtwebengine'
+          cache: 'true'
 
       - name: Install Conan
         uses: turtlebrowser/get-conan@v1.2

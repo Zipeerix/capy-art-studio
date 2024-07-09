@@ -82,7 +82,7 @@ set(APPLICATION_SOURCE_FILES
 )
 
 set(APPLICATION_UI_FILES
-        src/ui/MainWindow.ui
+        src/ui/mainwindow.ui
         src/ui/ConsoleWindow.ui
         src/ui/dialogs/NewFileDialog.ui
         src/ui/docks/ToolsArea.ui
