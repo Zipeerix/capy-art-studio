@@ -25,7 +25,7 @@
 namespace capy {
 class Application {
  public:
-  Application(int argc, char** argv);
+  Application();
   ~Application();
 
   [[nodiscard]] int start() const;
@@ -33,6 +33,7 @@ class Application {
  private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   QApplication _guiApplication;
+  int _cmdArgcOverwrite = 0;
 
   static void registerMetadata();
 };

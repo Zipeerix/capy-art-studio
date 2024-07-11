@@ -18,6 +18,8 @@
 #ifndef DYNAMICLIBRARY_TPP
 #define DYNAMICLIBRARY_TPP
 
+#include <stdexcept>
+
 #include "DynamicLibrary.hpp"
 
 namespace capy {

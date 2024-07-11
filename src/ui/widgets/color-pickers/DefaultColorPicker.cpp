@@ -62,7 +62,7 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
   auto* brightnessLabel = new QLabel;
   auto* alphaLabel = new QLabel;
 
-  connect(_hueSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_hueSlider, &QSlider::valueChanged, this, [=, this](int value) {
     hueLabel->setText(QString::number(value));
     _saturationSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 0, 255)},
                                          {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
@@ -73,17 +73,17 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
     setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
              _alphaSlider->value());
   });
-  connect(_saturationSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_saturationSlider, &QSlider::valueChanged, this, [=, this](int value) {
     saturationLabel->setText(QString::number(value));
     setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
              _alphaSlider->value());
   });
-  connect(_brightnessSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_brightnessSlider, &QSlider::valueChanged, this, [=, this](int value) {
     brightnessLabel->setText(QString::number(value));
     setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
              _alphaSlider->value());
   });
-  connect(_alphaSlider, &QSlider::valueChanged, this, [=](int value) {
+  connect(_alphaSlider, &QSlider::valueChanged, this, [=, this](int value) {
     alphaLabel->setText(QString::number(value));
     setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
              _alphaSlider->value());

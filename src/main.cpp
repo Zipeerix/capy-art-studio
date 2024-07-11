@@ -17,7 +17,7 @@
 
 #include "Application.hpp"
 
-int main(int argc, char* argv[]) {
-  capy::Application application{argc, argv};
+int main() {
+  capy::Application application{};
   return application.start();
 }

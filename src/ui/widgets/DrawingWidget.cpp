@@ -112,8 +112,8 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
         _panStartY = static_cast<int>(eventPosition.y());
         setCursor(Qt::ClosedHandCursor);
         event->accept();
-        return;
       }
+      return;
     }
 
     case DrawingTool::Pen: {
@@ -140,6 +140,9 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
 
     case DrawingTool::Circle:
       break;
+
+    default:
+      break;
   }
 
   // or maybe base to base class
@@ -153,8 +156,8 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
         _leftMouseButtonPressed = false;
         setCursor(Qt::ArrowCursor);
         event->accept();
-        return;
       }
+      return;
     }
     case DrawingTool::Pen: {
       _lastContinousDrawingPoint = std::nullopt;
@@ -167,6 +170,9 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
       break;
 
     case DrawingTool::Circle:
+      break;
+
+    default:
       break;
   }
 
@@ -188,8 +194,8 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
         _panStartX = static_cast<int>(eventPosition.x());
         _panStartY = static_cast<int>(eventPosition.y());
         event->accept();
-        return;
       }
+      return;
     }
 
     case DrawingTool::Pen: {

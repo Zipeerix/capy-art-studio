@@ -19,6 +19,7 @@
 #define APPLICATIONFILESYSTEM_HPP
 
 #include <string>
+#include <vector>
 
 // TODO: Refactor? Maybe seperate file for listFilesInPath  cuz its utils
 // TODO: maybe io namespace

@@ -25,7 +25,7 @@
 namespace capy::algorithms {
 class AlphaBlender {
  public:
-  using PixelColorGettingFunction = std::function<const Pixel&(int, int, int)>;
+  using PixelColorGettingFunction = std::function<Pixel(int, int, int)>;
 
   explicit AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction);
 

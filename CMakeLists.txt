@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.16)
 
 project(CapyArtStudio VERSION 1.0 LANGUAGES CXX)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 set(APPLICATION_SOURCE_FILES
         src/Application.cpp
         src/Application.hpp
@@ -78,7 +82,7 @@ set(APPLICATION_SOURCE_FILES
 )
 
 set(APPLICATION_UI_FILES
-        src/ui/MainWindow.ui
+        src/ui/mainwindow.ui
         src/ui/ConsoleWindow.ui
         src/ui/dialogs/NewFileDialog.ui
         src/ui/docks/ToolsArea.ui
@@ -105,12 +109,6 @@ set(LIBS_TO_LINK
         rapidjson
 )
 
-set(Qt6_DIR /opt/homebrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6)
-
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
@@ -120,24 +118,23 @@ find_package(libzippp REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-if (SKIP_COMPILER_FLAGS)
-    message("Skipping compiler flags")
-else ()
-    if (MSVC)
-        add_compile_options("/W4" "$<$<CONFIG:RELEASE>:/O2>")
-    else ()
-        add_compile_options("-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
-                "-Wstrict-prototypes" "-Wstrict-overflow=4" "-Wwrite-strings" "-Waggregate-return" "-Wcast-qual" "-Wswitch-enum"
-                "$<$<CONFIG:RELEASE>:-O3>")
-    endif ()
-endif ()
-
 qt_add_executable(CapyArtStudio
         src/main.cpp
         ${APPLICATION_SOURCE_FILES}
         ${APPLICATION_UI_FILES}
         resources/resources.qrc
 )
+
+if (SKIP_COMPILER_FLAGS)
+    message("Skipping compiler flags")
+else ()
+    if (MSVC)
+        target_compile_options(CapyArtStudio PUBLIC "/W4" "$<$<CONFIG:RELEASE>:/O2>")
+    else ()
+        target_compile_options(CapyArtStudio PUBLIC "-Wall" "-Wextra" "-Werror" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
+                "-Wwrite-strings" "-Wcast-qual" "-Wswitch-enum" "$<$<CONFIG:RELEASE>:-O3>")
+    endif ()
+endif ()
 
 set_target_properties(CapyArtStudio PROPERTIES
         # C++ Settings
