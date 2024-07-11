@@ -1,0 +1,56 @@
+name: Build on Linux
+
+on:
+  push:
+    branches: [ "master", "feature/CAS-92_github" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ windows-latest ]
+        build_type: [ Release ]
+        c_compiler: [ cl ]
+        include:
+          - os: windows-latest
+            cpp_compiler: cl
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: echo "Placeholder for windows system dependencies"
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4.0.0
+        with:
+          version: '6.7.0'
+          host: 'windows'
+          install-deps: 'true'
+          dir: '${{ github.workspace }}\qt'
+          modules: 'qtwebengine'
+          cache: 'true'
+
+      - name: Install Conan
+        uses: turtlebrowser/get-conan@v1.2
+
+      - name: Detect Conan profiles
+        run: conan profile detect
+
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Install conan dependencies
+        run: conan install ${{ github.workspace }}/conan --build=missing
+
+      - name: Build
+        run: conan build ${{ github.workspace }}/conan
