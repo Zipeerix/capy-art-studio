@@ -41,7 +41,9 @@ QColor Drawing::calculateCombinedPixelColor(const int x, const int y) const {
   // TODO: change x to xArg and y to yArg and check in getPixel and test asap if layers work
   // transparently
   static algorithms::AlphaBlender alphaBlender(
-      [&](int x, int y, int layer) { return _layers.at(layer).getPixel(x, y); });
+      [&](const int xPixel, const int yPixel, const int layer) {
+        return _layers.at(layer).getPixel(xPixel, yPixel);
+      });
   return alphaBlender.blend(x, y, _layers.size());
 }
 }  // namespace capy
