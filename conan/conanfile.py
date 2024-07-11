@@ -21,6 +21,7 @@ class CapyArtStudio(ConanFile):
         self.requires("gtest/1.14.0")
         self.requires("rapidjson/1.1.0")
         self.requires("libzippp/7.1-1.10.1")
+        self.requires("libcurl/8.8.0")
 
     def layout(self):
         self.folders.root = "build"
