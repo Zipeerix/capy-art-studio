@@ -133,7 +133,7 @@ else ()
     if (MSVC)
         target_compile_options(CapyArtStudio PUBLIC "/W4" "$<$<CONFIG:RELEASE>:/O2>")
     else ()
-        target_compile_options(CapyArtStudio PUBLIC "-Wall" "-Wextra" "-Werror" "-Wfloat-equal" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
+        target_compile_options(CapyArtStudio PUBLIC "-Wall" "-Wextra" "-Werror" "-Wshadow" "-Wundef" "-Wcast-align" "-Wpointer-arith"
                 "-Wwrite-strings" "-Wcast-qual" "-Wswitch-enum" "$<$<CONFIG:RELEASE>:-O3>")
     endif ()
 endif ()
