@@ -12,6 +12,8 @@ class CapyArtStudio(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"
 
+    # TODO: Move building tests seperatetly to here conan test? Don't build both at build()
+
     def requirements(self):
         self.requires("spdlog/1.14.1")
         self.requires("fmt/10.2.1")
