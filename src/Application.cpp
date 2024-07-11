@@ -22,10 +22,11 @@
 #include "ui/MainWindow.hpp"
 
 namespace capy {
-Application::Application() :
- _configurationManager(ConfigurationManager::createInstance()),
- _guiApplication(_cmdArgcOverwrite, nullptr) {
- _guiApplication.setAttribute(Qt::AA_DontUseNativeMenuBar);  // NOLINT(*-static-accessed-through-instance)
+Application::Application()
+    : _configurationManager(ConfigurationManager::createInstance()),
+      _guiApplication(_cmdArgcOverwrite, nullptr) {
+  _guiApplication.setAttribute(
+      Qt::AA_DontUseNativeMenuBar);  // NOLINT(*-static-accessed-through-instance)
 }
 
 Application::~Application() { logger::cleanup(); }
