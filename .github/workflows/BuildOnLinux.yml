@@ -1,4 +1,4 @@
-name: Build on Linux
+name: Build on Linux (GCC)
 
 on:
   push:
@@ -16,14 +16,11 @@ jobs:
       matrix:
         os: [ ubuntu-24.04 ]
         build_type: [ Release ]
-        c_compiler: [ gcc, clang ]
+        c_compiler: [ gcc ]
         include:
           - os: ubuntu-24.04
             c_compiler: gcc
             cpp_compiler: g++
-          - os: ubuntu-24.04
-            c_compiler: clang
-            cpp_compiler: clang++
 
     steps:
       - uses: actions/checkout@v4
@@ -52,6 +49,7 @@ jobs:
         shell: bash
         run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+      # TODO: Cache packages to save minutes
       - name: Install conan dependencies
         run: conan install ${{ github.workspace }}/conan --build=missing
 

@@ -31,7 +31,7 @@ TEST(algorithms, alpha_blending_one_layer) {
       capy::algorithms::AlphaBlender([&](int, int, int layer) -> capy::Pixel { return layers.at(layer); });
 
   const auto blendResult = blender.blend(0, 0, layers.size());
-  ASSERT_EQ(blendResult, QColor(128, 128, 128, 255));
+  ASSERT_EQ(blendResult, QColor(128, 128, 128, 0));
 }
 
 TEST(algorithms, alpha_blending_two_layers) {
