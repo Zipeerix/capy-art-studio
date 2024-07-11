@@ -2,7 +2,7 @@ name: Build on Linux
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feature/CAS-92_github" ]
   pull_request:
     branches: [ "master" ]
 
