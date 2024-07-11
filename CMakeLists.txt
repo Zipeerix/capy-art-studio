@@ -109,8 +109,6 @@ set(LIBS_TO_LINK
         rapidjson
 )
 
-#set(Qt6_DIR /opt/homebrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6)
-
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
