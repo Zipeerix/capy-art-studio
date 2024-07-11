@@ -19,6 +19,7 @@
 #define DYNAMICLIBRARY_TPP
 
 #include "DynamicLibrary.hpp"
+#include <stdexcept>
 
 namespace capy {
 template <typename SymbolType>
