@@ -2,7 +2,7 @@ name: Build on Linux (GCC)
 
 on:
   push:
-    branches: [ "master", "feature/CAS-92_github" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
