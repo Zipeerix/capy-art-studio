@@ -1,4 +1,4 @@
-name: Build on Linux
+name: Build on Windows
 
 on:
   push:
@@ -42,6 +42,9 @@ jobs:
 
       - name: Detect Conan profiles
         run: conan profile detect
+
+      - name: Update Conan profiles
+        run: conan profile update settings.compiler.cppstd=23 default
 
       - name: Set reusable strings
         id: strings
