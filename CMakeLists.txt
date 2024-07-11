@@ -79,6 +79,8 @@ set(APPLICATION_SOURCE_FILES
         src/plugin/DynamicLibrary.tpp
         src/plugin/ExternalPlugin.hpp
         src/plugin/ExternalPlugin.cpp
+        src/network/AsyncFileDownloader.hpp
+        src/network/AsyncFileDownloader.cpp
 )
 
 set(APPLICATION_UI_FILES
@@ -101,17 +103,21 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/user/resources/TestPalette.json
         ${CMAKE_CURRENT_BINARY_DIR}/tests/user/resources/TestPalette.json COPYONLY)
 
 set(LIBS_TO_LINK
+        Qt6::Core
+        Qt6::Network
         Qt6::Widgets
         spdlog::spdlog
         fmt::fmt
         tomlplusplus::tomlplusplus
         libzippp::libzippp
         rapidjson
+        CURL::libcurl
 )
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
+find_package(CURL REQUIRED)
 find_package(tomlplusplus REQUIRED)
 find_package(RapidJSON REQUIRED)
 find_package(libzippp REQUIRED)
