@@ -40,6 +40,7 @@ QColor Drawing::calculateCombinedPixelColor(const int x, const int y) const {
   // TODO: if program crashes then its this retarded static here
   // TODO: change x to xArg and y to yArg and check in getPixel and test asap if layers work
   // transparently
+  // TODO: Member?
   static algorithms::AlphaBlender alphaBlender(
       [&](const int xPixel, const int yPixel, const int layer) {
         return _layers.at(layer).getPixel(xPixel, yPixel);
