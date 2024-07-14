@@ -78,11 +78,11 @@ void DrawingWidget::redrawScreen() {
     pen.setCosmetic(true);
 
     for (int y = 0; y <= totalDrawingHeight; y += 1) {
-      _scene->addLine(0, y, totalDrawingHeight, y, pen);
+      _scene->addLine(0, y, totalDrawingWidth, y, pen);
     }
 
     for (int x = 0; x <= totalDrawingWidth; x += 1) {
-      _scene->addLine(x, 0, x, totalDrawingWidth, pen);
+      _scene->addLine(x, 0, x, totalDrawingHeight, pen);
     }
   }
 
