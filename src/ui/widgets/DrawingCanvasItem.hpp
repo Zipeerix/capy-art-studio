@@ -25,10 +25,12 @@
 namespace capy::ui {
 class DrawingCanvasItem final : public QGraphicsItem {
 public:
+  using ColorCalculatingFunction = std::function<QColor(int, int)>;
+
   DrawingCanvasItem(int width, int height);
 
   void updateExternalCanvasPixel(int x, int y, const QColor& color);
-  void updateAllPixels(const std::function<QColor(int, int)>& colorCalculatingFunction);
+  void updateAllPixels(const ColorCalculatingFunction& colorCalculatingFunction);
 
 private:
   QImage _canvasRepresentation;

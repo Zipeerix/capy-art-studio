@@ -41,7 +41,7 @@ void DrawingCanvasItem::updateExternalCanvasPixel(const int x, const int y, cons
   update();
 }
 
-void DrawingCanvasItem::updateAllPixels(const std::function<QColor(int, int)>& colorCalculatingFunction) {
+void DrawingCanvasItem::updateAllPixels(const ColorCalculatingFunction& colorCalculatingFunction) {
   const auto width = _canvasRepresentation.width();
   const auto height = _canvasRepresentation.height();
 
