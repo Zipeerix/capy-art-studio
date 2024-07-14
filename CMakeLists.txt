@@ -134,7 +134,6 @@ set(LIBS_TO_LINK
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
 find_package(fmt REQUIRED)
-find_package(CURL REQUIRED)
 find_package(RapidJSON REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
