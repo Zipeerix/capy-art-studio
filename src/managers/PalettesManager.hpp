@@ -15,38 +15,45 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PROJECTSMANAGER_HPP
-#define PROJECTSMANAGER_HPP
+#ifndef PALETTESMANAGER_HPP
+#define PALETTESMANAGER_HPP
 
 #include "Manager.hpp"
-#include "io/ConfigurationManager.hpp"
-#include "models/ProjectsModel.hpp"
+#include "models/PaletteColorTableModel.hpp"
+#include "models/PaletteModel.hpp"
 
 namespace capy {
-class ProjectsManager final : public QObject {
+class PalettesManager final : public QObject {
   Q_OBJECT
  public:
-  explicit ProjectsManager(QObject* parent);
+  explicit PalettesManager(QObject* parent);
 
-  // TODO: base class Manager and also dont pass throguh model fns just have model() method
-  // same as in palettesmanager
-  const std::vector<Project>& getProjects() const;
+  models::PaletteModel* getPaletteModel();
+  models::PaletteColorTableModel* getPaletteColorTableModel();
 
-  bool isProjectInternal(const Project& project) const;
+  void loadPalettesFromFilesystem();
 
-  void loadProjectsFromFilesystem();
+  void createPalette(const std::string& name, const ManagerErrorHandler& errorHandler);
+  void removePalette(int index, const ManagerErrorHandler& errorHandler);
 
-  void addProject(const std::string& path);
-  void removeProject(const std::string& projectPath);
-  void deleteProject(const std::string& projectPath, const ManagerErrorHandler& errorHandler);
+  void removeColorFromPalette(int paletteIndex, int colorIndex,
+                              const ManagerErrorHandler& errorHandler);
+  void addColorToPalette(int paletteIndex, QColor color, const std::optional<std::string>& hint,
+                         const ManagerErrorHandler& errorHandler);
+
+  PaletteColor getColorFromPalette(int paletteIndex, int colorIndex) const;
+
+  void setTableColorsFromPalette(int paletteIndex);
 
  signals:
-  void projectsUpdated();
+  void palettesUpdated();
 
  private:
-  std::shared_ptr<ConfigurationManager> _configurationManager;
-  models::ProjectsModel _model;
+  models::PaletteModel _paletteModel;
+
+  // TODO: Move to its own manager?
+  models::PaletteColorTableModel _colorTableModel;
 };
 }  // namespace capy
 
-#endif  // PROJECTSMANAGER_HPP
+#endif  // PALETTESMANAGER_HPP

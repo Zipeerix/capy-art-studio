@@ -166,15 +166,8 @@ void WelcomeScreen::projectDeleteClicked(const std::optional<std::string>& path)
     return;
   }
 
-  const auto deletionError = _projectsManager.deleteProject(projectPath);
-  if (deletionError.has_value()) {
-    const auto errorText =
-        QString::fromStdString(fmt::format("Unable to delete project file at {} due to error: {}",
-                                           projectPath, deletionError.value()));
-    // TODO: allow std::string as arg for below
-    return execMessageBox(this, QMessageBox::Icon::Critical, errorText);
-  }
-
-  logger::info(fmt::format("Deleted project file at {}", projectPath));
+  _projectsManager.deleteProject(projectPath, [&](const std::string& error) {
+    return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+  });
 }
 }  // namespace capy::ui

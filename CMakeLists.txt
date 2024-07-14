@@ -27,6 +27,9 @@ set(APPLICATION_SOURCE_FILES
         src/graphics/Layer.cpp
         src/managers/ProjectsManager.hpp
         src/managers/ProjectsManager.cpp
+        src/managers/PalettesManager.hpp
+        src/managers/PalettesManager.cpp
+        src/managers/Manager.hpp
         src/user/Palette.cpp
         src/user/Palette.hpp
         src/user/Project.hpp

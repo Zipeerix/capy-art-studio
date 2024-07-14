@@ -30,8 +30,7 @@ namespace capy::ui {
 ColorArea::ColorArea(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::ColorArea),
-  _paletteModel(this),
-  _colorTableModel(this) {
+  _palettesManager(this) {
   ui->setupUi(this);
 
   _colorPicker = ui->colorPickerWidget;
@@ -46,8 +45,8 @@ ColorArea::ColorArea(QWidget *parent) :
   connect(ui->addColorToPalette, &QPushButton::clicked, this,
     &ColorArea::addColorToPaletteClicked);
 
-  ui->paletteComboBox->setModel(&_paletteModel);
-  ui->colorTableView->setModel(&_colorTableModel);
+  ui->paletteComboBox->setModel(_palettesManager.getPaletteModel());
+  ui->colorTableView->setModel(_palettesManager.getPaletteColorTableModel());
   ui->colorTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
   auto* colorTableDelegate = new ColorRectangleDelegate(ui->colorTableView);
@@ -70,7 +69,10 @@ ColorArea::ColorArea(QWidget *parent) :
   connect(ui->removeColorButton, &QPushButton::clicked, this,
     &ColorArea::removeColorClicked);
 
-  loadPalettesFromFilesystem();
+  connect(&_palettesManager, &PalettesManager::palettesUpdated, this,
+        &ColorArea::updatePalettesUi);
+
+  _palettesManager.loadPalettesFromFilesystem();
 }
 
 ColorArea::~ColorArea() {
@@ -85,65 +87,28 @@ void ColorArea::addColorToPaletteClicked() {
 
   const QColor colorToAdd = _colorPicker->getColor();
   const QString hint = QInputDialog::getText(this, "Add new Color to palette", "Color hint");
-  const auto colorAddingError = _paletteModel.addColorToPalette(currentPaltteIndex, colorToAdd, hint.isEmpty() ? std::nullopt : std::optional(hint.toStdString()));
-  if (colorAddingError.has_value()) {
-    return execMessageBox(this, QMessageBox::Critical,
-      "Error when adding color to palette: " + QString::fromStdString(colorAddingError.value()));
-  }
+  const auto hintAsOptional = hint.isEmpty() ? std::nullopt : std::optional(hint.toStdString());
 
-  loadPalettesFromFilesystem();
+  _palettesManager.addColorToPalette(currentPaltteIndex, colorToAdd, hintAsOptional, [&](const std::string& error) {
+    return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+  });
 }
 
-void ColorArea::loadPalettesFromFilesystem() {
-  // TODO: only load json files and validate them
-  // TODO: load and _paleteModel.setPalettes() and if error then show error box
-  const auto paletteFileList = listFilesInPath(FilesystemPath::Palettes);
-
-  std::vector<Palette> palettes;
-  for (const auto& paletteFilePath : paletteFileList) {
-    const auto loadedPaletteOpt = Palette::createFromJson(paletteFilePath);
-    if (!loadedPaletteOpt.has_value()) {
-      execMessageBox(this, QMessageBox::Critical,
-        "Error when loading palette: " + QString::fromStdString(loadedPaletteOpt.error()));
-      continue;
-    }
-
-    const auto& loadedPalette = loadedPaletteOpt.value();
-    logger::info(fmt::format("Loaded new palette: {}", loadedPalette.getName()));
-    palettes.push_back(loadedPalette);
-  }
-
-  _paletteModel.setPalettes(std::move(palettes));
-
+void ColorArea::updatePalettesUi() const {
   if (isPaletteComboBoxIndexRestorable()) {
     ui->paletteComboBox->setCurrentIndex(_savedPaletteComboBoxIndex);
   }
 }
 
 void ColorArea::createPaletteClicked() {
-  QString paletteName = QInputDialog::getText(this, "New Palette", "Palette name");
+  const QString paletteName = QInputDialog::getText(this, "New Palette", "Palette name");
   if (paletteName.isEmpty()) {
     return;
   }
 
-  if (_paletteModel.doesPaletteExist(paletteName.toStdString())) {
-    return execMessageBox(this, QMessageBox::Warning, "Palette with this name already exists");
-  }
-
-  auto newPalette = Palette(paletteName.toStdString());
-
-  const auto palettesPath = std::filesystem::path(getFilesystemPath(FilesystemPath::Palettes));
-  const auto newPaletteFilePath = palettesPath / (newPalette.getName() + ".json");
-
-  const auto saveError = newPalette.saveToJson(newPaletteFilePath.string());
-  if (saveError.has_value()) {
-    QMessageBox messageBox;
-    return execMessageBox(this, QMessageBox::Critical,
-      "Unable to save new palette, check filesystem permissions");
-  } else {
-    logger::info(fmt::format("Created new palette: {}", newPalette.getName()));
-    loadPalettesFromFilesystem();
-  }
+  _palettesManager.createPalette(paletteName.toStdString(), [&](const std::string& error) {
+    return execMessageBox(this, QMessageBox::Warning, QString::fromStdString(error));
+  });
 
   // TODO: Change index to newly created palette
 }
@@ -158,23 +123,9 @@ void ColorArea::removePaletteClicked() {
     return;
   }
 
-  logger::info(fmt::format("Attempting to remove palette at index: {}", paletteIndex));
-
-  const auto& paletteToDelete = _paletteModel.getPalette(paletteIndex);
-  std::optional<std::string> pathToDeleteOpt = paletteToDelete.getPath();
-  if (!pathToDeleteOpt.has_value()) {
-    logger::error(fmt::format("Unable to remove palette: {} due to missing path", paletteToDelete.getName()), logger::Severity::Severe);
-    return;
-  }
-
-  const std::string pathToDelete = pathToDeleteOpt.value();
-  if (!std::filesystem::remove(pathToDelete)) {
-    logger::error(fmt::format("Unable to remove palette file at path: {}", pathToDelete), logger::Severity::Severe);
-    return;
-  }
-
-  logger::info(fmt::format("Deleted palette: {}", paletteToDelete.getName()));
-  loadPalettesFromFilesystem();
+  _palettesManager.removePalette(paletteIndex, [&](const std::string& error) {
+    return execMessageBox(this, QMessageBox::Warning, QString::fromStdString(error));
+  });
 }
 
 void ColorArea::createColorClicked() const {
@@ -196,14 +147,9 @@ void ColorArea::removeColorClicked() {
     const auto selectedRows = selectionModel->selectedRows();
     for (const auto selectedRow : selectedRows) {
       const auto colorIndex = selectedRow.row();
-      const auto removeError = _paletteModel.removeColorFromPalette(paletteIndex, colorIndex);
-      // TODO: Below -> maybe add a signal from colorTableModel to paletteModel or other way around to signal this without calling this method
-      _colorTableModel.notifyThatColorWasRemovedFromThePalette(colorIndex);
-      if (removeError.has_value()) {
-        return execMessageBox(this, QMessageBox::Critical,
-          "Error when updating palette after removing color: " + QString::fromStdString(removeError.value()));
-        // TODO: Readd colors? So there is no discrepancy between ui and file
-      }
+      _palettesManager.removeColorFromPalette(paletteIndex, colorIndex, [&](const std::string& error) {
+        return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+      });
     }
   }
 }
@@ -213,13 +159,12 @@ void ColorArea::userCurrentColorPaletteChanged(const int newPaletteIndex){
 }
 
 void ColorArea::colorClicked(const QModelIndex& index) const {
-  const auto color = _paletteModel.getColor(ui->paletteComboBox->currentIndex(), index.row());
-  _colorPicker->setColor(color.color);
+  const auto paletteColor = _palettesManager.getColorFromPalette(ui->paletteComboBox->currentIndex(), index.row());
+  _colorPicker->setColor(paletteColor.color);
 }
 
 void ColorArea::currentColorPaletteChanged(const int newPaletteIndex){
-  const auto colorsOfCurrentPalette = _paletteModel.getColors(newPaletteIndex);
-  _colorTableModel.setColors(colorsOfCurrentPalette);
+  _palettesManager.setTableColorsFromPalette(newPaletteIndex);
 }
 
 bool ColorArea::isPaletteComboBoxIndexRestorable() const {

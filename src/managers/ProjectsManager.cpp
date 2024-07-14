@@ -57,7 +57,8 @@ void ProjectsManager::addProject(const std::string& path) {
   loadProjectsFromFilesystem();
 }
 
-PotentialError<std::string> ProjectsManager::deleteProject(const std::string& projectPath) {
+void ProjectsManager::deleteProject(const std::string& projectPath,
+                                    const ManagerErrorHandler& errorHandler) {
   removeProject(projectPath);
 
   PotentialError<std::string> fsError;
@@ -69,8 +70,14 @@ PotentialError<std::string> ProjectsManager::deleteProject(const std::string& pr
     fsError = err.what();
   }
 
+  if (fsError.has_value()) {
+    return errorHandler(
+        fmt::format("Unable to delete profile file due to error: {}", fsError.value()));
+  }
+
+  logger::info(fmt::format("Deleted project file at {}", projectPath));
+
   loadProjectsFromFilesystem();
-  return fsError;
 }
 
 void ProjectsManager::removeProject(const std::string& projectPath) {
