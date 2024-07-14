@@ -21,12 +21,15 @@
 #include <QPixmap>
 #include <string>
 
+#include "graphics/Drawing.hpp"
 #include "utils/ErrorHandling.hpp"
 
 namespace capy {
 class Project {
  public:
-  static Result<Project, std::string> createFromFile(const std::string& path);
+  [[nodiscard]] static Result<Project, std::string> createFromFile(const std::string& path);
+
+  [[nodiscard]] Result<Drawing, std::string> readDrawing() const;
 
   std::string getPath() const;
   std::string getName() const;

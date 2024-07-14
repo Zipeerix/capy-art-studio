@@ -92,4 +92,11 @@ std::string Project::getPath() const { return _path; }
 std::string Project::getName() const { return getFileNameFromPath(_path); }
 
 QPixmap Project::getMiniature() const { return _miniature; }
+
+Result<Drawing, std::string> Project::readDrawing() const {
+  Drawing drawing(32, 32);
+  drawing.drawPixelOnCurrentLayer(16, 16, QColor(255, 0, 0, 255));
+
+  return drawing;
+}
 }  // namespace capy

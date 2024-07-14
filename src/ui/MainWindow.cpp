@@ -24,6 +24,7 @@
 #include "ui/SettingsDialog.hpp"
 #include "ui_MainWindow.h"
 #include "widgets/DrawingWidget.hpp"
+#include "widgets/utils/MessageBoxUtils.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
@@ -93,5 +94,14 @@ void MainWindow::colorPickerColorChanged(QColor newColor) const {
 void MainWindow::loadProject(const Project& project) {
   // TODO: read project data and set drawing with layers based upon it
   changeWindowTitle(project.getPath());
+
+  const auto projectDrawingRes = project.readDrawing();
+  if (!projectDrawingRes.has_value()) {
+    execMessageBox(this, QMessageBox::Icon::Critical, QString::fromStdString(projectDrawingRes.error()));
+    return QApplication::exit(); // TODO: Maybe just go back to welcome screen
+  }
+
+  // TODO: Maybe make drawing unique_ptr for memory saving
+  _drawingWidget->setDrawing(std::move(projectDrawingRes.value()));
 }
 }  // namespace capy::ui

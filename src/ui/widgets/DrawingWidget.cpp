@@ -42,6 +42,11 @@ void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRe
   painter->restore();
 }
 
+void DrawingWidget::setDrawing(Drawing drawing) {
+  _drawing = std::move(drawing);
+  redrawScreen();
+}
+
 void DrawingWidget::setDrawingColor(const QColor color) {
   _drawingColor = color;
 }
@@ -55,14 +60,18 @@ void DrawingWidget::startNewDrawing(const int width, const int height) {
       "Creating new image with dimensions {}x{} with per layer size of {} bytes",
       width, height, calculateInMemorySizeOfImage(width, height)));
   _drawing = Drawing(width, height);
+  redrawScreen();
+}
+
+void DrawingWidget::redrawScreen() {
   _scene->clear();
 
-  _drawingCanvasItem = new DrawingCanvasItem(width, height);
+  _drawingCanvasItem = new DrawingCanvasItem(_drawing.getWidth(), _drawing.getHeight());
   _scene->addItem(_drawingCanvasItem);
 
   if (_settings->getGraphicsSetting<bool>(ConfigurationManager::GraphicsSetting::DrawGrid)) {
-    const int totalDrawingWidth = width;
-    const int totalDrawingHeight = height;
+    const int totalDrawingWidth = _drawing.getWidth();
+    const int totalDrawingHeight = _drawing.getHeight();
 
     auto pen = QPen(Qt::lightGray);
     pen.setWidthF(_settings->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
