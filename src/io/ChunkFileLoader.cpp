@@ -15,30 +15,6 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PROJECT_HPP
-#define PROJECT_HPP
+#include "ChunkFileLoader.hpp"
 
-#include <QPixmap>
-#include <string>
-
-#include "utils/ErrorHandling.hpp"
-
-namespace capy {
-class Project {
- public:
-  static Result<Project, std::string> createFromFile(const std::string& path);
-
-  std::string getPath() const;
-  std::string getName() const;
-
-  QPixmap getMiniature() const;
-
- private:
-  Project(std::string path, QPixmap miniature);
-
-  std::string _path;
-  QPixmap _miniature;
-};
-}  // namespace capy
-
-#endif  // PROJECT_HPP
+namespace capy {}

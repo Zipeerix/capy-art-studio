@@ -15,10 +15,16 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef TOMLWRAPPER_H
-#define TOMLWRAPPER_H
+#ifndef CHUNKFILELOADER_HPP
+#define CHUNKFILELOADER_HPP
 
-#define TOML_EXCEPTIONS 0
-#include <toml++/toml.hpp>
+namespace capy {
+class ChunkFileLoader {
+public:
 
-#endif  // TOMLWRAPPER_H
+private:
+
+};
+}  // namespace capy
+
+#endif  // CHUNKFILELOADER_HPP

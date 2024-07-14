@@ -77,12 +77,13 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/DockableWidget.cpp
         src/ui/dialogs/NewFileDialog.cpp
         src/ui/dialogs/NewFileDialog.hpp
-        src/utils/TomlWrapper.hpp
         src/io/ConfigurationManager.hpp
         src/io/ConfigurationManager.tpp
         src/io/ConfigurationManager.cpp
         src/io/ConsoleLogger.hpp
         src/io/ConsoleLogger.cpp
+        src/io/ChunkFileLoader.hpp
+        src/io/ChunkFileLoader.cpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
         src/io/JsonSerializable.hpp

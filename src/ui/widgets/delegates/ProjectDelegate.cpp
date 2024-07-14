@@ -43,15 +43,17 @@ ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidge
 
   const auto projectName = QString::fromStdString(_project.getName());
   ui->nameLabel->setText(elideText(projectName, ui->nameLabel->font(), ui->nameLabel->width()));
-  ui->nameLabel->setToolTip(QString::fromStdString(_project.getPath().value_or("Unknown Path")));
+  ui->nameLabel->setToolTip(QString::fromStdString(_project.getPath()));
 
-  // TODO: Get real miniature
-  QPixmap miniature{QString::fromStdString("THIS_IS_DELIBERATE_TO_FAIL")};
+  QPixmap miniature = _project.getMiniature();
   if (miniature.isNull()) {
     miniature = QPixmap{":/no-image.png"};
   }
 
-  ui->imageLabel->setPixmap(miniature);
+  const auto actualMiniature =
+      miniature.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+  ui->imageLabel->setPixmap(actualMiniature);
 }
 
 ProjectDelegate::~ProjectDelegate() { delete ui; }
