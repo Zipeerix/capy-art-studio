@@ -15,13 +15,9 @@ class CapyArtStudio(ConanFile):
     # TODO: Move building tests seperatetly to here conan test? Don't build both at build()
 
     def requirements(self):
-        self.requires("spdlog/1.14.1")
         self.requires("fmt/10.2.1")
-        self.requires("tomlplusplus/3.4.0")
         self.requires("gtest/1.14.0")
         self.requires("rapidjson/1.1.0")
-        self.requires("libzippp/7.1-1.10.1")
-        self.requires("libcurl/8.8.0")
 
     def layout(self):
         self.folders.root = "build"
