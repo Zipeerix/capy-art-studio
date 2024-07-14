@@ -91,17 +91,8 @@ void MainWindow::colorPickerColorChanged(QColor newColor) const {
   _drawingWidget->setDrawingColor(newColor);
 }
 
-void MainWindow::loadProject(const Project& project) {
-  // TODO: read project data and set drawing with layers based upon it
-  changeWindowTitle(project.getPath());
-
-  const auto projectDrawingRes = project.readDrawing();
-  if (!projectDrawingRes.has_value()) {
-    execMessageBox(this, QMessageBox::Icon::Critical, QString::fromStdString(projectDrawingRes.error()));
-    return QApplication::exit(); // TODO: Maybe just go back to welcome screen
-  }
-
-  // TODO: Maybe make drawing unique_ptr for memory saving
-  _drawingWidget->setDrawing(std::move(projectDrawingRes.value()));
+void MainWindow::setDrawing(Drawing drawing, const std::string& projectPath) {
+  changeWindowTitle(projectPath);
+  _drawingWidget->setDrawing(std::move(drawing));
 }
 }  // namespace capy::ui

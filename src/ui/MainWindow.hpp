@@ -37,7 +37,7 @@ class MainWindow final : public QMainWindow {
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
-  void loadProject(const Project& project);
+  void setDrawing(Drawing drawing, const std::string& projectPath);
 
  public slots:
   void menuBarFileNewClicked();

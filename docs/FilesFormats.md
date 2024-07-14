@@ -2,15 +2,11 @@
 
 ### 0x00 - 0x04: Magic string
 
-0x00 - 'C'
-
-0x01 - 'A'
-
-0x02 - 'P'
-
-0x03 - 'A'
-
-0x04 - 0x00
+- 0x00: 'C'
+- 0x01: 'A'
+- 0x02: 'P'
+- 0x03: 'A'
+- 0x04: 0x00
 
 ### 0x05 - 0x08: Miniature size
 
@@ -21,9 +17,35 @@ integer.
 
 Miniature of the project in format that can be loaded in QPixmap (preferably PNG).
 
-### (after miniature data) 0x00 - 0x??: TBD
+### (After miniature data) 0x00 - 0x0B: Project width, height & count
 
-TBD
+Each represented by 32-bit (4-byte integer) in little endian.
+
+- Project width
+- Project height
+- Layer count
+
+### 0x0B - 0x??: Layer names
+
+For each layer a null-terminated string is present, starting from base layer.
+
+### Byte after layer names
+
+Byte 0xFF indicating end of layer names.
+
+### Remaining data
+
+This section contains raw data of layers (row by row), in the same order as their names. Each pixel is represented by
+4-byte structure:
+
+- First byte: Red channel
+- Second byte: Green channel
+- Third byte: Blue channel
+- Fourth byte: Alpa channel
+
+The data is read byte by date so there is no differences between different endianness systems.
+
+If there is any data present after this point the project is determined to be corrupted.
 
 ## Palette files (.json)
 

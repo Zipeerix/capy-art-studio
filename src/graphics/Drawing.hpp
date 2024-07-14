@@ -28,8 +28,11 @@ class Drawing {
  public:
   Drawing(int width, int height);
 
+  void insertOrAssignLayerFromRawPixels(int index, const std::string& name, std::vector<Pixel> pixels);
+
   int getWidth() const;
   int getHeight() const;
+  int getLayerCount() const;
   const Layer& getCurrentLayer() const;
   void setCurrentLayer(int newCurrentLayer);
 

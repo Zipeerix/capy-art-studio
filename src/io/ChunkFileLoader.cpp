@@ -28,7 +28,11 @@ ChunkFileLoader::~ChunkFileLoader() { _fileStream.close(); }
 
 bool ChunkFileLoader::isFileValid() const { return _fileStream.good(); }
 
-std::size_t ChunkFileLoader::currentReadIndex() { return _fileStream.tellg(); }
+std::size_t ChunkFileLoader::currentReadingIndex() { return _fileStream.tellg(); }
+
+void ChunkFileLoader::setReadingIndex(std::size_t index) {
+  _fileStream.seekg(index);
+}
 
 Result<std::vector<uint8_t>, std::string> ChunkFileLoader::readNextBytesToVector(const int nBytes) {
   std::vector<uint8_t> vecBuffer(nBytes, 0);
@@ -39,6 +43,17 @@ Result<std::vector<uint8_t>, std::string> ChunkFileLoader::readNextBytesToVector
   }
 
   return vecBuffer;
+}
+
+Result<uint8_t, std::string> ChunkFileLoader::readNextByte() {
+  uint8_t data = 0x00;
+
+  _fileStream.read(reinterpret_cast<char*>(&data), 1);
+  if (_fileStream.gcount() != 1) {
+    return std::unexpected("Unable to read further 1 bytes");
+  }
+
+  return data;
 }
 
 Result<QByteArray, std::string> ChunkFileLoader::readNextBytesToQByteArray(const int nBytes) {
@@ -73,6 +88,23 @@ Result<std::string, std::string> ChunkFileLoader::readNextString(const int size,
   return std::string{rawChars.begin(), nullTerminated ? rawChars.end() - 1 : rawChars.end()};
 }
 
+Result<std::string, std::string> ChunkFileLoader::readNextVariableLengthString() {
+  std::string buffer;
+  while (true) {
+    const auto nextByteReadRes = readNextByte();
+    if (!nextByteReadRes.has_value()) {
+      return std::unexpected("Unexpected end of file before reaching null terminator");
+    }
+
+    const auto nextByte = nextByteReadRes.value();
+    if (nextByte == 0x00) {
+      return buffer;
+    }
+
+    buffer.push_back(static_cast<char>(nextByte));
+  }
+}
+
 Result<std::uint32_t, std::string> ChunkFileLoader::readNext32BitInt(const bool bigEndian) {
   const auto bytesRes = readNextBytesToVector(sizeof(std::uint32_t));
   if (!bytesRes.has_value()) {
@@ -96,5 +128,10 @@ Result<std::uint32_t, std::string> ChunkFileLoader::readNext32BitInt(const bool 
   }
 
   return value;
+}
+
+void ChunkFileLoader::moveIteratorBackBy(int offset) {
+  const auto current = currentReadingIndex();
+  setReadingIndex(current - offset);
 }
 }  // namespace capy

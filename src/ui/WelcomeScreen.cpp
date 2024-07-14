@@ -117,16 +117,15 @@ void WelcomeScreen::settingsClicked() {
 void WelcomeScreen::projectClicked(const Project& project) {
   logger::info(fmt::format("Attempting to open project at {}", project.getPath()));
 
-  // TODO: Change project to unloaded project and have UnloadedProjectModel and now here also
-  // unloaded project doesnt need to be json serializable and there is prob no need for model tODO:
-  // Or maybe have full project inherit from UnloadedPrject that inherist from json serializable
+  const auto projectDrawingRes = project.readDrawing();
+  if (!projectDrawingRes.has_value()) {
+    return execMessageBox(this, QMessageBox::Icon::Critical, QString::fromStdString(projectDrawingRes.error()));
+  }
 
-  // TODO: Pass data to _mainWindow here and in MainWindow convert Project to Drawing and fill
-  // layers
-
-  _mainWindow->loadProject(project);
+  // TODO: Maybe make drawing unique_ptr for memory saving
+  _mainWindow->setDrawing(std::move(projectDrawingRes.value()), project.getPath());
   _mainWindow->show();
-  this->hide();
+  hide();
 }
 
 void WelcomeScreen::projectRemoveClicked(const Project& project) {

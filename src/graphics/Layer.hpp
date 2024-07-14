@@ -25,16 +25,20 @@
 namespace capy {
 class Layer {
  public:
-  Layer(int width, int height);
+  Layer(int width, int height, std::string name);
 
   bool isVisible() const;
   void hide();
   void show();
 
+  void setPixels(std::vector<Pixel> pixels);
+  void setName(std::string name);
+
   const Pixel& getPixel(int x, int y) const;
   void drawPixel(int x, int y, const QColor& color);
 
  private:
+  std::string _name;
   std::vector<Pixel> _pixels;
   bool _visible = false;
 

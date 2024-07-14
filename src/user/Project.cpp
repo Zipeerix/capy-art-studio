@@ -79,7 +79,7 @@ Result<Project, std::string> Project::createFromFile(const std::string& path) {
 
   // TODO: May
 
-  return Project(path, miniature, file.currentReadIndex());
+  return Project(path, miniature, file.currentReadingIndex());
 }
 
 Project::Project(std::string path, QPixmap miniature, const std::size_t indexOfDataAfterMiniature)
@@ -94,7 +94,103 @@ std::string Project::getName() const { return getFileNameFromPath(_path); }
 QPixmap Project::getMiniature() const { return _miniature; }
 
 Result<Drawing, std::string> Project::readDrawing() const {
-  // TODO: get drawing
-  throw;
+  ChunkFileLoader file{_path};
+  if (!file.isFileValid()) {
+    logger::debug("Project file was opened once successfully but then failed when reading data",
+                  "Project");
+    return std::unexpected(fmt::format("Unable to open project file at: {}", _path));
+  }
+
+  // TODO: Break down into static methods, or just statics
+
+  file.setReadingIndex(_indexOfDataAfterMiniature);
+
+  /* Project Metadata */
+  const auto projectWidthRes = file.readNext32BitInt();
+  if (!projectWidthRes.has_value()) {
+    logger::error("Unable to read project width from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
+  const auto projectHeightRes = file.readNext32BitInt();
+  if (!projectHeightRes.has_value()) {
+    logger::error("Unable to read project height from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
+  const auto layersCountRes = file.readNext32BitInt();
+  if (!layersCountRes.has_value()) {
+    logger::error("Unable to read project layer count from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
+  std::uint32_t projectWidth = projectWidthRes.value();
+  std::uint32_t projectHeight = projectHeightRes.value();
+  std::uint32_t layerCount = layersCountRes.value();
+
+  /* Layer names */
+  std::vector<std::string> layerNames;
+  for (std::uint32_t i = 0; i < layerCount; i++) {
+    const auto layerNameReadingRes = file.readNextVariableLengthString();
+    if (!layerNameReadingRes.has_value()) {
+      logger::error(fmt::format("Unable to read project layer name at index {} from project file", i), logger::Severity::Mild);
+      return std::unexpected("Project file is corrupted or incompatible with this version");
+    }
+
+    layerNames.push_back(layerNameReadingRes.value());
+  }
+
+  if (layerNames.size() != layerCount) {
+    throw std::logic_error("Assertion failed layerNames.size() != layerCount");
+  }
+
+  const auto endOfLayerNamesByte = file.readNextByte();
+  if (!endOfLayerNamesByte.has_value()) {
+    logger::error("Unable to read end of layers names byte from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
+  if (endOfLayerNamesByte.value() != 0xFF) {
+    logger::error("Invalid end of layers name byte read from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
+  auto drawing = Drawing(projectWidth, projectHeight);
+
+  /* Layer data */
+  const auto sizePerLayer = projectHeight * projectWidth * 4;
+  for (std::uint32_t layerIndex = 0; layerIndex < layerCount; layerIndex++) {
+    const auto layersRawPixelsReadRes = file.readNextBytesToVector(sizePerLayer);
+    if (!layersRawPixelsReadRes.has_value()) {
+      logger::error(fmt::format("Unable to read layer data with index: {}", layerIndex), logger::Severity::Mild);
+      return std::unexpected("Project file is corrupted or incompatible with this version");
+    }
+
+    const auto& layerRawPixels = layersRawPixelsReadRes.value();
+
+    std::vector<Pixel> layerPixels;
+    layerPixels.reserve(projectHeight * projectWidth);
+
+    for (std::uint32_t j = 0; j < layerRawPixels.size(); j += 4) {
+      const auto r = layerRawPixels[j];
+      const auto g = layerRawPixels[j + 1];
+      const auto b = layerRawPixels[j + 2];
+      const auto a = layerRawPixels[j + 3];
+      layerPixels.emplace_back(r, g, b, a);
+    }
+
+    drawing.insertOrAssignLayerFromRawPixels(layerIndex, layerNames[layerIndex], std::move(layerPixels));
+  }
+
+  if (static_cast<std::uint32_t>(drawing.getLayerCount()) != layerCount) {
+    throw std::logic_error("drawing.getLayerCount() != layerCount");
+  }
+
+  if (file.readNextByte().has_value()) {
+    logger::error("Unexpected data at the end of project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
+  return drawing;
 }
 }  // namespace capy
