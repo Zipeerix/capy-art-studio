@@ -15,40 +15,37 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#include "Project.hpp"
 
-#include <rapidjson/document.h>
+#include <utility>
 
-#include "utils/ErrorHandling.hpp"
+#include "io/ApplicationFilesystem.hpp"
 
 namespace capy {
-template <class Derived>
-class JsonSerializable {
- public:
-  virtual ~JsonSerializable() = default;
+Project Project::createFromPathWithoutLoading(const std::string& path) {
+  Project project{};
+  project.setPath(path);
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+  return project;
+}
 
-  std::optional<std::string> getPath() const;
+std::string Project::getName() const {
+  const auto path = getPath();
+  if (!path.has_value()) {
+    return "Unknown";
+  }
 
-  bool wasEditedFromLastSave() const;
+  return getFileNameFromPath(path.value());
+}
 
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+PotentialError<std::string> Project::importValuesFromJson(
+    [[maybe_unused]] const rapidjson::Document& root) {
+  return std::nullopt;
+}
 
- private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
-};
+rapidjson::Document Project::exportValuesToJson() const {
+  rapidjson::Document document;
+  document.SetObject();
+  return document;
+}
 }  // namespace capy
-
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP

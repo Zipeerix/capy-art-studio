@@ -15,40 +15,14 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef MANAGER_HPP
+#define MANAGER_HPP
 
-#include <rapidjson/document.h>
-
-#include "utils/ErrorHandling.hpp"
+#include <functional>
+#include <string>
 
 namespace capy {
-template <class Derived>
-class JsonSerializable {
- public:
-  virtual ~JsonSerializable() = default;
+using ManagerErrorHandler = std::function<void(const std::string&)>;
+}
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
-
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
-
- private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
-};
-}  // namespace capy
-
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // MANAGER_HPP

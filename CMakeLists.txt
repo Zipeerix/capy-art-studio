@@ -13,6 +13,8 @@ set(APPLICATION_SOURCE_FILES
         src/models/PaletteModel.cpp
         src/models/PaletteColorTableModel.hpp
         src/models/PaletteColorTableModel.cpp
+        src/models/ProjectsModel.hpp
+        src/models/ProjectsModel.cpp
         src/ai/AiServiceInterface.cpp
         src/ai/AiServiceInterface.hpp
         src/algorithms/Bresenham.hpp
@@ -23,8 +25,15 @@ set(APPLICATION_SOURCE_FILES
         src/algorithms/Luminance.hpp
         src/graphics/Layer.hpp
         src/graphics/Layer.cpp
+        src/managers/ProjectsManager.hpp
+        src/managers/ProjectsManager.cpp
+        src/managers/PalettesManager.hpp
+        src/managers/PalettesManager.cpp
+        src/managers/Manager.hpp
         src/user/Palette.cpp
         src/user/Palette.hpp
+        src/user/Project.hpp
+        src/user/Project.cpp
         src/graphics/Drawing.hpp
         src/graphics/Drawing.cpp
         src/graphics/DrawingTools.hpp
@@ -34,22 +43,32 @@ set(APPLICATION_SOURCE_FILES
         src/ui/ConsoleWindow.hpp
         src/ui/MainWindow.hpp
         src/ui/MainWindow.cpp
+        src/ui/WelcomeScreen.hpp
+        src/ui/WelcomeScreen.cpp
+        src/ui/SettingsDialog.hpp
+        src/ui/SettingsDialog.cpp
         src/ui/widgets/color-pickers/DefaultColorPicker.cpp
         src/ui/widgets/color-pickers/DefaultColorPicker.hpp
         src/ui/widgets/color-pickers/DefaultColorPickerSlider.cpp
         src/ui/widgets/color-pickers/DefaultColorPickerSlider.hpp
         src/ui/widgets/delegates/ColorRectangleDelegate.hpp
         src/ui/widgets/delegates/ColorRectangleDelegate.cpp
+        src/ui/widgets/delegates/ProjectDelegate.hpp
+        src/ui/widgets/delegates/ProjectDelegate.cpp
         src/ui/widgets/utils/CheckerboardPixmap.hpp
         src/ui/widgets/utils/CheckerboardPixmap.cpp
         src/ui/widgets/utils/MessageBoxUtils.cpp
         src/ui/widgets/utils/MessageBoxUtils.hpp
+        src/ui/layouts/FlowLayout.cpp
+        src/ui/layouts/FlowLayout.hpp
         src/ui/docks/ColorArea.hpp
         src/ui/docks/ColorArea.cpp
         src/ui/docks/ToolsArea.cpp
         src/ui/docks/ToolsArea.hpp
         src/ui/docks/LayersArea.cpp
         src/ui/docks/LayersArea.hpp
+        src/ui/widgets/utils/ClickableLabel.cpp
+        src/ui/widgets/utils/ClickableLabel.hpp
         src/ui/widgets/DrawingCanvasItem.hpp
         src/ui/widgets/DrawingCanvasItem.cpp
         src/ui/widgets/DrawingWidget.hpp
@@ -64,8 +83,6 @@ set(APPLICATION_SOURCE_FILES
         src/io/ConfigurationManager.cpp
         src/io/ConsoleLogger.hpp
         src/io/ConsoleLogger.cpp
-        src/io/CapyFileManager.cpp
-        src/io/CapyFileManager.hpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
         src/io/JsonSerializable.hpp
@@ -73,6 +90,8 @@ set(APPLICATION_SOURCE_FILES
         src/utils/General.hpp
         src/utils/General.cpp
         src/utils/General.tpp
+        src/utils/UiHelpers.cpp
+        src/utils/UiHelpers.hpp
         src/utils/ErrorHandling.hpp
         src/plugin/DynamicLibrary.cpp
         src/plugin/DynamicLibrary.hpp
@@ -84,9 +103,12 @@ set(APPLICATION_SOURCE_FILES
 )
 
 set(APPLICATION_UI_FILES
-        src/ui/mainwindow.ui
+        src/ui/MainWindow.ui
+        src/ui/WelcomeScreen.ui
         src/ui/ConsoleWindow.ui
+        src/ui/SettingsDialog.ui
         src/ui/dialogs/NewFileDialog.ui
+        src/ui/widgets/delegates/ProjectDelegate.ui
         src/ui/docks/ToolsArea.ui
         src/ui/docks/LayersArea.ui
         src/ui/docks/ColorArea.ui
@@ -106,21 +128,13 @@ set(LIBS_TO_LINK
         Qt6::Core
         Qt6::Network
         Qt6::Widgets
-        spdlog::spdlog
         fmt::fmt
-        tomlplusplus::tomlplusplus
-        libzippp::libzippp
         rapidjson
-        CURL::libcurl
 )
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
-find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
-find_package(CURL REQUIRED)
-find_package(tomlplusplus REQUIRED)
 find_package(RapidJSON REQUIRED)
-find_package(libzippp REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
 

@@ -15,40 +15,32 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef CAPY_UI_SETTINGSWINDOW_HPP
+#define CAPY_UI_SETTINGSWINDOW_HPP
 
-#include <rapidjson/document.h>
+#include <QDialog>
 
-#include "utils/ErrorHandling.hpp"
+#include "io/ConfigurationManager.hpp"
 
-namespace capy {
-template <class Derived>
-class JsonSerializable {
+namespace capy::ui {
+namespace Ui {
+class SettingsDialog;
+}
+
+class SettingsDialog final : public QDialog {
+  Q_OBJECT
  public:
-  virtual ~JsonSerializable() = default;
-
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
-
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+  explicit SettingsDialog(QWidget* parent = nullptr);
+  ~SettingsDialog() override;
 
  private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
+  Ui::SettingsDialog* ui;
+  std::shared_ptr<ConfigurationManager> _configurationManager;
 
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  void setupConnectionsForApplicationTab();
+  void setupConnectionsForDebugTab();
+  void setupConnectionsForGraphicsTab();
 };
-}  // namespace capy
+}  // namespace capy::ui
 
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // CAPY_UI_SETTINGSWINDOW_HPP

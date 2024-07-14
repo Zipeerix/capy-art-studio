@@ -38,15 +38,16 @@ class MainWindow final : public QMainWindow {
 
  public slots:
   void menuBarFileNewClicked();
+  void settingsOpenClicked();
   void colorPickerColorChanged(QColor newColor) const;
 
  private:
   Ui::MainWindow* ui;
   DrawingWidget* _drawingWidget;
 
-  ColorArea* _colorDockArea;
-  LayersArea* _layersDockArea;
-  ToolsArea* _toolsDockArea;
+  ColorArea* _colorDockArea = nullptr;
+  LayersArea* _layersDockArea = nullptr;
+  ToolsArea* _toolsDockArea = nullptr;
 
   void setupColorDock();
   void setupLayersDock();

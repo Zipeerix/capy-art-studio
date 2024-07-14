@@ -15,40 +15,45 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef PALETTESMANAGER_HPP
+#define PALETTESMANAGER_HPP
 
-#include <rapidjson/document.h>
-
-#include "utils/ErrorHandling.hpp"
+#include "Manager.hpp"
+#include "models/PaletteColorTableModel.hpp"
+#include "models/PaletteModel.hpp"
 
 namespace capy {
-template <class Derived>
-class JsonSerializable {
+class PalettesManager final : public QObject {
+  Q_OBJECT
  public:
-  virtual ~JsonSerializable() = default;
+  explicit PalettesManager(QObject* parent);
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+  models::PaletteModel* getPaletteModel();
+  models::PaletteColorTableModel* getPaletteColorTableModel();
 
-  std::optional<std::string> getPath() const;
+  void loadPalettesFromFilesystem();
 
-  bool wasEditedFromLastSave() const;
+  void createPalette(const std::string& name, const ManagerErrorHandler& errorHandler);
+  void removePalette(int index, const ManagerErrorHandler& errorHandler);
 
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+  void removeColorFromPalette(int paletteIndex, int colorIndex,
+                              const ManagerErrorHandler& errorHandler);
+  void addColorToPalette(int paletteIndex, QColor color, const std::optional<std::string>& hint,
+                         const ManagerErrorHandler& errorHandler);
+
+  PaletteColor getColorFromPalette(int paletteIndex, int colorIndex) const;
+
+  void setTableColorsFromPalette(int paletteIndex);
+
+ signals:
+  void palettesUpdated();
 
  private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
+  models::PaletteModel _paletteModel;
 
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  // TODO: Move to its own manager?
+  models::PaletteColorTableModel _colorTableModel;
 };
 }  // namespace capy
 
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // PALETTESMANAGER_HPP

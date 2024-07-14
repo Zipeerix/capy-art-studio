@@ -15,40 +15,54 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef CAPY_UI_WELCOMESCREEN_HPP
+#define CAPY_UI_WELCOMESCREEN_HPP
 
-#include <rapidjson/document.h>
+#include <QGridLayout>
+#include <QMainWindow>
+#include <QTimer>
 
-#include "utils/ErrorHandling.hpp"
+#include "managers/ProjectsManager.hpp"
+#include "models/ProjectsModel.hpp"
+#include "ui/MainWindow.hpp"
+#include "ui/layouts/FlowLayout.hpp"
 
-namespace capy {
-template <class Derived>
-class JsonSerializable {
+namespace capy::ui {
+namespace Ui {
+class WelcomeScreen;
+}
+
+class WelcomeScreen final : public QMainWindow {
+  Q_OBJECT
  public:
-  virtual ~JsonSerializable() = default;
+  explicit WelcomeScreen(MainWindow* mainWindow, QWidget* parent = nullptr);
+  ~WelcomeScreen() override;
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+  void resizeEvent(QResizeEvent* event) override;
 
-  std::optional<std::string> getPath() const;
+ public slots:
+  void createNewProjectClicked();
+  void openProjectClicked();
+  void importProjectClicked();
+  void settingsClicked();
+  void continueButtonClicked();
 
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+  // TODO: When fully implemented the path shouldn't be optional
+  void projectClicked(const std::optional<std::string>& path);
+  void projectRemoveClicked(const std::optional<std::string>& path);
+  void projectDeleteClicked(const std::optional<std::string>& path);
 
  private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
+  Ui::WelcomeScreen* ui;
+  std::shared_ptr<ConfigurationManager> _configurationManager;
+  ProjectsManager _projectsManager;
+  MainWindow* _mainWindow;
+  FlowLayout* _projectAreaLayout;
 
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  int _currentColumns = 0;
+
+  void updateUiProjectList();
 };
-}  // namespace capy
+}  // namespace capy::ui
 
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // CAPY_UI_WELCOMESCREEN_HPP

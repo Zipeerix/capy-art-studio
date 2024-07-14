@@ -86,6 +86,34 @@ void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
 
   _settings.sync();
 }
+
+template <typename SettingValueType>
+SettingValueType ConfigurationManager::getApplicationSetting(ApplicationSettings setting) const {
+  switch (setting) {
+    case ApplicationSettings::ShowWelcomeScreen:
+      compileTimeTypeCheck<SettingValueType, bool>();
+      return _settings.value(getApplicationSettingPath(setting), true).toBool();
+
+    default:
+      throw std::logic_error("Invalid setting requested");
+  }
+}
+
+template <typename SettingValueType>
+void ConfigurationManager::setApplicationSetting(ApplicationSettings setting,
+                                                 SettingValueType value) {
+  switch (setting) {
+    case ApplicationSettings::ShowWelcomeScreen:
+      compileTimeTypeCheck<SettingValueType, bool>();
+      _settings.setValue(getApplicationSettingPath(setting), value);
+      break;
+
+    default:
+      throw std::logic_error("Invalid setting requested");
+  }
+
+  _settings.sync();
+}
 }  // namespace capy
 
 #endif  // CONFIGURATIONMANAGER_TPP

@@ -25,11 +25,13 @@
 // TODO: maybe io namespace
 
 namespace capy {
-enum class FilesystemPath : int { Palettes, PathCount };
+enum class FilesystemPath : int { Palettes, Projects, PathCount };
 
 void initApplicationFilesystem();
 std::string getFilesystemPath(FilesystemPath of);
+std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationPath);
 std::vector<std::string> listFilesInPath(FilesystemPath applicationPath);
+std::string getFileNameFromPath(const std::string& fullPath);
 }  // namespace capy
 
 #endif  // APPLICATIONFILESYSTEM_HPP

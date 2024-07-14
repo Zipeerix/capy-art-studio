@@ -15,40 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#include "UiHelpers.hpp"
 
-#include <rapidjson/document.h>
-
-#include "utils/ErrorHandling.hpp"
+#include <QFontMetrics>
+#include <QWidget>
 
 namespace capy {
-template <class Derived>
-class JsonSerializable {
- public:
-  virtual ~JsonSerializable() = default;
+QString elideText(const QString& string, const QFont& font, int width,
+                  const Qt::TextElideMode elideMode) {
+  const QFontMetrics metrics{font};
+  QString elidedText = metrics.elidedText(string, elideMode, width);
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+  return elidedText;
+}
 
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
-
- private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
-};
+void clearLayout(QLayout* layout) {
+  while (const QLayoutItem* item = layout->takeAt(0)) {
+    if (QWidget* widget = item->widget()) {
+      widget->deleteLater();
+    }
+    delete item;
+  }
+}
 }  // namespace capy
-
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP

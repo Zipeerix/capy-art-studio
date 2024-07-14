@@ -19,6 +19,8 @@
 #define COLORAREA_HPP
 
 #include <QWidget>
+
+#include "managers/PalettesManager.hpp"
 #include "models/PaletteModel.hpp"
 #include "models/PaletteColorTableModel.hpp"
 #include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
@@ -49,12 +51,11 @@ signals:
 
 private:
   Ui::ColorArea* ui;
-  models::PaletteModel _paletteModel;
-  models::PaletteColorTableModel _colorTableModel;
+  PalettesManager _palettesManager;
   DefaultColorPicker* _colorPicker;
   int _savedPaletteComboBoxIndex = -1;
 
-  void loadPalettesFromFilesystem();
+  void updatePalettesUi() const;
   bool isPaletteComboBoxIndexRestorable() const;
 };
 }

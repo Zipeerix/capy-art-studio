@@ -15,40 +15,39 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef CAPY_UI_PROJECTDELEGATE_HPP
+#define CAPY_UI_PROJECTDELEGATE_HPP
 
-#include <rapidjson/document.h>
+#include <QWidget>
 
-#include "utils/ErrorHandling.hpp"
+#include "user/Project.hpp"
 
-namespace capy {
-template <class Derived>
-class JsonSerializable {
+namespace capy::ui {
+namespace Ui {
+class ProjectDelegate;
+}
+
+// TODO: pass model and index? or find another way to use model in list or get rid of model or do
+// nothing :D
+class ProjectDelegate final : public QWidget {
+  Q_OBJECT
  public:
-  virtual ~JsonSerializable() = default;
+  explicit ProjectDelegate(Project project, bool isProjectInternal, QWidget* parent = nullptr);
+  ~ProjectDelegate() override;
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+ public slots:
+  void imageOrNameClicked();
 
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+ signals:
+  void itemClicked(const std::optional<std::string>& projectPath);
+  void removeClicked(const std::optional<std::string>& projectPath);
+  void deleteClicked(const std::optional<std::string>& projectPath);
 
  private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  Ui::ProjectDelegate* ui;
+  Project _project;
 };
-}  // namespace capy
 
-#include "JsonSerializable.tpp"
+}  // namespace capy::ui
 
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // CAPY_UI_PROJECTDELEGATE_HPP

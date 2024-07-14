@@ -42,9 +42,11 @@ void initApplicationFilesystem() {
 std::string getFilesystemPath(const FilesystemPath of) {
   const auto basePath = getApplicationFilesystemBasePath();
   switch (of) {
-    case FilesystemPath::Palettes: {
+    case FilesystemPath::Palettes:
       return basePath / "palettes";
-    }
+
+    case FilesystemPath::Projects:
+      return basePath / "projects";
 
     case FilesystemPath::PathCount:
     default:
@@ -52,16 +54,40 @@ std::string getFilesystemPath(const FilesystemPath of) {
   }
 }
 
+std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationPath) {
+  switch (applicationPath) {
+    case FilesystemPath::Palettes:
+      return {".json"};
+
+    case FilesystemPath::Projects:
+      return {".capy"};
+
+    case FilesystemPath::PathCount:
+    default:
+      throw std::logic_error("Invalid option for getting filesystem path extensions");
+  }
+}
+
+static bool isCorrectExtension(const FilesystemPath applicationPath, const std::string& extension) {
+  const auto validExtensions = getCorrectExtensionsForPath(applicationPath);
+  return std::ranges::find(validExtensions, extension) != validExtensions.end();
+}
+
 std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
   const auto path = getFilesystemPath(applicationPath);
   std::vector<std::string> filePaths;
 
   for (const auto& entry : std::filesystem::directory_iterator(path)) {
-    if (entry.is_regular_file()) {
+    if (entry.is_regular_file() && isCorrectExtension(applicationPath, entry.path().extension())) {
       filePaths.push_back(entry.path().string());
     }
   }
 
   return filePaths;
+}
+
+std::string getFileNameFromPath(const std::string& fullPath) {
+  const std::filesystem::path pathObj{fullPath};
+  return pathObj.filename().string();
 }
 }  // namespace capy
