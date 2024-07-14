@@ -114,15 +114,8 @@ void WelcomeScreen::settingsClicked() {
   settingsDialog.exec();
 }
 
-void WelcomeScreen::projectClicked(const std::optional<std::string>& path) {
-  if (!path.has_value()) {
-    logger::error("Attempt to open project without project path", logger::Severity::Severe);
-    return;
-  }
-
-  const auto& projectPath = path.value();
-
-  logger::info(fmt::format("Attempting to open project at {}", projectPath));
+void WelcomeScreen::projectClicked(const Project& project) {
+  logger::info(fmt::format("Attempting to open project at {}", project.getPath()));
 
   // TODO: Change project to unloaded project and have UnloadedProjectModel and now here also
   // unloaded project doesnt need to be json serializable and there is prob no need for model tODO:
@@ -130,17 +123,14 @@ void WelcomeScreen::projectClicked(const std::optional<std::string>& path) {
 
   // TODO: Pass data to _mainWindow here and in MainWindow convert Project to Drawing and fill
   // layers
+
+  _mainWindow->loadProject(project);
   _mainWindow->show();
   this->hide();
 }
 
-void WelcomeScreen::projectRemoveClicked(const std::optional<std::string>& path) {
-  if (!path.has_value()) {
-    logger::error("Attempt to remove project without project path", logger::Severity::Severe);
-    return;
-  }
-
-  const auto& projectPath = path.value();
+void WelcomeScreen::projectRemoveClicked(const Project& project) {
+  const auto& projectPath = project.getPath();
 
   logger::info(fmt::format("Attempting to remove project at {}", projectPath));
 
@@ -149,16 +139,12 @@ void WelcomeScreen::projectRemoveClicked(const std::optional<std::string>& path)
     return;
   }
 
+  // TODO: Maybe accept project instead of path
   _projectsManager.removeProject(projectPath);
 }
 
-void WelcomeScreen::projectDeleteClicked(const std::optional<std::string>& path) {
-  if (!path.has_value()) {
-    logger::error("Attempt to delete project without project path", logger::Severity::Severe);
-    return;
-  }
-
-  const auto& projectPath = path.value();
+void WelcomeScreen::projectDeleteClicked(const Project& project) {
+  const auto& projectPath = project.getPath();
 
   logger::info(fmt::format("Attempting to delete project at {}", projectPath));
 
@@ -166,6 +152,7 @@ void WelcomeScreen::projectDeleteClicked(const std::optional<std::string>& path)
     return;
   }
 
+  // TODO: Maybe accept project instead of path
   _projectsManager.deleteProject(projectPath, [&](const std::string& error) {
     return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
   });

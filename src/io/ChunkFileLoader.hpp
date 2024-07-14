@@ -18,12 +18,35 @@
 #ifndef CHUNKFILELOADER_HPP
 #define CHUNKFILELOADER_HPP
 
+#include <QByteArray>
+#include <cstdint>
+#include <fstream>
+#include <vector>
+
+#include "utils/ErrorHandling.hpp"
+
 namespace capy {
 class ChunkFileLoader {
-public:
+ public:
+  explicit ChunkFileLoader(const std::string& path);
+  ~ChunkFileLoader();
 
-private:
+  bool isFileValid() const;
 
+  std::size_t currentReadIndex();
+
+  // TODO: also to buffer, usefull for large reads (or is move enough)
+  Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);
+  Result<QByteArray, std::string> readNextBytesToQByteArray(int nBytes);
+  Result<std::string, std::string> readNextString(int size, bool nullTerminated);
+
+  // TODO: Make this more generic, read below
+  Result<std::uint32_t, std::string> readNext32BitInt(bool bigEndian = false);
+
+  // TODO: Templated read
+
+ private:
+  std::ifstream _fileStream;
 };
 }  // namespace capy
 

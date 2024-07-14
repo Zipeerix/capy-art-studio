@@ -24,6 +24,7 @@
 #include <utility>
 
 #include "io/ApplicationFilesystem.hpp"
+#include "io/ChunkFileLoader.hpp"
 #include "io/ConsoleLogger.hpp"
 
 namespace capy {
@@ -32,69 +33,59 @@ Result<Project, std::string> Project::createFromFile(const std::string& path) {
     return std::unexpected("File path is empty");
   }
 
-  // TODO: Move to ChunkFileReader util class and return vector of bytes or uint etc instead of
-  // buffers
-  std::ifstream file(path, std::ios::binary);
-  if (!file) {
-    return std::unexpected(fmt::format("Unable to open project file at {}", path));
+  // TODO: Break down into static methods, or just statics
+
+  ChunkFileLoader file{path};
+  if (!file.isFileValid()) {
+    return std::unexpected(fmt::format("Unable to open project file at: {}", path));
   }
 
-  char magicStringBuffer[5];
-  file.read(magicStringBuffer, 5);
-  if (file.gcount() != 5) {
-    logger::error("Error when reading project's magic string", logger::Severity::Mild);
-    return std::unexpected(fmt::format("Error when reading project file at {}", path));
+  const auto magicStringReadRes = file.readNextString(5, true);
+  if (!magicStringReadRes.has_value()) {
+    logger::error("Unable to read magic string from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  const std::string magicString = magicStringBuffer;
-  if (magicString != "CAPY") {
+  if (magicStringReadRes.value() != "CAPY") {
     logger::error(
-        fmt::format("Magic string mismatch when loading project: {} != CAPY", magicString),
+        fmt::format("Project's magic string mismatch {} != CAPY", magicStringReadRes.value()),
         logger::Severity::Mild);
-    return std::unexpected(fmt::format("Project file at {} is corrupted", path));
+    return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  char miniatureSizeBuffer[4];
-  file.read(miniatureSizeBuffer, 4);
-  if (file.gcount() != 4) {
-    logger::error("Error when reading project's miniature size", logger::Severity::Mild);
-    return std::unexpected(fmt::format("Error when reading project file at {}", path));
+  const auto miniatureSizeReadRes = file.readNext32BitInt();
+  if (!miniatureSizeReadRes.has_value()) {
+    logger::error("Unable to read miniature size from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  uint32_t miniatureSize =
-      (static_cast<uint32_t>(static_cast<uint8_t>(miniatureSizeBuffer[0])) |
-       (static_cast<uint32_t>(static_cast<uint8_t>(miniatureSizeBuffer[1])) << 8) |
-       (static_cast<uint32_t>(static_cast<uint8_t>(miniatureSizeBuffer[2])) << 16) |
-       (static_cast<uint32_t>(static_cast<uint8_t>(miniatureSizeBuffer[3])) << 24));
-
-  logger::info(fmt::format("Loaded miniature with size: {}", miniatureSize));
-
-  qDebug() << "Miniature size: " << miniatureSize;
-
-  char* miniatureBytes = new char[miniatureSize];
-  file.read(miniatureBytes, miniatureSize);
-  if (file.gcount() != miniatureSize) {
-    logger::error("Error when reading project's miniature data", logger::Severity::Mild);
-    return std::unexpected(fmt::format("Error when reading project file at {}", path));
+  std::uint32_t miniatureSize = miniatureSizeReadRes.value();
+  if (miniatureSize >= INT32_MAX) {
+    logger::error("Miniature size > INT32_MAX", logger::Severity::Severe);
+    return std::unexpected("Project file is corrupted");
   }
 
-  const QByteArray miniatureQByteArray{miniatureBytes, miniatureSize};
+  const auto miniatureDataReadRes =
+      file.readNextBytesToQByteArray(static_cast<int32_t>(miniatureSize));
+  if (!miniatureDataReadRes.has_value()) {
+    logger::error("Unable to read miniature data from project file", logger::Severity::Mild);
+    return std::unexpected("Project file is corrupted or incompatible with this version");
+  }
+
   QPixmap miniature;
-  if (!miniature.loadFromData(miniatureQByteArray)) {
-    logger::error("Error when creating miniature pixmap from data", logger::Severity::Mild);
+  if (!miniature.loadFromData(miniatureDataReadRes.value())) {
+    logger::warning("Error when creating miniature pixmap from data", logger::Severity::Mild);
   }
 
-  delete[] miniatureBytes;
+  // TODO: May
 
-  // TODO: load layer data
-
-  file.close();
-
-  return Project(path, miniature);
+  return Project(path, miniature, file.currentReadIndex());
 }
 
-Project::Project(std::string path, QPixmap miniature)
-    : _path(std::move(path)), _miniature(std::move(miniature)) {}
+Project::Project(std::string path, QPixmap miniature, const std::size_t indexOfDataAfterMiniature)
+    : _path(std::move(path)),
+      _miniature(std::move(miniature)),
+      _indexOfDataAfterMiniature(indexOfDataAfterMiniature) {}
 
 std::string Project::getPath() const { return _path; }
 

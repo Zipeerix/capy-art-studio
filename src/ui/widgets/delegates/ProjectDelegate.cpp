@@ -35,11 +35,9 @@ ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidge
   connect(ui->nameLabel, &ClickableLabel::clicked, this, &ProjectDelegate::imageOrNameClicked);
   connect(ui->imageLabel, &ClickableLabel::clicked, this, &ProjectDelegate::imageOrNameClicked);
 
-  connect(ui->deleteButton, &QPushButton::clicked, this,
-          [&]() { emit deleteClicked(_project.getPath()); });
+  connect(ui->deleteButton, &QPushButton::clicked, this, [&]() { emit deleteClicked(_project); });
 
-  connect(ui->removeButton, &QPushButton::clicked, this,
-          [&]() { emit removeClicked(_project.getPath()); });
+  connect(ui->removeButton, &QPushButton::clicked, this, [&]() { emit removeClicked(_project); });
 
   const auto projectName = QString::fromStdString(_project.getName());
   ui->nameLabel->setText(elideText(projectName, ui->nameLabel->font(), ui->nameLabel->width()));
@@ -58,5 +56,5 @@ ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidge
 
 ProjectDelegate::~ProjectDelegate() { delete ui; }
 
-void ProjectDelegate::imageOrNameClicked() { emit itemClicked(_project.getPath()); }
+void ProjectDelegate::imageOrNameClicked() { emit itemClicked(_project); }
 }  // namespace capy::ui

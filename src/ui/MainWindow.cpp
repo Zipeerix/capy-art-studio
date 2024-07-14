@@ -80,9 +80,18 @@ void MainWindow::setupToolsDock() {
   ui->toolsDock->setWidget(_toolsDockArea);
 }
 
+void MainWindow::changeWindowTitle(const std::string& projectPath) {
+  setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
+}
+
 void MainWindow::colorPickerColorChanged(QColor newColor) const {
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
                            newColor.blue(), newColor.alpha()));
   _drawingWidget->setDrawingColor(newColor);
+}
+
+void MainWindow::loadProject(const Project& project) {
+  // TODO: read project data and set drawing with layers based upon it
+  changeWindowTitle(project.getPath());
 }
 }  // namespace capy::ui

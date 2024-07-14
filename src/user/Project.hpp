@@ -34,10 +34,11 @@ class Project {
   QPixmap getMiniature() const;
 
  private:
-  Project(std::string path, QPixmap miniature);
+  Project(std::string path, QPixmap miniature, std::size_t indexOfDataAfterMiniature);
 
   std::string _path;
   QPixmap _miniature;
+  std::size_t _indexOfDataAfterMiniature;
 };
 }  // namespace capy
 
