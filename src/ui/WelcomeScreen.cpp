@@ -123,7 +123,7 @@ void WelcomeScreen::projectClicked(const Project& project) {
   }
 
   // TODO: Maybe make drawing unique_ptr for memory saving
-  _mainWindow->setDrawing(std::move(projectDrawingRes.value()), project.getPath());
+  _mainWindow->setDrawing(projectDrawingRes.value(), project.getPath());
   _mainWindow->show();
   hide();
 }

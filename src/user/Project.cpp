@@ -102,6 +102,7 @@ Result<Drawing, std::string> Project::readDrawing() const {
   }
 
   // TODO: Break down into static methods, or just statics
+  // TODO: Clean ups casts here and above file reading
 
   file.setReadingIndex(_indexOfDataAfterMiniature);
 
@@ -155,12 +156,12 @@ Result<Drawing, std::string> Project::readDrawing() const {
     return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  auto drawing = Drawing(projectWidth, projectHeight);
+  auto drawing = Drawing(static_cast<int>(projectWidth), static_cast<int>(projectHeight));
 
   /* Layer data */
   const auto sizePerLayer = projectHeight * projectWidth * 4;
   for (std::uint32_t layerIndex = 0; layerIndex < layerCount; layerIndex++) {
-    const auto layersRawPixelsReadRes = file.readNextBytesToVector(sizePerLayer);
+    const auto layersRawPixelsReadRes = file.readNextBytesToVector(static_cast<int>(sizePerLayer));
     if (!layersRawPixelsReadRes.has_value()) {
       logger::error(fmt::format("Unable to read layer data with index: {}", layerIndex), logger::Severity::Mild);
       return std::unexpected("Project file is corrupted or incompatible with this version");
@@ -179,7 +180,7 @@ Result<Drawing, std::string> Project::readDrawing() const {
       layerPixels.emplace_back(r, g, b, a);
     }
 
-    drawing.insertOrAssignLayerFromRawPixels(layerIndex, layerNames[layerIndex], std::move(layerPixels));
+    drawing.insertOrAssignLayerFromRawPixels(static_cast<int>(layerIndex), layerNames[layerIndex], std::move(layerPixels));
   }
 
   if (static_cast<std::uint32_t>(drawing.getLayerCount()) != layerCount) {
