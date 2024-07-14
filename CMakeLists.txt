@@ -103,7 +103,7 @@ set(APPLICATION_SOURCE_FILES
 )
 
 set(APPLICATION_UI_FILES
-        src/ui/mainwindow.ui
+        src/ui/MainWindow_.ui
         src/ui/WelcomeScreen.ui
         src/ui/ConsoleWindow.ui
         src/ui/SettingsDialog.ui
