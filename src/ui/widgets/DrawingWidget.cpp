@@ -42,6 +42,11 @@ void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRe
   painter->restore();
 }
 
+void DrawingWidget::setDrawing(Drawing drawing) {
+  _drawing = std::move(drawing);
+  redrawScreen();
+}
+
 void DrawingWidget::setDrawingColor(const QColor color) {
   _drawingColor = color;
 }
@@ -55,14 +60,18 @@ void DrawingWidget::startNewDrawing(const int width, const int height) {
       "Creating new image with dimensions {}x{} with per layer size of {} bytes",
       width, height, calculateInMemorySizeOfImage(width, height)));
   _drawing = Drawing(width, height);
+  redrawScreen();
+}
+
+void DrawingWidget::redrawScreen() {
   _scene->clear();
 
-  _drawingCanvasItem = new DrawingCanvasItem(width, height);
+  _drawingCanvasItem = new DrawingCanvasItem(_drawing.getWidth(), _drawing.getHeight());
   _scene->addItem(_drawingCanvasItem);
 
   if (_settings->getGraphicsSetting<bool>(ConfigurationManager::GraphicsSetting::DrawGrid)) {
-    const int totalDrawingWidth = width;
-    const int totalDrawingHeight = height;
+    const int totalDrawingWidth = _drawing.getWidth();
+    const int totalDrawingHeight = _drawing.getHeight();
 
     auto pen = QPen(Qt::lightGray);
     pen.setWidthF(_settings->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
@@ -76,7 +85,16 @@ void DrawingWidget::startNewDrawing(const int width, const int height) {
       _scene->addLine(x, 0, x, totalDrawingWidth, pen);
     }
   }
+
+  syncInternalAndExternalDrawing();
 }
+
+void DrawingWidget::syncInternalAndExternalDrawing() const {
+  _drawingCanvasItem->updateAllPixels([&](const int x, const int y) {
+    return _drawing.calculateCombinedPixelColor(x, y);
+  });
+}
+
 
 void DrawingWidget::setCurrentLayer(const int newLayer) {
   _drawing.setCurrentLayer(newLayer);
@@ -97,6 +115,12 @@ std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
   }
 
   return std::nullopt;
+}
+
+void DrawingWidget::drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor){
+  _drawing.drawPixelOnCurrentLayerInternalRepresentationOnly(x, y, drawingColor);
+  const auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
+  _drawingCanvasItem->updateExternalCanvasPixel(x, y, combinedColor);
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {
@@ -121,13 +145,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
         const auto clickedPixelX = clickedPixel->x();
         const auto clickedPixelY = clickedPixel->y();
 
-        _drawing.drawPixelOnCurrentLayer(clickedPixelX,
-                                         clickedPixelY,
-                                         _drawingColor);
-        const auto combinedColor = _drawing.calculateCombinedPixelColor(
-            clickedPixelX, clickedPixelY);
-        _drawingCanvasItem->updateCanvasPixel(clickedPixelX, clickedPixelY,
-                                                combinedColor);
+        drawPixelOnBothRepresentations(clickedPixelX, clickedPixelY, _drawingColor);
       }
       return;
     }
@@ -206,9 +224,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
         if (_lastContinousDrawingPoint.has_value()) {
           // TODO: Move this to a method or cleanup/tool_to_class seperation
           static const auto pixelDrawingAction = [&](int x, int y) {
-            _drawing.drawPixelOnCurrentLayer(x, y, _drawingColor);
-            const auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
-            _drawingCanvasItem->updateCanvasPixel(x, y, combinedColor);
+            drawPixelOnBothRepresentations(x, y, _drawingColor);
           };
 
           algorithms::applyBresenham(_lastContinousDrawingPoint->x(),

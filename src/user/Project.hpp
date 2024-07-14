@@ -18,21 +18,30 @@
 #ifndef PROJECT_HPP
 #define PROJECT_HPP
 
+#include <QPixmap>
 #include <string>
 
-#include "io/JsonSerializable.hpp"
+#include "graphics/Drawing.hpp"
+#include "utils/ErrorHandling.hpp"
 
 namespace capy {
-class Project final : public JsonSerializable<Project> {
+class Project {
  public:
+  [[nodiscard]] static Result<Project, std::string> createFromFile(const std::string& path);
+
+  [[nodiscard]] Result<Drawing, std::string> readDrawing() const;
+
+  std::string getPath() const;
   std::string getName() const;
 
-  static Project createFromPathWithoutLoading(const std::string& path);
+  QPixmap getMiniature() const;
 
  private:
-  [[nodiscard]] PotentialError<std::string> importValuesFromJson(
-      const rapidjson::Document& root) override;
-  rapidjson::Document exportValuesToJson() const override;
+  Project(std::string path, QPixmap miniature, std::size_t indexOfDataAfterMiniature);
+
+  std::string _path;
+  QPixmap _miniature;
+  std::size_t _indexOfDataAfterMiniature;
 };
 }  // namespace capy
 

@@ -24,6 +24,7 @@
 #include "ui/SettingsDialog.hpp"
 #include "ui_MainWindow.h"
 #include "widgets/DrawingWidget.hpp"
+#include "widgets/utils/MessageBoxUtils.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
@@ -80,9 +81,18 @@ void MainWindow::setupToolsDock() {
   ui->toolsDock->setWidget(_toolsDockArea);
 }
 
+void MainWindow::changeWindowTitle(const std::string& projectPath) {
+  setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
+}
+
 void MainWindow::colorPickerColorChanged(QColor newColor) const {
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
                            newColor.blue(), newColor.alpha()));
   _drawingWidget->setDrawingColor(newColor);
+}
+
+void MainWindow::setDrawing(Drawing drawing, const std::string& projectPath) {
+  changeWindowTitle(projectPath);
+  _drawingWidget->setDrawing(std::move(drawing));
 }
 }  // namespace capy::ui

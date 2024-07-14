@@ -28,12 +28,15 @@ class Drawing {
  public:
   Drawing(int width, int height);
 
+  void insertOrAssignLayerFromRawPixels(int index, const std::string& name, std::vector<Pixel> pixels);
+
   int getWidth() const;
   int getHeight() const;
+  int getLayerCount() const;
   const Layer& getCurrentLayer() const;
   void setCurrentLayer(int newCurrentLayer);
 
-  void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
+  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
   QColor calculateCombinedPixelColor(int x, int y) const;
 
  private:

@@ -19,18 +19,33 @@
 
 namespace capy {
 Drawing::Drawing(const int width, const int height) : _width(width), _height(height) {
-  _layers.emplace_back(width, height);
+  _layers.emplace_back(width, height, "Base Layer");
 }
 
 int Drawing::getWidth() const { return _width; }
 
 int Drawing::getHeight() const { return _height; }
 
+int Drawing::getLayerCount() const{
+  return _layers.size();
+}
+
 const Layer& Drawing::getCurrentLayer() const { return _layers.at(_currentLayer); }
 
 void Drawing::setCurrentLayer(const int newCurrentLayer) { _currentLayer = newCurrentLayer; }
 
-void Drawing::drawPixelOnCurrentLayer(const int x, const int y, const QColor& color) {
+void Drawing::insertOrAssignLayerFromRawPixels(const int index, const std::string& name, std::vector<Pixel> pixels) {
+  if (static_cast<std::size_t>(index) == _layers.size()) {
+    _layers.emplace_back(_width, _height, name);
+  } else if (!(static_cast<std::size_t>(index) < _layers.size())) {
+    throw std::logic_error("Bad index provided, check logic");
+  }
+
+  _layers.at(index).setPixels(std::move(pixels));
+}
+
+void Drawing::drawPixelOnCurrentLayerInternalRepresentationOnly(const int x, const int y,
+                                                                const QColor& color) {
   auto& currentLayer = _layers.at(_currentLayer);
   currentLayer.drawPixel(x, y, color);
 }

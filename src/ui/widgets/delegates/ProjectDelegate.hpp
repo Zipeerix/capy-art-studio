@@ -39,9 +39,9 @@ class ProjectDelegate final : public QWidget {
   void imageOrNameClicked();
 
  signals:
-  void itemClicked(const std::optional<std::string>& projectPath);
-  void removeClicked(const std::optional<std::string>& projectPath);
-  void deleteClicked(const std::optional<std::string>& projectPath);
+  void itemClicked(const Project& projectPath);
+  void removeClicked(const Project& projectPath);
+  void deleteClicked(const Project& projectPath);
 
  private:
   Ui::ProjectDelegate* ui;

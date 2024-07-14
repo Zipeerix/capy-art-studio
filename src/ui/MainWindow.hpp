@@ -23,6 +23,7 @@
 #include "docks/ColorArea.hpp"
 #include "docks/LayersArea.hpp"
 #include "docks/ToolsArea.hpp"
+#include "user/Project.hpp"
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
@@ -35,6 +36,8 @@ class MainWindow final : public QMainWindow {
  public:
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
+
+  void setDrawing(Drawing drawing, const std::string& projectPath);
 
  public slots:
   void menuBarFileNewClicked();
@@ -52,6 +55,8 @@ class MainWindow final : public QMainWindow {
   void setupColorDock();
   void setupLayersDock();
   void setupToolsDock();
+
+  void changeWindowTitle(const std::string& projectPath);
 };
 }  // namespace capy::ui
 

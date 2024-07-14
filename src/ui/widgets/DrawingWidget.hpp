@@ -34,8 +34,9 @@ class DrawingWidget final : public QGraphicsView {
 public:
   explicit DrawingWidget(QWidget* parent);
 
-  void startNewDrawing(int width, int height);
+  void setDrawing(Drawing drawing);
 
+  void startNewDrawing(int width, int height);
   void setCurrentLayer(int newLayer);
 
   QColor getDrawingColor() const;
@@ -61,6 +62,11 @@ private:
   int _panStartY = 0;
 
   std::optional<QPoint> mapPositionOfEventToScene(const QMouseEvent* event) const;
+
+  void drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor);
+
+  void redrawScreen();
+  void syncInternalAndExternalDrawing() const;
 
   void mousePressEvent(QMouseEvent* event) override;
   void mouseReleaseEvent(QMouseEvent* event) override;

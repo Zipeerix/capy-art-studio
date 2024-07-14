@@ -36,8 +36,21 @@ void DrawingCanvasItem::paint(QPainter* painter,
   painter->drawImage(0, 0, _canvasRepresentation);
 }
 
-void DrawingCanvasItem::updateCanvasPixel(const int x, const int y, const QColor& color) {
+void DrawingCanvasItem::updateExternalCanvasPixel(const int x, const int y, const QColor& color) {
   _canvasRepresentation.setPixelColor(x, y, color);
+  update();
+}
+
+void DrawingCanvasItem::updateAllPixels(const ColorCalculatingFunction& colorCalculatingFunction) {
+  const auto width = _canvasRepresentation.width();
+  const auto height = _canvasRepresentation.height();
+
+  for (int x = 0; x < width; x++) {
+    for (int y = 0; y < height; y++) {
+      _canvasRepresentation.setPixelColor(x, y, colorCalculatingFunction(x, y));
+    }
+  }
+
   update();
 }
 

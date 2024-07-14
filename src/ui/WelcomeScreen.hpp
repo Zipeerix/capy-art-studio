@@ -48,9 +48,9 @@ class WelcomeScreen final : public QMainWindow {
   void continueButtonClicked();
 
   // TODO: When fully implemented the path shouldn't be optional
-  void projectClicked(const std::optional<std::string>& path);
-  void projectRemoveClicked(const std::optional<std::string>& path);
-  void projectDeleteClicked(const std::optional<std::string>& path);
+  void projectClicked(const Project& project);
+  void projectRemoveClicked(const Project& project);
+  void projectDeleteClicked(const Project& project);
 
  private:
   Ui::WelcomeScreen* ui;
