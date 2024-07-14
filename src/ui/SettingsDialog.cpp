@@ -77,5 +77,13 @@ void SettingsDialog::setupConnectionsForGraphicsTab() {
             _configurationManager->setGraphicsSetting(
                 ConfigurationManager::GraphicsSetting::GridWidth, newValue);
           });
+
+  ui->pixelGridZoomThresholdSpinbox->setValue(_configurationManager->getGraphicsSetting<double>(
+    ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold));
+  connect(ui->pixelGridZoomThresholdSpinbox, &QDoubleSpinBox::valueChanged, this,
+          [&](const double newValue) {
+            _configurationManager->setGraphicsSetting(
+                ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold, newValue);
+          });
 }
 }  // namespace capy::ui

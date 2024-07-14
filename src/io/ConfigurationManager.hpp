@@ -34,6 +34,7 @@ class ConfigurationManager {
   enum class GraphicsSetting : int {
     DrawGrid,
     GridWidth,
+    GridDrawingZoomThreshold
   };
 
   ConfigurationManager(ConfigurationManager&) = delete;
