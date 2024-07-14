@@ -19,6 +19,7 @@
 #define MANAGER_HPP
 
 #include <functional>
+#include <string>
 
 namespace capy {
 using ManagerErrorHandler = std::function<void(const std::string&)>;
