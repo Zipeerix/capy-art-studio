@@ -128,21 +128,14 @@ set(LIBS_TO_LINK
         Qt6::Core
         Qt6::Network
         Qt6::Widgets
-        spdlog::spdlog
         fmt::fmt
-        tomlplusplus::tomlplusplus
-        libzippp::libzippp
         rapidjson
-        CURL::libcurl
 )
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
-find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
 find_package(CURL REQUIRED)
-find_package(tomlplusplus REQUIRED)
 find_package(RapidJSON REQUIRED)
-find_package(libzippp REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
