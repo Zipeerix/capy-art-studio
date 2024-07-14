@@ -30,7 +30,7 @@ const Layer& Drawing::getCurrentLayer() const { return _layers.at(_currentLayer)
 
 void Drawing::setCurrentLayer(const int newCurrentLayer) { _currentLayer = newCurrentLayer; }
 
-void Drawing::drawPixelOnCurrentLayer(const int x, const int y, const QColor& color) {
+void Drawing::drawPixelOnCurrentLayerInternalRepresentationOnly(const int x, const int y, const QColor& color) {
   auto& currentLayer = _layers.at(_currentLayer);
   currentLayer.drawPixel(x, y, color);
 }

@@ -33,7 +33,7 @@ class Drawing {
   const Layer& getCurrentLayer() const;
   void setCurrentLayer(int newCurrentLayer);
 
-  void drawPixelOnCurrentLayer(int x, int y, const QColor& color);
+  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
   QColor calculateCombinedPixelColor(int x, int y) const;
 
  private:

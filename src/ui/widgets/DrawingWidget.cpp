@@ -85,7 +85,16 @@ void DrawingWidget::redrawScreen() {
       _scene->addLine(x, 0, x, totalDrawingWidth, pen);
     }
   }
+
+  syncInternalAndExternalDrawing();
 }
+
+void DrawingWidget::syncInternalAndExternalDrawing() const {
+  _drawingCanvasItem->updateAllPixels([&](const int x, const int y) {
+    return _drawing.calculateCombinedPixelColor(x, y);
+  });
+}
+
 
 void DrawingWidget::setCurrentLayer(const int newLayer) {
   _drawing.setCurrentLayer(newLayer);
@@ -106,6 +115,12 @@ std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
   }
 
   return std::nullopt;
+}
+
+void DrawingWidget::drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor){
+  _drawing.drawPixelOnCurrentLayerInternalRepresentationOnly(x, y, drawingColor);
+  const auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
+  _drawingCanvasItem->updateExternalCanvasPixel(x, y, combinedColor);
 }
 
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {
@@ -130,13 +145,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event) {
         const auto clickedPixelX = clickedPixel->x();
         const auto clickedPixelY = clickedPixel->y();
 
-        _drawing.drawPixelOnCurrentLayer(clickedPixelX,
-                                         clickedPixelY,
-                                         _drawingColor);
-        const auto combinedColor = _drawing.calculateCombinedPixelColor(
-            clickedPixelX, clickedPixelY);
-        _drawingCanvasItem->updateCanvasPixel(clickedPixelX, clickedPixelY,
-                                                combinedColor);
+        drawPixelOnBothRepresentations(clickedPixelX, clickedPixelY, _drawingColor);
       }
       return;
     }
@@ -215,9 +224,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
         if (_lastContinousDrawingPoint.has_value()) {
           // TODO: Move this to a method or cleanup/tool_to_class seperation
           static const auto pixelDrawingAction = [&](int x, int y) {
-            _drawing.drawPixelOnCurrentLayer(x, y, _drawingColor);
-            const auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
-            _drawingCanvasItem->updateCanvasPixel(x, y, combinedColor);
+            drawPixelOnBothRepresentations(x, y, _drawingColor);
           };
 
           algorithms::applyBresenham(_lastContinousDrawingPoint->x(),
