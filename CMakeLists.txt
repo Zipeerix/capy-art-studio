@@ -25,6 +25,8 @@ set(APPLICATION_SOURCE_FILES
         src/algorithms/Luminance.hpp
         src/graphics/Layer.hpp
         src/graphics/Layer.cpp
+        src/managers/ProjectsManager.hpp
+        src/managers/ProjectsManager.cpp
         src/user/Palette.cpp
         src/user/Palette.hpp
         src/user/Project.hpp

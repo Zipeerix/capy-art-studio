@@ -15,20 +15,36 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef UIHELPERS_HPP
-#define UIHELPERS_HPP
+#ifndef PROJECTSMANAGER_HPP
+#define PROJECTSMANAGER_HPP
 
-#include <QFont>
-#include <QLayout>
-#include <QString>
-
-// TODO: Move to ui/utils
+#include "io/ConfigurationManager.hpp"
+#include "models/ProjectsModel.hpp"
 
 namespace capy {
-QString elideText(const QString& string, const QFont& font, int width,
-                  Qt::TextElideMode elideMode = Qt::ElideRight);
+class ProjectsManager final : public QObject {
+  Q_OBJECT
+ public:
+  explicit ProjectsManager(QObject* parent);
 
-void clearLayout(QLayout* layout);
+  // TODO: base class Manager and also dont pass throguh model fns just have model() method
+  const std::vector<Project>& getProjects() const;
+
+  bool isProjectInternal(const Project& project) const;
+
+  void loadProjectsFromFilesystem();
+
+  void addProject(const std::string& path);
+  void removeProject(const std::string& projectPath);
+  [[nodiscard]] PotentialError<std::string> deleteProject(const std::string& projectPath);
+
+ signals:
+  void projectsUpdated();
+
+ private:
+  std::shared_ptr<ConfigurationManager> _configurationManager;
+  models::ProjectsModel _model;
+};
 }  // namespace capy
 
-#endif  // UIHELPERS_HPP
+#endif  // PROJECTSMANAGER_HPP

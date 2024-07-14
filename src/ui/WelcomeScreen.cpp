@@ -21,26 +21,28 @@
 #include <QMessageBox>
 
 #include "MainWindow.hpp"
+#include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
 #include "ui/SettingsDialog.hpp"
 #include "ui/widgets/delegates/ProjectDelegate.hpp"
 #include "ui/widgets/utils/MessageBoxUtils.hpp"
 #include "ui_WelcomeScreen.h"
-#include "io/ApplicationFilesystem.hpp"
+#include "utils/UiHelpers.hpp"
 
 namespace capy::ui {
 WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
     : QMainWindow(parent),
       ui(new Ui::WelcomeScreen),
       _configurationManager(ConfigurationManager::createInstance()),
-      _mainWindow(mainWindow),
-      _projectsModel(this) {
+      _projectsManager(this),
+      _mainWindow(mainWindow) {
   ui->setupUi(this);
 
   connect(ui->createProjectButton, &QPushButton::clicked, this,
           &WelcomeScreen::createNewProjectClicked);
   connect(ui->openProjectButton, &QPushButton::clicked, this, &WelcomeScreen::openProjectClicked);
-  connect(ui->importProjectButton, &QPushButton::clicked, this, &WelcomeScreen::importProjectClicked);
+  connect(ui->importProjectButton, &QPushButton::clicked, this,
+          &WelcomeScreen::importProjectClicked);
   connect(ui->settingsButton, &QPushButton::clicked, this, &WelcomeScreen::settingsClicked);
   connect(ui->exitButton, &QPushButton::clicked, this, &QApplication::exit);
   connect(ui->continueButton, &QPushButton::clicked, this, &WelcomeScreen::continueButtonClicked);
@@ -48,7 +50,10 @@ WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
   _projectAreaLayout = new FlowLayout(ui->scrollAreaWidgetContents);
   ui->scrollAreaWidgetContents->setLayout(_projectAreaLayout);
 
-  loadProjectsFromFilesystem();
+  connect(&_projectsManager, &ProjectsManager::projectsUpdated, this,
+          &WelcomeScreen::updateUiProjectList);
+
+  _projectsManager.loadProjectsFromFilesystem();
 }
 
 WelcomeScreen::~WelcomeScreen() { delete ui; }
@@ -58,21 +63,11 @@ void WelcomeScreen::resizeEvent(QResizeEvent* event) {
   QWidget::resizeEvent(event);
 }
 
-void WelcomeScreen::clearLayout() const {
-  while (const QLayoutItem* item = _projectAreaLayout->takeAt(0)) {
-    if (QWidget* widget = item->widget()) {
-      widget->deleteLater();
-    }
-    delete item;
-  }
-}
-
 void WelcomeScreen::updateUiProjectList() {
-  clearLayout();
+  clearLayout(_projectAreaLayout);
 
-  const auto& projects = _projectsModel.getProjects();
-  for (const auto& project : projects) {
-    const bool isProjectInternal = !_configurationManager->doesAdditionalProjectExist(project.getPath().value_or("Unknown"));
+  for (const auto& project : _projectsManager.getProjects()) {
+    const bool isProjectInternal = _projectsManager.isProjectInternal(project);
     auto* delegate = new ProjectDelegate(project, isProjectInternal, this);
     connect(delegate, &ProjectDelegate::itemClicked, this, &WelcomeScreen::projectClicked);
     connect(delegate, &ProjectDelegate::removeClicked, this, &WelcomeScreen::projectRemoveClicked);
@@ -83,8 +78,7 @@ void WelcomeScreen::updateUiProjectList() {
 }
 
 void WelcomeScreen::createNewProjectClicked() {
-  // TODO Reuse new file dialog, extend it, ConfigurationManager::addProjectPath also on remove
-  // removeProjectPath
+  // TODO Reuse new file dialog
 }
 
 void WelcomeScreen::openProjectClicked() {
@@ -97,15 +91,13 @@ void WelcomeScreen::openProjectClicked() {
   }
 
   if (_configurationManager->doesAdditionalProjectExist(filePath)) {
-    execMessageBox(this, QMessageBox::Icon::Information,
-                   "This file is already in your project list");
-  } else {
-    _configurationManager->addAdditionalProjectPath(filePath);
+    return execMessageBox(this, QMessageBox::Icon::Information,
+                          "This file is already in your project list");
   }
 
-  loadProjectsFromFilesystem();
+  _projectsManager.addProject(filePath);
 
-  // TODO: Open project from path: filePath
+  // TODO: Open project that was loaded
 }
 
 void WelcomeScreen::importProjectClicked() {
@@ -152,9 +144,12 @@ void WelcomeScreen::projectRemoveClicked(const std::optional<std::string>& path)
 
   logger::info(fmt::format("Attempting to remove project at {}", projectPath));
 
-  _configurationManager->removeAdditionalProjectPath(projectPath);
+  if (!showConfirmationDialog(this,
+                              "Are you sure you want to remove this project from the list?")) {
+    return;
+  }
 
-  loadProjectsFromFilesystem();
+  _projectsManager.removeProject(projectPath);
 }
 
 void WelcomeScreen::projectDeleteClicked(const std::optional<std::string>& path) {
@@ -167,48 +162,19 @@ void WelcomeScreen::projectDeleteClicked(const std::optional<std::string>& path)
 
   logger::info(fmt::format("Attempting to delete project at {}", projectPath));
 
-  _configurationManager->removeAdditionalProjectPath(projectPath);
-
-  bool deleted = false;
-  std::optional<std::string> fsError;
-  try {
-    deleted = std::filesystem::remove(projectPath);
-    if (!deleted) {
-      fsError = "File not found";
-    }
-  } catch (const std::filesystem::filesystem_error& err) {
-    fsError = err.what();
+  if (!showConfirmationDialog(this, "Are you sure you want to delete this project?")) {
+    return;
   }
 
-  if (!deleted) {
-    const auto errorText = QString::fromStdString(fmt::format("Unable to delete project file at {} due to error: {}", projectPath,
-                              fsError.value()));
+  const auto deletionError = _projectsManager.deleteProject(projectPath);
+  if (deletionError.has_value()) {
+    const auto errorText =
+        QString::fromStdString(fmt::format("Unable to delete project file at {} due to error: {}",
+                                           projectPath, deletionError.value()));
     // TODO: allow std::string as arg for below
     return execMessageBox(this, QMessageBox::Icon::Critical, errorText);
   }
 
   logger::info(fmt::format("Deleted project file at {}", projectPath));
-
-  loadProjectsFromFilesystem();
-}
-
-void WelcomeScreen::loadProjectsFromFilesystem() {
-  std::vector<Project> projects;
-
-  auto projectsPaths = listFilesInPath(FilesystemPath::Projects);
-  const auto additionalProjectsPathsList = _configurationManager->getAdditionalProjectsPaths();
-
-  projectsPaths.insert(projectsPaths.end(), additionalProjectsPathsList.begin(), additionalProjectsPathsList.end());
-
-  // TODO: std::transform
-  for (const auto& path : projectsPaths) {
-    logger::info(fmt::format("Adding project from path {}", path));
-    projects.push_back(Project::createFromPathWithoutLoading(path));
-  }
-
-  _projectsModel.setProjects(projects);
-
-  // TODO: Do not allow 'remove' for projects from 'projects' internal directory
-  updateUiProjectList();
 }
 }  // namespace capy::ui

@@ -63,8 +63,8 @@ std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationP
       return {".capy"};
 
     case FilesystemPath::PathCount:
-      default:
-        throw std::logic_error("Invalid option for getting filesystem path extensions");
+    default:
+      throw std::logic_error("Invalid option for getting filesystem path extensions");
   }
 }
 

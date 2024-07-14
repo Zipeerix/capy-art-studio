@@ -22,6 +22,7 @@
 #include <QMainWindow>
 #include <QTimer>
 
+#include "managers/ProjectsManager.hpp"
 #include "models/ProjectsModel.hpp"
 #include "ui/MainWindow.hpp"
 #include "ui/layouts/FlowLayout.hpp"
@@ -54,15 +55,13 @@ class WelcomeScreen final : public QMainWindow {
  private:
   Ui::WelcomeScreen* ui;
   std::shared_ptr<ConfigurationManager> _configurationManager;
+  ProjectsManager _projectsManager;
   MainWindow* _mainWindow;
   FlowLayout* _projectAreaLayout;
 
-  models::ProjectsModel _projectsModel;
   int _currentColumns = 0;
 
-  void loadProjectsFromFilesystem();
   void updateUiProjectList();
-  void clearLayout() const;
 };
 }  // namespace capy::ui
 

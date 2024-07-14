@@ -18,6 +18,7 @@
 #include "UiHelpers.hpp"
 
 #include <QFontMetrics>
+#include <QWidget>
 
 namespace capy {
 QString elideText(const QString& string, const QFont& font, int width,
@@ -26,5 +27,14 @@ QString elideText(const QString& string, const QFont& font, int width,
   QString elidedText = metrics.elidedText(string, elideMode, width);
 
   return elidedText;
+}
+
+void clearLayout(QLayout* layout) {
+  while (const QLayoutItem* item = layout->takeAt(0)) {
+    if (QWidget* widget = item->widget()) {
+      widget->deleteLater();
+    }
+    delete item;
+  }
 }
 }  // namespace capy
