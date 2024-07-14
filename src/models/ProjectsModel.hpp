@@ -15,40 +15,34 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef PROJECTSMODEL_HPP
+#define PROJECTSMODEL_HPP
 
-#include <rapidjson/document.h>
+#include <QAbstractListModel>
 
-#include "utils/ErrorHandling.hpp"
+#include "user/Project.hpp"
 
-namespace capy {
-template <class Derived>
-class JsonSerializable {
+namespace capy::models {
+class ProjectsModel final : public QAbstractListModel {
+  Q_OBJECT
  public:
-  virtual ~JsonSerializable() = default;
+  explicit ProjectsModel(QObject* parent = nullptr);
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+  int rowCount(const QModelIndex& parent) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
 
-  std::optional<std::string> getPath() const;
+  bool doesProjectExist(const std::string& name) const;
 
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+  void setProjects(std::vector<Project> projects);
+  const Project& getProject(int index) const;
+  const std::vector<Project>& getProjects() const;
 
  private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
+  std::vector<Project> _projects;
 
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  bool isRowOutsideModel(const QModelIndex& index) const;
+  bool isRowOutsideModel(int index) const;
 };
-}  // namespace capy
+}  // namespace capy::models
 
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // PROJECTSMODEL_HPP

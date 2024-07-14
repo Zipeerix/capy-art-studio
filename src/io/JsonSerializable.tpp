@@ -39,6 +39,11 @@ std::optional<std::string> JsonSerializable<Derived>::getPath() const {
 }
 
 template <class Derived>
+void JsonSerializable<Derived>::setPath(std::string path) {
+  _path = std::move(path);
+}
+
+template <class Derived>
 bool JsonSerializable<Derived>::wasEditedFromLastSave() const {
   return _wasEdited;
 }

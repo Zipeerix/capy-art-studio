@@ -17,12 +17,36 @@
 
 #include "ConfigurationManager.hpp"
 
+#include <fmt/format.h>
+
 #include <QColor>
+
+#include "ConsoleLogger.hpp"
 
 namespace capy {
 std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
   static std::shared_ptr<ConfigurationManager> singletonEntity(new ConfigurationManager());
   return singletonEntity;
+}
+
+QString ConfigurationManager::getInternalValuePath(const InternalValues value) {
+  switch (value) {
+    case InternalValues::ProjectPaths:
+      return "Internal/ProjectPaths";
+
+    default:
+      throw std::logic_error("Invalid value requested");
+  }
+}
+
+QString ConfigurationManager::getApplicationSettingPath(const ApplicationSettings setting) {
+  switch (setting) {
+    case ApplicationSettings::ShowWelcomeScreen:
+      return "Application/ShowWelcomeScreen";
+
+    default:
+      throw std::logic_error("Invalid setting requested");
+  }
 }
 
 QString ConfigurationManager::getDebugSettingPath(const DebugSetting setting) {
@@ -46,5 +70,66 @@ QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setti
     default:
       throw std::logic_error("Invalid setting requested");
   }
+}
+
+void ConfigurationManager::addAdditionalProjectPath(const std::string& path) {
+  const auto valuePath = getInternalValuePath(InternalValues::ProjectPaths);
+  auto list = _settings.value(valuePath, {}).toStringList();
+
+  if (doesAdditionalProjectExist(path)) {
+    logger::error(fmt::format("There is a duplicate project with path: {}", path),
+                  logger::Severity::Mild);
+    return;
+  }
+
+  list.push_back(QString::fromStdString(path));
+
+  _settings.setValue(valuePath, list);
+  _settings.sync();
+}
+
+void ConfigurationManager::removeAdditionalProjectPath(const std::string& pathToDelete) {
+  const auto valuePath = getInternalValuePath(InternalValues::ProjectPaths);
+  auto list = _settings.value(valuePath, {}).toStringList();
+
+  list.erase(std::remove_if(list.begin(), list.end(),
+                            [pathToDelete](const QString& path) {
+                              return path.toStdString() == pathToDelete;
+                            }),
+             list.cend());
+
+  _settings.setValue(valuePath, list);
+  _settings.sync();
+}
+
+std::vector<std::string> ConfigurationManager::getAdditionalProjectsPaths() const {
+  const auto internalList =
+      _settings.value(getInternalValuePath(InternalValues::ProjectPaths), {}).toStringList();
+
+  std::vector<std::string> listToReturn{};
+  listToReturn.reserve(internalList.size());
+
+  for (const auto& path : internalList) {
+    const bool isDuplicate =
+        std::ranges::any_of(listToReturn, [path](const std::string& alreadyAddedPath) {
+          return alreadyAddedPath == path.toStdString();
+        });
+
+    if (isDuplicate) {
+      logger::error(fmt::format("There is a duplicate project with path: {}", path.toStdString()),
+                    logger::Severity::Mild);
+      continue;
+    }
+
+    listToReturn.push_back(path.toStdString());
+  }
+
+  return listToReturn;
+}
+
+bool ConfigurationManager::doesAdditionalProjectExist(const std::string& path) const {
+  const auto projects = getAdditionalProjectsPaths();
+  return std::ranges::any_of(
+      projects, [path](const std::string& alreadyAddedPath) { return alreadyAddedPath == path; });
 }
 }  // namespace capy

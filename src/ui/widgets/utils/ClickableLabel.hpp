@@ -15,6 +15,23 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "CapyFileManager.hpp"
+#ifndef CLICKABLELABEL_HPP
+#define CLICKABLELABEL_HPP
 
-namespace capy {}  // namespace capy
+#include <QLabel>
+
+namespace capy::ui {
+class ClickableLabel final : public QLabel {
+  Q_OBJECT
+ public:
+  explicit ClickableLabel(QWidget *parent = nullptr);
+
+ signals:
+  void clicked();
+
+ protected:
+  void mousePressEvent(QMouseEvent *event) override;
+};
+}  // namespace capy::ui
+
+#endif  // CLICKABLELABEL_HPP

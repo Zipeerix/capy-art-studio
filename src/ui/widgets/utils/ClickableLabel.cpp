@@ -15,40 +15,13 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#include "ClickableLabel.hpp"
 
-#include <rapidjson/document.h>
+namespace capy::ui {
+ClickableLabel::ClickableLabel(QWidget* parent) : QLabel(parent) {}
 
-#include "utils/ErrorHandling.hpp"
-
-namespace capy {
-template <class Derived>
-class JsonSerializable {
- public:
-  virtual ~JsonSerializable() = default;
-
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
-
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
-
- private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
-};
-}  // namespace capy
-
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+void ClickableLabel::mousePressEvent(QMouseEvent* event) {
+  emit clicked();
+  QLabel::mousePressEvent(event);
+}
+}  // namespace capy::ui

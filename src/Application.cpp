@@ -20,12 +20,13 @@
 #include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
 #include "ui/MainWindow.hpp"
+#include "ui/WelcomeScreen.hpp"
 
 namespace capy {
 Application::Application()
     : _configurationManager(ConfigurationManager::createInstance()),
       _guiApplication(_cmdArgcOverwrite, nullptr) {
-  _guiApplication.setAttribute(
+  QApplication::setAttribute(
       Qt::AA_DontUseNativeMenuBar);  // NOLINT(*-static-accessed-through-instance)
 }
 
@@ -40,8 +41,16 @@ int Application::start() const {
 
   initApplicationFilesystem();
 
-  ui::MainWindow mainWindow;
-  mainWindow.show();
+  ui::MainWindow mainWindow{};
+  QMainWindow* firstWindowToShow = &mainWindow;
+  std::unique_ptr<ui::WelcomeScreen> welcomeScreen = nullptr;
+  if (_configurationManager->getApplicationSetting<bool>(
+          ConfigurationManager::ApplicationSettings::ShowWelcomeScreen)) {
+    welcomeScreen = std::make_unique<ui::WelcomeScreen>(&mainWindow);
+    firstWindowToShow = welcomeScreen.get();
+  }
+
+  firstWindowToShow->show();
 
   return _guiApplication.exec();  // NOLINT(*-static-accessed-through-instance)
 }

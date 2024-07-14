@@ -21,7 +21,8 @@
 
 #include "../io/ConsoleLogger.hpp"
 #include "dialogs/NewFileDialog.hpp"
-#include "ui_mainwindow.h"
+#include "ui/SettingsDialog.hpp"
+#include "ui_MainWindow.h"
 #include "widgets/DrawingWidget.hpp"
 
 namespace capy::ui {
@@ -32,6 +33,12 @@ MainWindow::MainWindow(QWidget* parent)
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
   connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
+  connect(ui->actionExit, &QAction::triggered, this, &QApplication::exit);
+  connect(ui->actionCloseWindow, &QAction::triggered, this, &QApplication::exit);
+  connect(ui->actionSettingsOpen, &QAction::triggered, this, &MainWindow::settingsOpenClicked);
+
+  // TODO: on file->close go back to welcome screen? only if show welcome screen enabled
+  // TODO: Project history list using ConfigurationManager getProjectsList addProjectsList etc
 
   setupColorDock();
   setupLayersDock();
@@ -48,6 +55,11 @@ void MainWindow::menuBarFileNewClicked() {
   if (newFileDialogResult.has_value()) {
     _drawingWidget->startNewDrawing(newFileDialogResult->width, newFileDialogResult->height);
   }
+}
+
+void MainWindow::settingsOpenClicked() {
+  SettingsDialog settingsDialog{this};
+  settingsDialog.exec();
 }
 
 void MainWindow::setupColorDock() {

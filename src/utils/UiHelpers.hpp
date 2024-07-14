@@ -15,40 +15,17 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef UIHELPERS_HPP
+#define UIHELPERS_HPP
 
-#include <rapidjson/document.h>
+#include <QFont>
+#include <QString>
 
-#include "utils/ErrorHandling.hpp"
+// TODO: Move to ui/utils
 
 namespace capy {
-template <class Derived>
-class JsonSerializable {
- public:
-  virtual ~JsonSerializable() = default;
+QString elideText(const QString& string, const QFont& font, int width,
+                  Qt::TextElideMode elideMode = Qt::ElideRight);
+}
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
-
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
-
- private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
-};
-}  // namespace capy
-
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // UIHELPERS_HPP

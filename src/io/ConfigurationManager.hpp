@@ -19,11 +19,14 @@
 #define CONFIGURATIONMANAGER_HPP
 
 #include <QSettings>
-#include <memory>
 
 namespace capy {
 class ConfigurationManager {
  public:
+  enum class InternalValues : int { ProjectPaths };
+
+  enum class ApplicationSettings : int { ShowWelcomeScreen };
+
   enum class DebugSetting : int {
     ShowConsole,
   };
@@ -38,6 +41,14 @@ class ConfigurationManager {
 
   static std::shared_ptr<ConfigurationManager> createInstance();
 
+  // TODO: Maybe don't seperate into categories, a lot of syf especialyl for ui linking
+
+  template <typename SettingValueType>
+  SettingValueType getApplicationSetting(ApplicationSettings setting) const;
+
+  template <typename SettingValueType>
+  void setApplicationSetting(ApplicationSettings setting, SettingValueType value);
+
   template <typename SettingValueType>
   SettingValueType getDebugSetting(DebugSetting setting) const;
 
@@ -50,12 +61,19 @@ class ConfigurationManager {
   template <typename SettingValueType>
   void setGraphicsSetting(GraphicsSetting setting, SettingValueType value);
 
+  void addAdditionalProjectPath(const std::string& path);
+  void removeAdditionalProjectPath(const std::string& pathToDelete);
+  bool doesAdditionalProjectExist(const std::string& path) const;
+  std::vector<std::string> getAdditionalProjectsPaths() const;
+
  protected:
   ConfigurationManager() = default;
 
  private:
   QSettings _settings{};
 
+  static QString getInternalValuePath(InternalValues value);
+  static QString getApplicationSettingPath(ApplicationSettings setting);
   static QString getDebugSettingPath(DebugSetting setting);
   static QString getGraphicsSettingPath(GraphicsSetting setting);
 };

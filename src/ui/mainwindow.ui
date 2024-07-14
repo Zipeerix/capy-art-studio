@@ -110,9 +110,8 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionEditor"/>
-    <addaction name="actionGeneral"/>
-    <addaction name="actionPerformance"/>
+    <addaction name="actionSettingsOpen"/>
+    <addaction name="actionRestore_Defaults"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -126,7 +125,7 @@
      <string>Window</string>
     </property>
     <addaction name="actionNew_Window"/>
-    <addaction name="actionClose_2"/>
+    <addaction name="actionCloseWindow"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
@@ -286,29 +285,27 @@
     <string>New Window</string>
    </property>
   </action>
-  <action name="actionClose_2">
+  <action name="actionCloseWindow">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
    <property name="text">
     <string>Close</string>
-   </property>
-  </action>
-  <action name="actionGeneral">
-   <property name="text">
-    <string>General</string>
-   </property>
-  </action>
-  <action name="actionPerformance">
-   <property name="text">
-    <string>Performance</string>
-   </property>
-  </action>
-  <action name="actionEditor">
-   <property name="text">
-    <string>Editor</string>
    </property>
   </action>
   <action name="actionManage">
    <property name="text">
     <string>Manage</string>
+   </property>
+  </action>
+  <action name="actionSettingsOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionRestore_Defaults">
+   <property name="text">
+    <string>Restore Defaults</string>
    </property>
   </action>
  </widget>

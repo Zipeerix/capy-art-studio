@@ -15,40 +15,40 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef CAPY_UI_FLOWLAYOUT_HPP
+#define CAPY_UI_FLOWLAYOUT_HPP
 
-#include <rapidjson/document.h>
+#include <QLayout>
+#include <QRect>
+#include <QStyle>
 
-#include "utils/ErrorHandling.hpp"
+class FlowLayout final : public QLayout
+{
+public:
+  explicit FlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
+  explicit FlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
+  ~FlowLayout() override;
 
-namespace capy {
-template <class Derived>
-class JsonSerializable {
- public:
-  virtual ~JsonSerializable() = default;
+  void addItem(QLayoutItem *item) override;
+  int horizontalSpacing() const;
+  int verticalSpacing() const;
+  Qt::Orientations expandingDirections() const override;
+  bool hasHeightForWidth() const override;
+  int heightForWidth(int) const override;
+  int count() const override;
+  QLayoutItem* itemAt(int index) const override;
+  QSize minimumSize() const override;
+  void setGeometry(const QRect &rect) override;
+  QSize sizeHint() const override;
+  QLayoutItem* takeAt(int index) override;
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
+private:
+  int doLayout(const QRect &rect, bool testOnly) const;
+  int smartSpacing(QStyle::PixelMetric pm) const;
 
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
-
- private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  QList<QLayoutItem *> itemList;
+  int m_hSpace;
+  int m_vSpace;
 };
-}  // namespace capy
 
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif // CAPY_UI_FLOWLAYOUT_HPP

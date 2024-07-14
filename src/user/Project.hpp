@@ -15,40 +15,25 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef JSONSERIALIZABLE_HPP
-#define JSONSERIALIZABLE_HPP
+#ifndef PROJECT_HPP
+#define PROJECT_HPP
 
-#include <rapidjson/document.h>
+#include <string>
 
-#include "utils/ErrorHandling.hpp"
+#include "io/JsonSerializable.hpp"
 
 namespace capy {
-template <class Derived>
-class JsonSerializable {
+class Project final : public JsonSerializable<Project> {
  public:
-  virtual ~JsonSerializable() = default;
+  std::string getName() const;
 
-  static Result<Derived, std::string> createFromJson(const std::string& path);
-  // TODO: Only save when _wasEdited=true
-  PotentialError<std::string> saveToJson(std::optional<std::string> path);
-
-  std::optional<std::string> getPath() const;
-
-  bool wasEditedFromLastSave() const;
-
- protected:
-  void setPath(std::string path);
-  void markAsEdited();
+  static Project createFromPathWithoutLoading(const std::string& path);
 
  private:
-  std::optional<std::string> _path;
-  bool _wasEdited = false;
-
-  virtual PotentialError<std::string> importValuesFromJson(const rapidjson::Document& root) = 0;
-  virtual rapidjson::Document exportValuesToJson() const = 0;
+  [[nodiscard]] PotentialError<std::string> importValuesFromJson(
+      const rapidjson::Document& root) override;
+  rapidjson::Document exportValuesToJson() const override;
 };
 }  // namespace capy
 
-#include "JsonSerializable.tpp"
-
-#endif  // JSONSERIALIZABLE_HPP
+#endif  // PROJECT_HPP

@@ -15,44 +15,55 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CAPY_UI_WELCOMESCREEN_HPP
+#define CAPY_UI_WELCOMESCREEN_HPP
 
+#include <QGridLayout>
 #include <QMainWindow>
+#include <QTimer>
 
-#include "docks/ColorArea.hpp"
-#include "docks/LayersArea.hpp"
-#include "docks/ToolsArea.hpp"
-#include "widgets/DrawingWidget.hpp"
+#include "models/ProjectsModel.hpp"
+#include "ui/MainWindow.hpp"
+#include "ui/layouts/FlowLayout.hpp"
 
 namespace capy::ui {
 namespace Ui {
-class MainWindow;
+class WelcomeScreen;
 }
 
-class MainWindow final : public QMainWindow {
+class WelcomeScreen final : public QMainWindow {
   Q_OBJECT
  public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow() override;
+  explicit WelcomeScreen(MainWindow* mainWindow, QWidget* parent = nullptr);
+  ~WelcomeScreen() override;
+
+  void resizeEvent(QResizeEvent* event) override;
 
  public slots:
-  void menuBarFileNewClicked();
-  void settingsOpenClicked();
-  void colorPickerColorChanged(QColor newColor) const;
+  void createNewProjectClicked();
+  void openProjectClicked();
+  void importProjectClicked();
+  void settingsClicked();
+  void continueButtonClicked();
+
+  // TODO: When fully implemented the path shouldn't be optional
+  void projectClicked(const std::optional<std::string>& path);
+  void projectRemoveClicked(const std::optional<std::string>& path);
+  void projectDeleteClicked(const std::optional<std::string>& path);
 
  private:
-  Ui::MainWindow* ui;
-  DrawingWidget* _drawingWidget;
+  Ui::WelcomeScreen* ui;
+  std::shared_ptr<ConfigurationManager> _configurationManager;
+  MainWindow* _mainWindow;
+  FlowLayout* _projectAreaLayout;
 
-  ColorArea* _colorDockArea = nullptr;
-  LayersArea* _layersDockArea = nullptr;
-  ToolsArea* _toolsDockArea = nullptr;
+  models::ProjectsModel _projectsModel;
+  int _currentColumns = 0;
 
-  void setupColorDock();
-  void setupLayersDock();
-  void setupToolsDock();
+  void loadProjectsFromFilesystem();
+  void updateUiProjectList();
+  void clearLayout() const;
 };
 }  // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+#endif  // CAPY_UI_WELCOMESCREEN_HPP

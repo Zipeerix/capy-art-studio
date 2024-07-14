@@ -15,12 +15,16 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPYFILEMANAGER_HPP
-#define CAPYFILEMANAGER_HPP
+#include "UiHelpers.hpp"
+
+#include <QFontMetrics>
 
 namespace capy {
-// TODO Use rapid json to encode info and then compress the file
-class CapyFileManager {};
-}  // namespace capy
+QString elideText(const QString& string, const QFont& font, int width,
+                  const Qt::TextElideMode elideMode) {
+  const QFontMetrics metrics{font};
+  QString elidedText = metrics.elidedText(string, elideMode, width);
 
-#endif  // CAPYFILEMANAGER_HPP
+  return elidedText;
+}
+}  // namespace capy
