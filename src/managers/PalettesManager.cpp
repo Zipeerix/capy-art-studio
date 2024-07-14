@@ -17,6 +17,8 @@
 
 #include "PalettesManager.hpp"
 
+#include <filesystem>
+
 #include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
 
