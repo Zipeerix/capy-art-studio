@@ -29,9 +29,9 @@ namespace capy::ui {
 DrawingWidget::DrawingWidget(QWidget* parent) :
   QGraphicsView(parent),
   _configurationManager(ConfigurationManager::createInstance()),
-  _scene(new QGraphicsScene(this)),
   _drawing(0, 0) {
-  setScene(_scene);
+  setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+  recreateScene();
 }
 
 void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect) {
@@ -65,15 +65,23 @@ void DrawingWidget::startNewDrawing(const int width, const int height) {
 
 void DrawingWidget::redrawScreen() {
   removeGrid();
-
-  _scene->clear();
+  recreateScene();
+  resetZoom();
 
   _drawingCanvasItem = new DrawingCanvasItem(_drawing.getWidth(), _drawing.getHeight());
   _scene->addItem(_drawingCanvasItem);
 
-  redrawGrid();
-
   syncInternalAndExternalDrawing();
+}
+
+void DrawingWidget::recreateScene() {
+  if (_scene != nullptr) {
+    _scene->clear();
+    delete _scene;
+  }
+
+  _scene = new QGraphicsScene(this);
+  setScene(_scene);
 }
 
 void DrawingWidget::redrawGrid() {
@@ -102,6 +110,11 @@ void DrawingWidget::removeGrid() {
   _lines.clear();
 }
 
+void DrawingWidget::resetZoom() {
+  resetTransform();
+  _zoomFactor = 1.0;
+}
+
 void DrawingWidget::updateZoomLevel(const double factor){
   const auto oldZoomFactor = _zoomFactor;
   _zoomFactor *= factor;
@@ -116,10 +129,11 @@ void DrawingWidget::drawOrRemoveGridBasedOnZoomLevel(const double oldZoomFactor)
   // TODO: Save threshold on startup and then have a connect so that if its changed somewhere else
   // TODO: the saved value is changed, so that config manager doesnt have to be checked every
   // TODO: zoom tick
+  qDebug() << _zoomFactor;
   const auto zoomThreshold = _configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold);
-  if (oldZoomFactor < zoomThreshold && _zoomFactor > zoomThreshold) {
+  if (oldZoomFactor <= zoomThreshold && _zoomFactor >= zoomThreshold) {
     redrawGrid();
-  } else if (oldZoomFactor > zoomThreshold && _zoomFactor < zoomThreshold) {
+  } else if (oldZoomFactor >= zoomThreshold && _zoomFactor <= zoomThreshold) {
     removeGrid();
   }
 }
@@ -271,6 +285,8 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
 
         _lastContinousDrawingPoint = movingThroughPixel.value();
         // pixelDrawingAction(clickedPixelX, clickedPixelY...)
+      } else {
+        _lastContinousDrawingPoint = std::nullopt;
       }
       return;
     }
@@ -296,7 +312,8 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
 
     updateZoomLevel(factor);
 
-    const QPointF targetViewportPos = event->position();
+    // TODO: Implement zoom on mouse, this doesnt work
+    /*const QPointF targetViewportPos = event->position();
     const QPointF targetScenePos = mapToScene(event->position().toPoint());
 
     centerOn(targetScenePos);
@@ -305,7 +322,7 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
                                          viewport()->height() / 2.0);
     const QPointF viewportCenter =
         mapFromScene(targetScenePos) - deltaViewportPos;
-    centerOn(mapToScene(viewportCenter.toPoint()));
+    centerOn(mapToScene(viewportCenter.toPoint())); */
   } else {
     QGraphicsView::wheelEvent(event);
   }

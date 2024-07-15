@@ -44,6 +44,8 @@ public:
 
   void drawBackground(QPainter* painter, const QRectF& rect) override;
 
+  void resetZoom();
+
 private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   CheckerboardPixmap _checkerboardPixmap;
@@ -73,6 +75,7 @@ private:
   void redrawGrid();
   void removeGrid();
   void drawOrRemoveGridBasedOnZoomLevel(double oldZoomFactor);
+  void recreateScene();
 
   void updateZoomLevel(double factor);
 
