@@ -26,15 +26,14 @@ int Drawing::getWidth() const { return _width; }
 
 int Drawing::getHeight() const { return _height; }
 
-int Drawing::getLayerCount() const{
-  return _layers.size();
-}
+int Drawing::getLayerCount() const { return _layers.size(); }
 
 const Layer& Drawing::getCurrentLayer() const { return _layers.at(_currentLayer); }
 
 void Drawing::setCurrentLayer(const int newCurrentLayer) { _currentLayer = newCurrentLayer; }
 
-void Drawing::insertOrAssignLayerFromRawPixels(const int index, const std::string& name, std::vector<Pixel> pixels) {
+void Drawing::insertOrAssignLayerFromRawPixels(const int index, const std::string& name,
+                                               std::vector<Pixel> pixels) {
   if (static_cast<std::size_t>(index) == _layers.size()) {
     _layers.emplace_back(_width, _height, name);
   } else if (!(static_cast<std::size_t>(index) < _layers.size())) {

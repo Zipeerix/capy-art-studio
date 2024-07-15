@@ -79,7 +79,7 @@ void SettingsDialog::setupConnectionsForGraphicsTab() {
           });
 
   ui->pixelGridZoomThresholdSpinbox->setValue(_configurationManager->getGraphicsSetting<double>(
-    ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold));
+      ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold));
   connect(ui->pixelGridZoomThresholdSpinbox, &QDoubleSpinBox::valueChanged, this,
           [&](const double newValue) {
             _configurationManager->setGraphicsSetting(

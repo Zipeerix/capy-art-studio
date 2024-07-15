@@ -20,7 +20,8 @@
 #include "utils/General.hpp"
 
 namespace capy {
-Layer::Layer(const int width, const int height, std::string name) : _name(std::move(name)), _width(width), _height(height) {
+Layer::Layer(const int width, const int height, std::string name)
+    : _name(std::move(name)), _width(width), _height(height) {
   _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
 }
 
@@ -30,13 +31,9 @@ void Layer::show() { _visible = true; }
 
 void Layer::hide() { _visible = false; }
 
-void Layer::setPixels(std::vector<Pixel> pixels) {
-  _pixels = std::move(pixels);
-}
+void Layer::setPixels(std::vector<Pixel> pixels) { _pixels = std::move(pixels); }
 
-void Layer::setName(std::string name) {
-  _name = std::move(name);
-}
+void Layer::setName(std::string name) { _name = std::move(name); }
 
 void Layer::drawPixel(const int x, const int y, const QColor& color) {
   auto& targetPixel = getMutablePixel(x, y);
