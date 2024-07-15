@@ -117,14 +117,8 @@ void WelcomeScreen::settingsClicked() {
 void WelcomeScreen::projectClicked(const Project& project) {
   logger::info(fmt::format("Attempting to open project at {}", project.getPath()));
 
-  const auto projectDrawingRes = project.readDrawing();
-  if (!projectDrawingRes.has_value()) {
-    return execMessageBox(this, QMessageBox::Icon::Critical,
-                          QString::fromStdString(projectDrawingRes.error()));
-  }
-
   // TODO: Maybe make drawing unique_ptr for memory saving
-  _mainWindow->setDrawing(projectDrawingRes.value(), project.getPath());
+  _mainWindow->setProject(project);
   _mainWindow->show();
   hide();
 }

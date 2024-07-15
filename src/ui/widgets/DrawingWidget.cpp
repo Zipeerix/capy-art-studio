@@ -34,6 +34,10 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
   recreateScene();
 }
 
+QByteArray DrawingWidget::createMiniatureBytes() const {
+  return _drawingCanvasItem->createMiniatureBytes();
+}
+
 void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect) {
   painter->save();
   painter->resetTransform();
@@ -53,6 +57,10 @@ void DrawingWidget::setDrawingColor(const QColor color) {
 
 QColor DrawingWidget::getDrawingColor() const {
   return _drawingColor;
+}
+
+const std::vector<Layer>& DrawingWidget::getLayers() const {
+  return _drawing.getLayers();
 }
 
 void DrawingWidget::startNewDrawing(const int width, const int height) {

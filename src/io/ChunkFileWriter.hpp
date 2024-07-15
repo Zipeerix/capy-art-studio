@@ -15,39 +15,27 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#ifndef CHUNKFILEWRITER_HPP
+#define CHUNKFILEWRITER_HPP
 
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
+#include "ChunkFileManagerBase.hpp"
 
 namespace capy {
-class Drawing {
+class ChunkFileWriter : public ChunkFileManagerBase {
  public:
-  Drawing(int width, int height);
+  enum class ExisingFileStrategy {
+    ClearAndWrite,
+    Overwrite,
+    Error,
+  };
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
-
-  int getWidth() const;
-  int getHeight() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
-
-  void setCurrentLayer(int newCurrentLayer);
-
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
+  explicit ChunkFileWriter(const std::string& path, ExisingFileStrategy existingFileStrategy);
 
  private:
-  std::vector<Layer> _layers;
-  int _currentLayer = 0;
-  int _width;
-  int _height;
+  ExisingFileStrategy _existingFileStrategy;
+
+  void initStrategy();
 };
 }  // namespace capy
 
-#endif  // DRAWING_HPP
+#endif  // CHUNKFILEWRITER_HPP

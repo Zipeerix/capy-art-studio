@@ -24,7 +24,8 @@
 #include <utility>
 
 #include "io/ApplicationFilesystem.hpp"
-#include "io/ChunkFileLoader.hpp"
+#include "io/ChunkFileReader.hpp"
+#include "io/ChunkFileWriter.hpp"
 #include "io/ConsoleLogger.hpp"
 
 namespace capy {
@@ -35,7 +36,7 @@ Result<Project, std::string> Project::createFromFile(const std::string& path) {
 
   // TODO: Break down into static methods, or just statics
 
-  ChunkFileLoader file{path};
+  ChunkFileReader file{path};
   if (!file.isFileValid()) {
     return std::unexpected(fmt::format("Unable to open project file at: {}", path));
   }
@@ -94,7 +95,7 @@ std::string Project::getName() const { return getFileNameFromPath(_path); }
 QPixmap Project::getMiniature() const { return _miniature; }
 
 Result<Drawing, std::string> Project::readDrawing() const {
-  ChunkFileLoader file{_path};
+  ChunkFileReader file{_path};
   if (!file.isFileValid()) {
     logger::debug("Project file was opened once successfully but then failed when reading data",
                   "Project");
@@ -198,5 +199,17 @@ Result<Drawing, std::string> Project::readDrawing() const {
   }
 
   return drawing;
+}
+
+PotentialError<std::string> Project::save(const QByteArray& miniatureBytes,
+                                          const std::vector<Layer>& layers) {
+  Q_UNUSED(miniatureBytes);
+  Q_UNUSED(layers);
+
+  // TODO: When optimizing should probably use replace or somehow do it in a different way that
+  // doesnt hammer the disk
+  ChunkFileWriter file{_path, ChunkFileWriter::ExisingFileStrategy::ClearAndWrite};
+
+  throw;
 }
 }  // namespace capy

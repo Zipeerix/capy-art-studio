@@ -23,18 +23,13 @@
 #include <fstream>
 #include <vector>
 
+#include "ChunkFileManagerBase.hpp"
 #include "utils/ErrorHandling.hpp"
 
 namespace capy {
-class ChunkFileLoader {
+class ChunkFileReader : public ChunkFileManagerBase {
  public:
-  explicit ChunkFileLoader(const std::string& path);
-  ~ChunkFileLoader();
-
-  bool isFileValid() const;
-
-  std::size_t currentReadingIndex();
-  void setReadingIndex(std::size_t index);
+  explicit ChunkFileReader(const std::string& path);
 
   // TODO: also to buffer, usefull for large reads (or is move enough)
   Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);
@@ -47,11 +42,6 @@ class ChunkFileLoader {
   Result<std::uint32_t, std::string> readNext32BitInt(bool bigEndian = false);
 
   // TODO: Templated read
-
- private:
-  std::ifstream _fileStream;
-
-  void moveIteratorBackBy(int offset);
 };
 }  // namespace capy
 

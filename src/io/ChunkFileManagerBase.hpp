@@ -15,39 +15,27 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#ifndef CHUNKFILEMANAGERBASE_HPP
+#define CHUNKFILEMANAGERBASE_HPP
 
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
+#include <fstream>
 
 namespace capy {
-class Drawing {
+class ChunkFileManagerBase {
  public:
-  Drawing(int width, int height);
+  explicit ChunkFileManagerBase(const std::string& path);
+  ~ChunkFileManagerBase();
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
+  bool isFileValid() const;
 
-  int getWidth() const;
-  int getHeight() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
+  std::size_t currentReadingIndex();
+  void setReadingIndex(std::size_t index);
 
-  void setCurrentLayer(int newCurrentLayer);
+ protected:
+  std::ifstream _fileStream;
 
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
-
- private:
-  std::vector<Layer> _layers;
-  int _currentLayer = 0;
-  int _width;
-  int _height;
+  void moveIteratorBackBy(int offset);
 };
 }  // namespace capy
 
-#endif  // DRAWING_HPP
+#endif  // CHUNKFILEMANAGERBASE_HPP

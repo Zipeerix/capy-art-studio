@@ -82,8 +82,12 @@ set(APPLICATION_SOURCE_FILES
         src/io/ConfigurationManager.cpp
         src/io/ConsoleLogger.hpp
         src/io/ConsoleLogger.cpp
-        src/io/ChunkFileLoader.hpp
-        src/io/ChunkFileLoader.cpp
+        src/io/ChunkFileReader.hpp
+        src/io/ChunkFileReader.cpp
+        src/io/ChunkFileWriter.hpp
+        src/io/ChunkFileWriter.cpp
+        src/io/ChunkFileManagerBase.hpp
+        src/io/ChunkFileManagerBase.cpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
         src/io/JsonSerializable.hpp

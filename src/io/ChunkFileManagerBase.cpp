@@ -15,39 +15,22 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
-
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
+#include "ChunkFileManagerBase.hpp"
 
 namespace capy {
-class Drawing {
- public:
-  Drawing(int width, int height);
+ChunkFileManagerBase::ChunkFileManagerBase(const std::string& path)
+    : _fileStream(path, std::ios::binary) {}
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
+ChunkFileManagerBase::~ChunkFileManagerBase() { _fileStream.close(); }
 
-  int getWidth() const;
-  int getHeight() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
+bool ChunkFileManagerBase::isFileValid() const { return _fileStream.good(); }
 
-  void setCurrentLayer(int newCurrentLayer);
+std::size_t ChunkFileManagerBase::currentReadingIndex() { return _fileStream.tellg(); }
 
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
+void ChunkFileManagerBase::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
 
- private:
-  std::vector<Layer> _layers;
-  int _currentLayer = 0;
-  int _width;
-  int _height;
-};
+void ChunkFileManagerBase::moveIteratorBackBy(int offset) {
+  const auto current = currentReadingIndex();
+  setReadingIndex(current - offset);
+}
 }  // namespace capy
-
-#endif  // DRAWING_HPP

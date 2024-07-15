@@ -30,6 +30,8 @@ int Drawing::getLayerCount() const { return _layers.size(); }
 
 const Layer& Drawing::getCurrentLayer() const { return _layers.at(_currentLayer); }
 
+const std::vector<Layer>& Drawing::getLayers() const { return _layers; }
+
 void Drawing::setCurrentLayer(const int newCurrentLayer) { _currentLayer = newCurrentLayer; }
 
 void Drawing::insertOrAssignLayerFromRawPixels(const int index, const std::string& name,

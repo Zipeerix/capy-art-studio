@@ -37,10 +37,11 @@ class MainWindow final : public QMainWindow {
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
-  void setDrawing(Drawing drawing, const std::string& projectPath);
+  void setProject(const Project& project);
 
  public slots:
   void menuBarFileNewClicked();
+  void menuBarFileSaveClicked();
   void settingsOpenClicked();
   void colorPickerColorChanged(QColor newColor) const;
 
@@ -51,6 +52,8 @@ class MainWindow final : public QMainWindow {
   ColorArea* _colorDockArea = nullptr;
   LayersArea* _layersDockArea = nullptr;
   ToolsArea* _toolsDockArea = nullptr;
+
+  std::optional<Project> _project = std::nullopt;
 
   void setupColorDock();
   void setupLayersDock();

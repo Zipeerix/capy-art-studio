@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget* parent)
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
   connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
+  connect(ui->actionSave, &QAction::triggered, this, &MainWindow::menuBarFileSaveClicked);
   connect(ui->actionExit, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionCloseWindow, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionSettingsOpen, &QAction::triggered, this, &MainWindow::settingsOpenClicked);
@@ -56,6 +57,25 @@ void MainWindow::menuBarFileNewClicked() {
   const auto newFileDialogResult = dialog.getResult();
   if (newFileDialogResult.has_value()) {
     _drawingWidget->startNewDrawing(newFileDialogResult->width, newFileDialogResult->height);
+  }
+}
+
+void MainWindow::menuBarFileSaveClicked() {
+  // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on
+  // exit/every n minutes
+  if (!_project.has_value()) {
+    // TODO: Rework this, call save as if no project path
+    // TODO: Maybe call saveAs from here and in saveAs set _projectPath
+    return execMessageBox(this, QMessageBox::Icon::Warning, "Use 'Save As' for new projects");
+  }
+
+  const QByteArray miniatureBytes = _drawingWidget->createMiniatureBytes();
+  const std::vector<Layer>& layers = _drawingWidget->getLayers();
+
+  const auto savingError = _project->save(miniatureBytes, layers);
+  if (savingError.has_value()) {
+    return execMessageBox(this, QMessageBox::Icon::Critical,
+                          QString::fromStdString(savingError.value()));
   }
 }
 
@@ -92,8 +112,16 @@ void MainWindow::colorPickerColorChanged(QColor newColor) const {
   _drawingWidget->setDrawingColor(newColor);
 }
 
-void MainWindow::setDrawing(Drawing drawing, const std::string& projectPath) {
-  changeWindowTitle(projectPath);
-  _drawingWidget->setDrawing(std::move(drawing));
+void MainWindow::setProject(const Project& project) {
+  const auto drawingCreationRes = project.readDrawing();
+  if (!drawingCreationRes.has_value()) {
+    return execMessageBox(this, QMessageBox::Icon::Critical,
+                          QString::fromStdString(drawingCreationRes.error()));
+  }
+
+  _project = project;
+  changeWindowTitle(_project->getPath());
+
+  _drawingWidget->setDrawing(drawingCreationRes.value());
 }
 }  // namespace capy::ui

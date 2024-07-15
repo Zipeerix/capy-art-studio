@@ -15,39 +15,24 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
-
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
+#include "ChunkFileWriter.hpp"
 
 namespace capy {
-class Drawing {
- public:
-  Drawing(int width, int height);
+ChunkFileWriter::ChunkFileWriter(const std::string& path,
+                                 const ExisingFileStrategy existingFileStrategy)
+    : ChunkFileManagerBase(path), _existingFileStrategy(existingFileStrategy) {
+  initStrategy();
+}
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
+void ChunkFileWriter::initStrategy() {
+  switch (_existingFileStrategy) {
+    case ExisingFileStrategy::ClearAndWrite:
+    case ExisingFileStrategy::Overwrite:
+    case ExisingFileStrategy::Error:
+      throw std::logic_error("Unimplemented strategy");
 
-  int getWidth() const;
-  int getHeight() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
-
-  void setCurrentLayer(int newCurrentLayer);
-
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
-
- private:
-  std::vector<Layer> _layers;
-  int _currentLayer = 0;
-  int _width;
-  int _height;
-};
+    default:
+      throw std::logic_error("Invalid strategy");
+  }
+}
 }  // namespace capy
-
-#endif  // DRAWING_HPP
