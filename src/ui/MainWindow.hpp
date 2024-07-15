@@ -41,7 +41,7 @@ class MainWindow final : public QMainWindow {
 
  public slots:
   void menuBarFileNewClicked();
-  void menuBarFileSaveClicked();
+  void menuBarFileSaveAsClicked();
   void settingsOpenClicked();
   void colorPickerColorChanged(QColor newColor) const;
 

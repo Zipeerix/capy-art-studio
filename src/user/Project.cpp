@@ -202,13 +202,16 @@ Result<Drawing, std::string> Project::readDrawing() const {
 }
 
 PotentialError<std::string> Project::save(const QByteArray& miniatureBytes,
-                                          const std::vector<Layer>& layers) {
+                                          const std::vector<Layer>& layers, const std::optional<std::string>& pathOverride) {
   Q_UNUSED(miniatureBytes);
   Q_UNUSED(layers);
+  Q_UNUSED(pathOverride);
 
   // TODO: When optimizing should probably use replace or somehow do it in a different way that
   // doesnt hammer the disk
-  ChunkFileWriter file{_path, ChunkFileWriter::ExisingFileStrategy::ClearAndWrite};
+
+  // TODO: Remember to setPath(pathOverride.value()) if its not optional on success
+  ChunkFileWriter file{_path, ChunkFileWriter::ExisingFileStrategy::};
 
   throw;
 }

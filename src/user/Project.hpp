@@ -31,7 +31,7 @@ class Project {
   [[nodiscard]] Result<Drawing, std::string> readDrawing() const;
 
   [[nodiscard]] PotentialError<std::string> save(const QByteArray& miniatureBytes,
-                                                 const std::vector<Layer>& layers);
+                                                 const std::vector<Layer>& layers, const std::optional<std::string>& pathOverride);
 
   std::string getPath() const;
   std::string getName() const;

@@ -19,6 +19,8 @@
 
 #include <fmt/format.h>
 
+#include <QFileDialog>
+
 #include "../io/ConsoleLogger.hpp"
 #include "dialogs/NewFileDialog.hpp"
 #include "ui/SettingsDialog.hpp"
@@ -34,7 +36,7 @@ MainWindow::MainWindow(QWidget* parent)
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
   connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
-  connect(ui->actionSave, &QAction::triggered, this, &MainWindow::menuBarFileSaveClicked);
+  connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::menuBarFileSaveAsClicked);
   connect(ui->actionExit, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionCloseWindow, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionSettingsOpen, &QAction::triggered, this, &MainWindow::settingsOpenClicked);
@@ -60,19 +62,19 @@ void MainWindow::menuBarFileNewClicked() {
   }
 }
 
-void MainWindow::menuBarFileSaveClicked() {
-  // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on
-  // exit/every n minutes
-  if (!_project.has_value()) {
-    // TODO: Rework this, call save as if no project path
-    // TODO: Maybe call saveAs from here and in saveAs set _projectPath
-    return execMessageBox(this, QMessageBox::Icon::Warning, "Use 'Save As' for new projects");
+void MainWindow::menuBarFileSaveAsClicked() {
+  // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on exit/nth minute
+
+  const QString filter = "Capy Project Files (*.capy)";
+  const std::string filePath = QFileDialog::getSaveFileName(this, "Save Capy File", QString(), filter).toStdString();
+  if (filePath.empty()) {
+    return;
   }
 
   const QByteArray miniatureBytes = _drawingWidget->createMiniatureBytes();
   const std::vector<Layer>& layers = _drawingWidget->getLayers();
 
-  const auto savingError = _project->save(miniatureBytes, layers);
+  const auto savingError = _project->save(miniatureBytes, layers, filePath);
   if (savingError.has_value()) {
     return execMessageBox(this, QMessageBox::Icon::Critical,
                           QString::fromStdString(savingError.value()));
