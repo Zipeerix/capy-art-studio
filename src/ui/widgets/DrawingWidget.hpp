@@ -44,10 +44,14 @@ public:
 
   void drawBackground(QPainter* painter, const QRectF& rect) override;
 
+  void resetZoom();
+
 private:
-  std::shared_ptr<ConfigurationManager> _settings;
+  std::shared_ptr<ConfigurationManager> _configurationManager;
   CheckerboardPixmap _checkerboardPixmap;
   QColor _drawingColor = QColor(0, 0, 0, 255);
+
+  std::vector<QGraphicsLineItem*> _lines;
 
   DrawingCanvasItem* _drawingCanvasItem = nullptr;
   QGraphicsScene* _scene = nullptr;
@@ -61,11 +65,20 @@ private:
   int _panStartX = 0;
   int _panStartY = 0;
 
+  double _zoomFactor = 1.0;
+
   std::optional<QPoint> mapPositionOfEventToScene(const QMouseEvent* event) const;
 
   void drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor);
 
   void redrawScreen();
+  void redrawGrid();
+  void removeGrid();
+  void drawOrRemoveGridBasedOnZoomLevel(double oldZoomFactor);
+  void recreateScene();
+
+  void updateZoomLevel(double factor);
+
   void syncInternalAndExternalDrawing() const;
 
   void mousePressEvent(QMouseEvent* event) override;

@@ -67,6 +67,9 @@ QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setti
     case GraphicsSetting::GridWidth:
       return "Graphics/GridWidth";
 
+    case GraphicsSetting::GridDrawingZoomThreshold:
+      return "Graphics/GridDrawingZoomThreshold";
+
     default:
       throw std::logic_error("Invalid setting requested");
   }

@@ -30,9 +30,7 @@ bool ChunkFileLoader::isFileValid() const { return _fileStream.good(); }
 
 std::size_t ChunkFileLoader::currentReadingIndex() { return _fileStream.tellg(); }
 
-void ChunkFileLoader::setReadingIndex(std::size_t index) {
-  _fileStream.seekg(index);
-}
+void ChunkFileLoader::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
 
 Result<std::vector<uint8_t>, std::string> ChunkFileLoader::readNextBytesToVector(const int nBytes) {
   std::vector<uint8_t> vecBuffer(nBytes, 0);

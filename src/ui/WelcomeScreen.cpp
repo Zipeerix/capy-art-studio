@@ -119,7 +119,8 @@ void WelcomeScreen::projectClicked(const Project& project) {
 
   const auto projectDrawingRes = project.readDrawing();
   if (!projectDrawingRes.has_value()) {
-    return execMessageBox(this, QMessageBox::Icon::Critical, QString::fromStdString(projectDrawingRes.error()));
+    return execMessageBox(this, QMessageBox::Icon::Critical,
+                          QString::fromStdString(projectDrawingRes.error()));
   }
 
   // TODO: Maybe make drawing unique_ptr for memory saving

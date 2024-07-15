@@ -28,10 +28,10 @@
 namespace capy::ui {
 DrawingWidget::DrawingWidget(QWidget* parent) :
   QGraphicsView(parent),
-  _settings(ConfigurationManager::createInstance()),
-  _scene(new QGraphicsScene(this)),
+  _configurationManager(ConfigurationManager::createInstance()),
   _drawing(0, 0) {
-  setScene(_scene);
+  setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+  recreateScene();
 }
 
 void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect) {
@@ -64,29 +64,78 @@ void DrawingWidget::startNewDrawing(const int width, const int height) {
 }
 
 void DrawingWidget::redrawScreen() {
-  _scene->clear();
+  removeGrid();
+  recreateScene();
+  resetZoom();
 
   _drawingCanvasItem = new DrawingCanvasItem(_drawing.getWidth(), _drawing.getHeight());
   _scene->addItem(_drawingCanvasItem);
 
-  if (_settings->getGraphicsSetting<bool>(ConfigurationManager::GraphicsSetting::DrawGrid)) {
-    const int totalDrawingWidth = _drawing.getWidth();
-    const int totalDrawingHeight = _drawing.getHeight();
+  syncInternalAndExternalDrawing();
+}
 
-    auto pen = QPen(Qt::lightGray);
-    pen.setWidthF(_settings->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
-    pen.setCosmetic(true);
-
-    for (int y = 0; y <= totalDrawingHeight; y += 1) {
-      _scene->addLine(0, y, totalDrawingWidth, y, pen);
-    }
-
-    for (int x = 0; x <= totalDrawingWidth; x += 1) {
-      _scene->addLine(x, 0, x, totalDrawingHeight, pen);
-    }
+void DrawingWidget::recreateScene() {
+  if (_scene != nullptr) {
+    _scene->clear();
+    delete _scene;
   }
 
-  syncInternalAndExternalDrawing();
+  _scene = new QGraphicsScene(this);
+  setScene(_scene);
+}
+
+void DrawingWidget::redrawGrid() {
+  removeGrid();
+
+  if (_configurationManager->getGraphicsSetting<bool>(ConfigurationManager::GraphicsSetting::DrawGrid)) {
+    auto pen = QPen(Qt::lightGray);
+    pen.setWidthF(_configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
+    pen.setCosmetic(true);
+
+    for (int y = 0; y <= _drawing.getHeight(); y += 1) {
+      _lines.push_back(_scene->addLine(0, y, _drawing.getWidth(), y, pen));
+    }
+
+    for (int x = 0; x <= _drawing.getWidth(); x += 1) {
+      _lines.push_back(_scene->addLine(x, 0, x, _drawing.getHeight(), pen));
+    }
+  }
+}
+
+void DrawingWidget::removeGrid() {
+  for (const QGraphicsLineItem* line : _lines) {
+    delete line;
+  }
+
+  _lines.clear();
+}
+
+void DrawingWidget::resetZoom() {
+  resetTransform();
+  _zoomFactor = 1.0;
+}
+
+void DrawingWidget::updateZoomLevel(const double factor){
+  const auto oldZoomFactor = _zoomFactor;
+  _zoomFactor *= factor;
+
+  drawOrRemoveGridBasedOnZoomLevel(oldZoomFactor);
+
+  scale(factor, factor);
+}
+
+void DrawingWidget::drawOrRemoveGridBasedOnZoomLevel(const double oldZoomFactor) {
+  // TODO Prime example of checking configuration manager too ofter
+  // TODO: Save threshold on startup and then have a connect so that if its changed somewhere else
+  // TODO: the saved value is changed, so that config manager doesnt have to be checked every
+  // TODO: zoom tick
+  qDebug() << _zoomFactor;
+  const auto zoomThreshold = _configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold);
+  if (oldZoomFactor <= zoomThreshold && _zoomFactor >= zoomThreshold) {
+    redrawGrid();
+  } else if (oldZoomFactor >= zoomThreshold && _zoomFactor <= zoomThreshold) {
+    removeGrid();
+  }
 }
 
 void DrawingWidget::syncInternalAndExternalDrawing() const {
@@ -236,6 +285,8 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
 
         _lastContinousDrawingPoint = movingThroughPixel.value();
         // pixelDrawingAction(clickedPixelX, clickedPixelY...)
+      } else {
+        _lastContinousDrawingPoint = std::nullopt;
       }
       return;
     }
@@ -259,17 +310,19 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
     const double angle = event->angleDelta().y();
     const double factor = qPow(1.0015, angle);
 
-    const QPointF targetViewportPos = event->position();
+    updateZoomLevel(factor);
+
+    // TODO: Implement zoom on mouse, this doesnt work
+    /*const QPointF targetViewportPos = event->position();
     const QPointF targetScenePos = mapToScene(event->position().toPoint());
 
-    scale(factor, factor);
     centerOn(targetScenePos);
     const QPointF deltaViewportPos = targetViewportPos - QPointF(
                                          viewport()->width() / 2.0,
                                          viewport()->height() / 2.0);
     const QPointF viewportCenter =
         mapFromScene(targetScenePos) - deltaViewportPos;
-    centerOn(mapToScene(viewportCenter.toPoint()));
+    centerOn(mapToScene(viewportCenter.toPoint())); */
   } else {
     QGraphicsView::wheelEvent(event);
   }

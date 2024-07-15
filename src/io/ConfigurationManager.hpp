@@ -31,10 +31,7 @@ class ConfigurationManager {
     ShowConsole,
   };
 
-  enum class GraphicsSetting : int {
-    DrawGrid,
-    GridWidth,
-  };
+  enum class GraphicsSetting : int { DrawGrid, GridWidth, GridDrawingZoomThreshold };
 
   ConfigurationManager(ConfigurationManager&) = delete;
   void operator=(const ConfigurationManager&) = delete;

@@ -61,6 +61,10 @@ SettingValueType ConfigurationManager::getGraphicsSetting(const GraphicsSetting 
       compileTimeTypeCheck<SettingValueType, double>();
       return _settings.value(getGraphicsSettingPath(setting), 0.3).toDouble();
 
+    case GraphicsSetting::GridDrawingZoomThreshold:
+      compileTimeTypeCheck<SettingValueType, double>();
+      return _settings.value(getGraphicsSettingPath(setting), 5.0).toDouble();
+
     default:
       throw std::logic_error("Invalid setting requested");
   }
@@ -72,17 +76,18 @@ void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
   switch (setting) {
     case GraphicsSetting::DrawGrid:
       compileTimeTypeCheck<SettingValueType, bool>();
-      _settings.setValue(getGraphicsSettingPath(setting), value);
       break;
 
     case GraphicsSetting::GridWidth:
+    case GraphicsSetting::GridDrawingZoomThreshold:
       compileTimeTypeCheck<SettingValueType, double>();
-      _settings.setValue(getGraphicsSettingPath(setting), value);
       break;
 
     default:
       throw std::logic_error("Invalid setting requested");
   }
+
+  _settings.setValue(getGraphicsSettingPath(setting), value);
 
   _settings.sync();
 }

@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
   connect(ui->actionExit, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionCloseWindow, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionSettingsOpen, &QAction::triggered, this, &MainWindow::settingsOpenClicked);
+  connect(ui->actionResetZoom, &QAction::triggered, this, [&]() { _drawingWidget->resetZoom(); });
 
   // TODO: on file->close go back to welcome screen? only if show welcome screen enabled
   // TODO: Project history list using ConfigurationManager getProjectsList addProjectsList etc

@@ -134,7 +134,9 @@ Result<Drawing, std::string> Project::readDrawing() const {
   for (std::uint32_t i = 0; i < layerCount; i++) {
     const auto layerNameReadingRes = file.readNextVariableLengthString();
     if (!layerNameReadingRes.has_value()) {
-      logger::error(fmt::format("Unable to read project layer name at index {} from project file", i), logger::Severity::Mild);
+      logger::error(
+          fmt::format("Unable to read project layer name at index {} from project file", i),
+          logger::Severity::Mild);
       return std::unexpected("Project file is corrupted or incompatible with this version");
     }
 
@@ -147,7 +149,8 @@ Result<Drawing, std::string> Project::readDrawing() const {
 
   const auto endOfLayerNamesByte = file.readNextByte();
   if (!endOfLayerNamesByte.has_value()) {
-    logger::error("Unable to read end of layers names byte from project file", logger::Severity::Mild);
+    logger::error("Unable to read end of layers names byte from project file",
+                  logger::Severity::Mild);
     return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
@@ -163,7 +166,8 @@ Result<Drawing, std::string> Project::readDrawing() const {
   for (std::uint32_t layerIndex = 0; layerIndex < layerCount; layerIndex++) {
     const auto layersRawPixelsReadRes = file.readNextBytesToVector(static_cast<int>(sizePerLayer));
     if (!layersRawPixelsReadRes.has_value()) {
-      logger::error(fmt::format("Unable to read layer data with index: {}", layerIndex), logger::Severity::Mild);
+      logger::error(fmt::format("Unable to read layer data with index: {}", layerIndex),
+                    logger::Severity::Mild);
       return std::unexpected("Project file is corrupted or incompatible with this version");
     }
 
@@ -180,7 +184,8 @@ Result<Drawing, std::string> Project::readDrawing() const {
       layerPixels.emplace_back(r, g, b, a);
     }
 
-    drawing.insertOrAssignLayerFromRawPixels(static_cast<int>(layerIndex), layerNames[layerIndex], std::move(layerPixels));
+    drawing.insertOrAssignLayerFromRawPixels(static_cast<int>(layerIndex), layerNames[layerIndex],
+                                             std::move(layerPixels));
   }
 
   if (static_cast<std::uint32_t>(drawing.getLayerCount()) != layerCount) {
