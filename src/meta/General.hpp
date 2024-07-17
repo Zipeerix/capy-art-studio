@@ -20,6 +20,8 @@
 
 // TODO: Change this and 'Memory.hpp' namespace to capy::utils?
 namespace capy {
+constexpr char nullTerminator = 0;
+
 int convert2DIndexto1DIndex(int x, int y, int width);
 
 template <typename T, typename U>

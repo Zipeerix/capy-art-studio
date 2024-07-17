@@ -15,24 +15,18 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ChunkFileLoader.hpp"
+#include "ChunkFileReader.hpp"
 
 #include <fmt/format.h>
 
 #include <stdexcept>
 
 namespace capy {
-ChunkFileLoader::ChunkFileLoader(const std::string& path) : _fileStream(path, std::ios::binary) {}
+ChunkFileReader::ChunkFileReader(const std::string& path) : _fileStream(path, std::ios::binary) {}
 
-ChunkFileLoader::~ChunkFileLoader() { _fileStream.close(); }
+ChunkFileReader::~ChunkFileReader() { _fileStream.close(); }
 
-bool ChunkFileLoader::isFileValid() const { return _fileStream.good(); }
-
-std::size_t ChunkFileLoader::currentReadingIndex() { return _fileStream.tellg(); }
-
-void ChunkFileLoader::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
-
-Result<std::vector<uint8_t>, std::string> ChunkFileLoader::readNextBytesToVector(const int nBytes) {
+Result<std::vector<uint8_t>, std::string> ChunkFileReader::readNextBytesToVector(const int nBytes) {
   std::vector<uint8_t> vecBuffer(nBytes, 0);
 
   _fileStream.read(reinterpret_cast<char*>(vecBuffer.data()), nBytes);
@@ -43,7 +37,7 @@ Result<std::vector<uint8_t>, std::string> ChunkFileLoader::readNextBytesToVector
   return vecBuffer;
 }
 
-Result<uint8_t, std::string> ChunkFileLoader::readNextByte() {
+Result<uint8_t, std::string> ChunkFileReader::readNextByte() {
   uint8_t data = 0x00;
 
   _fileStream.read(reinterpret_cast<char*>(&data), 1);
@@ -54,7 +48,7 @@ Result<uint8_t, std::string> ChunkFileLoader::readNextByte() {
   return data;
 }
 
-Result<QByteArray, std::string> ChunkFileLoader::readNextBytesToQByteArray(const int nBytes) {
+Result<QByteArray, std::string> ChunkFileReader::readNextBytesToQByteArray(const int nBytes) {
   // TODO: Combine this and to vector since api is the same
   QByteArray qBuffer(nBytes, 0);
 
@@ -66,7 +60,18 @@ Result<QByteArray, std::string> ChunkFileLoader::readNextBytesToQByteArray(const
   return qBuffer;
 }
 
-Result<std::string, std::string> ChunkFileLoader::readNextString(const int size,
+bool ChunkFileReader::isFileValid() const { return _fileStream.good(); }
+
+std::size_t ChunkFileReader::currentReadingIndex() { return _fileStream.tellg(); }
+
+void ChunkFileReader::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
+
+void ChunkFileReader::moveIteratorBackBy(const int offset) {
+  const auto current = currentReadingIndex();
+  setReadingIndex(current - offset);
+}
+
+Result<std::string, std::string> ChunkFileReader::readNextString(const int size,
                                                                  const bool nullTerminated) {
   if (size < 0) {
     throw std::invalid_argument("Invalid size argument for string reading");
@@ -86,7 +91,7 @@ Result<std::string, std::string> ChunkFileLoader::readNextString(const int size,
   return std::string{rawChars.begin(), nullTerminated ? rawChars.end() - 1 : rawChars.end()};
 }
 
-Result<std::string, std::string> ChunkFileLoader::readNextVariableLengthString() {
+Result<std::string, std::string> ChunkFileReader::readNextVariableLengthString() {
   std::string buffer;
   while (true) {
     const auto nextByteReadRes = readNextByte();
@@ -103,7 +108,7 @@ Result<std::string, std::string> ChunkFileLoader::readNextVariableLengthString()
   }
 }
 
-Result<std::uint32_t, std::string> ChunkFileLoader::readNext32BitInt(const bool bigEndian) {
+Result<std::uint32_t, std::string> ChunkFileReader::readNext32BitInt(const bool bigEndian) {
   const auto bytesRes = readNextBytesToVector(sizeof(std::uint32_t));
   if (!bytesRes.has_value()) {
     return std::unexpected(bytesRes.error());
@@ -126,10 +131,5 @@ Result<std::uint32_t, std::string> ChunkFileLoader::readNext32BitInt(const bool 
   }
 
   return value;
-}
-
-void ChunkFileLoader::moveIteratorBackBy(int offset) {
-  const auto current = currentReadingIndex();
-  setReadingIndex(current - offset);
 }
 }  // namespace capy

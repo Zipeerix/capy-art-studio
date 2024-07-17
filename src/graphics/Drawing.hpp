@@ -35,6 +35,8 @@ class Drawing {
   int getHeight() const;
   int getLayerCount() const;
   const Layer& getCurrentLayer() const;
+  const std::vector<Layer>& getLayers() const;
+
   void setCurrentLayer(int newCurrentLayer);
 
   void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);

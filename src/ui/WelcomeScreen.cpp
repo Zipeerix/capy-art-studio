@@ -21,13 +21,13 @@
 #include <QMessageBox>
 
 #include "MainWindow.hpp"
+#include "UiHelpers.hpp"
 #include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
 #include "ui/SettingsDialog.hpp"
 #include "ui/widgets/delegates/ProjectDelegate.hpp"
 #include "ui/widgets/utils/MessageBoxUtils.hpp"
 #include "ui_WelcomeScreen.h"
-#include "utils/UiHelpers.hpp"
 
 namespace capy::ui {
 WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
@@ -117,14 +117,8 @@ void WelcomeScreen::settingsClicked() {
 void WelcomeScreen::projectClicked(const Project& project) {
   logger::info(fmt::format("Attempting to open project at {}", project.getPath()));
 
-  const auto projectDrawingRes = project.readDrawing();
-  if (!projectDrawingRes.has_value()) {
-    return execMessageBox(this, QMessageBox::Icon::Critical,
-                          QString::fromStdString(projectDrawingRes.error()));
-  }
-
   // TODO: Maybe make drawing unique_ptr for memory saving
-  _mainWindow->setDrawing(projectDrawingRes.value(), project.getPath());
+  _mainWindow->setProject(project);
   _mainWindow->show();
   hide();
 }

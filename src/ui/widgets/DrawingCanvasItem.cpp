@@ -15,7 +15,7 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-
+#include <QBuffer>
 #include "DrawingCanvasItem.hpp"
 
 namespace capy::ui {
@@ -52,6 +52,29 @@ void DrawingCanvasItem::updateAllPixels(const ColorCalculatingFunction& colorCal
   }
 
   update();
+}
+
+QByteArray DrawingCanvasItem::createMiniatureBytes() const {
+  QByteArray byteArray;
+  QBuffer buffer(&byteArray);
+  buffer.open(QIODevice::WriteOnly);
+
+  // TODO: magic numbers
+  int width, height;
+  if (_canvasRepresentation.width() > _canvasRepresentation.height()) {
+    width = 300;
+    height = 200;
+  } else if (_canvasRepresentation.width() < _canvasRepresentation.height()) {
+    width = 200;
+    height = 300;
+  } else {
+    width = 300;
+    height = 300;
+  }
+
+  const auto scaledCanvas = _canvasRepresentation.scaled(width, height);
+  scaledCanvas.save(&buffer, "PNG");
+  return byteArray;
 }
 
 void DrawingCanvasItem::fillCanvas() {

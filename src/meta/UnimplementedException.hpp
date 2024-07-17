@@ -15,44 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CHUNKFILELOADER_HPP
-#define CHUNKFILELOADER_HPP
+#ifndef UNIMPLEMENTEDEXCEPTION_HPP
+#define UNIMPLEMENTEDEXCEPTION_HPP
 
-#include <QByteArray>
-#include <cstdint>
-#include <fstream>
-#include <vector>
+#include <stdexcept>
+#include <string>
 
-#include "utils/ErrorHandling.hpp"
+#define UNIMPLEMENTED throw capy::UnimplementedException();
+#define TODO throw capy::UnimplementedException();
 
 namespace capy {
-class ChunkFileLoader {
+class UnimplementedException final : std::exception {
  public:
-  explicit ChunkFileLoader(const std::string& path);
-  ~ChunkFileLoader();
+  UnimplementedException() = default;
+  explicit UnimplementedException(std::string extraInfo);
 
-  bool isFileValid() const;
-
-  std::size_t currentReadingIndex();
-  void setReadingIndex(std::size_t index);
-
-  // TODO: also to buffer, usefull for large reads (or is move enough)
-  Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);
-  Result<uint8_t, std::string> readNextByte();
-  Result<QByteArray, std::string> readNextBytesToQByteArray(int nBytes);
-  Result<std::string, std::string> readNextString(int size, bool nullTerminated);
-  Result<std::string, std::string> readNextVariableLengthString();
-
-  // TODO: Make this more generic, read below
-  Result<std::uint32_t, std::string> readNext32BitInt(bool bigEndian = false);
-
-  // TODO: Templated read
+  const char* what() const noexcept override;
 
  private:
-  std::ifstream _fileStream;
-
-  void moveIteratorBackBy(int offset);
+  std::string _extraInfo = "This code path is unimplemented";
 };
 }  // namespace capy
 
-#endif  // CHUNKFILELOADER_HPP
+#endif  // UNIMPLEMENTEDEXCEPTION_HPP

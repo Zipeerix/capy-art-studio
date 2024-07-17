@@ -15,48 +15,46 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef PALETTE_HPP
-#define PALETTE_HPP
+#ifndef CHUNKFILEWRITER_HPP
+#define CHUNKFILEWRITER_HPP
 
-#include <rapidjson/document.h>
+#include <QByteArray>
+#include <fstream>
 
-#include <QColor>
-#include <expected>
-
-#include "io/JsonSerializable.hpp"
 #include "meta/ErrorHandling.hpp"
 
 namespace capy {
-// TODO: Derive from JsonSerializable and append document to other document?
-struct PaletteColor {
-  QColor color;
-  std::optional<std::string> hint;
-};
-
-class Palette final : public JsonSerializable<Palette> {
+class ChunkFileWriter {
  public:
-  Palette() = default;
-  explicit Palette(std::string name);
+  enum class ExistingFileStrategy {
+    ClearAndWrite,
+    Overwrite,
+    Error,
+  };
 
-  std::string getName() const;
-  void setName(std::string newName);
+  [[nodiscard]] static PotentialError<std::string> existingFileStrategyCheck(
+      const std::string& path, ExistingFileStrategy existingFileStrategy);
 
-  int colorCount() const;
-  PaletteColor getColor(int index) const;
-  std::vector<PaletteColor> getAllColors() const;
-  void addColor(const QColor& color, const std::optional<std::string>& hint);
-  void removeColor(int index);
+  explicit ChunkFileWriter(const std::string& path);
+  ~ChunkFileWriter();
+
+  bool isFileValid() const;
+
+  [[nodiscard]] PotentialError<std::string> writeVector(const std::vector<uint8_t>& bytes) const;
+  [[nodiscard]] PotentialError<std::string> writeByte(uint8_t byte) const;
+  [[nodiscard]] PotentialError<std::string> writeQByteArray(const QByteArray& bytes) const;
+  [[nodiscard]] PotentialError<std::string> writeString(const std::string& value,
+                                                        bool addNullTerminator) const;
+  [[nodiscard]] PotentialError<std::string> write32BitInt(uint32_t value,
+                                                          bool bigEndian = false) const;
 
  private:
-  std::string _name;
-  std::vector<PaletteColor> _colors;
+  // TODO: Rrevert back to value not pointer
+  std::shared_ptr<std::ofstream> _fileStream = nullptr;
 
-  [[nodiscard]] PotentialError<std::string> importValuesFromJson(
-      const rapidjson::Document& root) override;
-  rapidjson::Document exportValuesToJson() const override;
-
-  bool isIndexOutsideColors(int index) const;
+  // TODO: ChunkFileWriter.tpp, template <typename StlIntefaceType> writeStlType and use in all
+  // data() .size() same for reader
 };
 }  // namespace capy
 
-#endif  // PALETTE_HPP
+#endif  // CHUNKFILEWRITER_HPP

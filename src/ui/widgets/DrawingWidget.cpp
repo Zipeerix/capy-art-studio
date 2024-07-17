@@ -20,7 +20,6 @@
 #include <fmt/format.h>
 #include "algorithms/Bresenham.hpp"
 #include "io/ConsoleLogger.hpp"
-#include "utils/General.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
@@ -32,6 +31,10 @@ DrawingWidget::DrawingWidget(QWidget* parent) :
   _drawing(0, 0) {
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   recreateScene();
+}
+
+QByteArray DrawingWidget::createMiniatureBytes() const {
+  return _drawingCanvasItem->createMiniatureBytes();
 }
 
 void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect) {
@@ -53,6 +56,10 @@ void DrawingWidget::setDrawingColor(const QColor color) {
 
 QColor DrawingWidget::getDrawingColor() const {
   return _drawingColor;
+}
+
+const std::vector<Layer>& DrawingWidget::getLayers() const {
+  return _drawing.getLayers();
 }
 
 void DrawingWidget::startNewDrawing(const int width, const int height) {
@@ -129,7 +136,6 @@ void DrawingWidget::drawOrRemoveGridBasedOnZoomLevel(const double oldZoomFactor)
   // TODO: Save threshold on startup and then have a connect so that if its changed somewhere else
   // TODO: the saved value is changed, so that config manager doesnt have to be checked every
   // TODO: zoom tick
-  qDebug() << _zoomFactor;
   const auto zoomThreshold = _configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold);
   if (oldZoomFactor <= zoomThreshold && _zoomFactor >= zoomThreshold) {
     redrawGrid();

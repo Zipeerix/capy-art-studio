@@ -19,9 +19,9 @@
 
 #include <utility>
 
+#include "../../UiHelpers.hpp"
 #include "ui/widgets/utils/ClickableLabel.hpp"
 #include "ui_ProjectDelegate.h"
-#include "utils/UiHelpers.hpp"
 
 namespace capy::ui {
 ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidget *parent)

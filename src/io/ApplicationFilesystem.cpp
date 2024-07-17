@@ -21,6 +21,7 @@
 
 #include <QStandardPaths>
 #include <filesystem>
+#include <fstream>
 #include <string>
 
 #include "io/ConsoleLogger.hpp"
@@ -89,5 +90,15 @@ std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
 std::string getFileNameFromPath(const std::string& fullPath) {
   const std::filesystem::path pathObj{fullPath};
   return pathObj.filename().string();
+}
+
+bool createFileIfItDoesntExist(const std::string& path) {
+  std::ofstream file;
+  file.open(path, std::ios::out);
+
+  const bool isFileGood = file.good();
+  file.close();
+
+  return isFileGood;
 }
 }  // namespace capy

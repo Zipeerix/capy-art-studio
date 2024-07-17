@@ -32,6 +32,8 @@ public:
   void updateExternalCanvasPixel(int x, int y, const QColor& color);
   void updateAllPixels(const ColorCalculatingFunction& colorCalculatingFunction);
 
+  QByteArray createMiniatureBytes() const;
+
 private:
   QImage _canvasRepresentation;
 

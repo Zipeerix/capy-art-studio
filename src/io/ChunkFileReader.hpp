@@ -15,18 +15,43 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef ERRORHANDLING_HPP
-#define ERRORHANDLING_HPP
+#ifndef CHUNKFILELOADER_HPP
+#define CHUNKFILELOADER_HPP
 
-#include <expected>
-#include <optional>
+#include <QByteArray>
+#include <cstdint>
+#include <fstream>
+#include <vector>
+
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
-template <typename SuccessType, typename ErrorType>
-using Result = std::expected<SuccessType, ErrorType>;
+class ChunkFileReader {
+ public:
+  explicit ChunkFileReader(const std::string& path);
+  ~ChunkFileReader();
 
-template <typename ErrorType>
-using PotentialError = std::optional<ErrorType>;
+  bool isFileValid() const;
+
+  std::size_t currentReadingIndex();
+  void setReadingIndex(std::size_t index);
+
+  // TODO: also to buffer, usefull for large reads (or is move enough)
+  [[nodiscard]] Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);
+  [[nodiscard]] Result<uint8_t, std::string> readNextByte();
+  [[nodiscard]] Result<QByteArray, std::string> readNextBytesToQByteArray(int nBytes);
+  [[nodiscard]] Result<std::string, std::string> readNextString(int size, bool nullTerminated);
+  [[nodiscard]] Result<std::string, std::string> readNextVariableLengthString();
+
+  // TODO: Make this more generic, read below
+  [[nodiscard]] Result<std::uint32_t, std::string> readNext32BitInt(bool bigEndian = false);
+
+  // TODO: Templated read
+
+ private:
+  std::ifstream _fileStream;
+  void moveIteratorBackBy(int offset);
+};
 }  // namespace capy
 
-#endif  // ERRORHANDLING_HPP
+#endif  // CHUNKFILELOADER_HPP

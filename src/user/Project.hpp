@@ -22,18 +22,20 @@
 #include <string>
 
 #include "graphics/Drawing.hpp"
-#include "utils/ErrorHandling.hpp"
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
 class Project {
  public:
   [[nodiscard]] static Result<Project, std::string> createFromFile(const std::string& path);
-
   [[nodiscard]] Result<Drawing, std::string> readDrawing() const;
+
+  [[nodiscard]] PotentialError<std::string> save(const QByteArray& miniatureBytes,
+                                                 const std::vector<Layer>& layers,
+                                                 const std::optional<std::string>& pathOverride);
 
   std::string getPath() const;
   std::string getName() const;
-
   QPixmap getMiniature() const;
 
  private:

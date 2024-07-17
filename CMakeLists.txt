@@ -82,18 +82,23 @@ set(APPLICATION_SOURCE_FILES
         src/io/ConfigurationManager.cpp
         src/io/ConsoleLogger.hpp
         src/io/ConsoleLogger.cpp
-        src/io/ChunkFileLoader.hpp
-        src/io/ChunkFileLoader.cpp
+        src/io/ChunkFileReader.hpp
+        src/io/ChunkFileReader.cpp
+        src/io/ChunkFileWriter.hpp
+        src/io/ChunkFileWriter.cpp
         src/io/ApplicationFilesystem.hpp
         src/io/ApplicationFilesystem.cpp
         src/io/JsonSerializable.hpp
         src/io/JsonSerializable.tpp
-        src/utils/General.hpp
-        src/utils/General.cpp
-        src/utils/General.tpp
-        src/utils/UiHelpers.cpp
-        src/utils/UiHelpers.hpp
-        src/utils/ErrorHandling.hpp
+        src/meta/General.hpp
+        src/meta/General.cpp
+        src/meta/General.tpp
+        src/meta/ErrorHandling.hpp
+        src/meta/ErrorHandling.cpp
+        src/meta/UnimplementedException.cpp
+        src/meta/UnimplementedException.hpp
+        src/ui/UiHelpers.cpp
+        src/ui/UiHelpers.hpp
         src/plugin/DynamicLibrary.cpp
         src/plugin/DynamicLibrary.hpp
         src/plugin/DynamicLibrary.tpp

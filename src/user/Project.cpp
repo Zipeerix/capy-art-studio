@@ -19,12 +19,12 @@
 
 #include <fmt/format.h>
 
-#include <QDebug>
 #include <fstream>
 #include <utility>
 
 #include "io/ApplicationFilesystem.hpp"
-#include "io/ChunkFileLoader.hpp"
+#include "io/ChunkFileReader.hpp"
+#include "io/ChunkFileWriter.hpp"
 #include "io/ConsoleLogger.hpp"
 
 namespace capy {
@@ -35,7 +35,7 @@ Result<Project, std::string> Project::createFromFile(const std::string& path) {
 
   // TODO: Break down into static methods, or just statics
 
-  ChunkFileLoader file{path};
+  ChunkFileReader file{path};
   if (!file.isFileValid()) {
     return std::unexpected(fmt::format("Unable to open project file at: {}", path));
   }
@@ -94,7 +94,7 @@ std::string Project::getName() const { return getFileNameFromPath(_path); }
 QPixmap Project::getMiniature() const { return _miniature; }
 
 Result<Drawing, std::string> Project::readDrawing() const {
-  ChunkFileLoader file{_path};
+  ChunkFileReader file{_path};
   if (!file.isFileValid()) {
     logger::debug("Project file was opened once successfully but then failed when reading data",
                   "Project");
@@ -164,6 +164,7 @@ Result<Drawing, std::string> Project::readDrawing() const {
   /* Layer data */
   const auto sizePerLayer = projectHeight * projectWidth * 4;
   for (std::uint32_t layerIndex = 0; layerIndex < layerCount; layerIndex++) {
+    // TODO: Bottleneck?
     const auto layersRawPixelsReadRes = file.readNextBytesToVector(static_cast<int>(sizePerLayer));
     if (!layersRawPixelsReadRes.has_value()) {
       logger::error(fmt::format("Unable to read layer data with index: {}", layerIndex),
@@ -198,5 +199,105 @@ Result<Drawing, std::string> Project::readDrawing() const {
   }
 
   return drawing;
+}
+
+PotentialError<std::string> Project::save(const QByteArray& miniatureBytes,
+                                          const std::vector<Layer>& layers,
+                                          const std::optional<std::string>& pathOverride) {
+  // TODO: When optimizing should probably use replace or somehow do it in a different way that
+  // doesnt hammer the disk
+
+  // TODO: Remember to setPath(pathOverride.value()) if its not optional on success
+
+  const auto path = pathOverride.has_value() ? pathOverride.value() : _path;
+
+  const auto existingFileStrategyCheckError = ChunkFileWriter::existingFileStrategyCheck(
+      path, ChunkFileWriter::ExistingFileStrategy::Error);
+  if (existingFileStrategyCheckError.has_value()) {
+    return fmt::format("Error when saving project: {}", existingFileStrategyCheckError.value());
+  }
+
+  if (layers.empty()) {
+    return "Unable to save project file as there are no layers";
+  }
+
+  const auto fileWriter = ChunkFileWriter(path);
+  if (!fileWriter.isFileValid()) {
+    logger::error("Bad file in chunk file writer", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  /* Project Metadata */
+  const auto magicNumberWriteError = fileWriter.writeString("CAPY", true);
+  if (magicNumberWriteError.has_value()) {
+    logger::error("Unable to write magic number", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  const auto miniatureSizeWriteError = fileWriter.write32BitInt(miniatureBytes.size());
+  if (miniatureSizeWriteError.has_value()) {
+    logger::error("Unable to write miniature size", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  const auto miniatureDataWriteError = fileWriter.writeQByteArray(miniatureBytes);
+  if (miniatureDataWriteError.has_value()) {
+    logger::error("Unable to write miniature data", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  // TODO: take width and height as args?
+  const auto projectWidthWriteError = fileWriter.write32BitInt(layers.back().getWidth());
+  if (projectWidthWriteError.has_value()) {
+    logger::error("Unable to write project width", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  const auto projectHeightWriteError = fileWriter.write32BitInt(layers.back().getHeight());
+  if (projectHeightWriteError.has_value()) {
+    logger::error("Unable to write project height", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  const auto projectLayerCountWriteError = fileWriter.write32BitInt(layers.size());
+  if (projectLayerCountWriteError.has_value()) {
+    logger::error("Unable to write layers count", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  /* Layer names */
+  for (const auto& layer : layers) {
+    const auto layerNameWriteError = fileWriter.writeString(layer.getName(), true);
+    if (layerNameWriteError.has_value()) {
+      logger::error(fmt::format("Unable to write layer name for layer: {}", layer.getName()),
+                    logger::Severity::Mild);
+      return "Unable to save project file";
+    }
+  }
+
+  const auto layerNameEndingByteWriteError = fileWriter.writeByte(0xFF);
+  if (layerNameEndingByteWriteError.has_value()) {
+    logger::error("Unable to write layer names ending byte", logger::Severity::Mild);
+    return "Unable to save project file";
+  }
+
+  /* Layer Data */
+  for (const auto& layer : layers) {
+    const auto& layerPixels = layer.getPixels();
+    // TODO: bottleneck?
+    for (const auto& pixel : layerPixels) {
+      const std::vector<uint8_t> bytesToWrite = {pixel.getRed(), pixel.getGreen(), pixel.getBlue(),
+                                                 pixel.getAlpha()};
+
+      const auto pixelWriteError = fileWriter.writeVector(bytesToWrite);
+      if (pixelWriteError.has_value()) {
+        // TODO: get exact byte index etc
+        logger::error("Unable to write layer data", logger::Severity::Mild);
+        return "Unable to save project file";
+      }
+    }
+  }
+
+  return std::nullopt;
 }
 }  // namespace capy

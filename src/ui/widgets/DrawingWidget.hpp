@@ -22,8 +22,8 @@
 #include "graphics/Drawing.hpp"
 #include "DrawingCanvasItem.hpp"
 #include "graphics/DrawingTools.hpp"
+#include "io/ConfigurationManager.hpp"
 #include "utils/CheckerboardPixmap.hpp"
-#include "../../io/ConfigurationManager.hpp"
 
 namespace capy::ui {
 struct Pixel {
@@ -34,13 +34,15 @@ class DrawingWidget final : public QGraphicsView {
 public:
   explicit DrawingWidget(QWidget* parent);
 
-  void setDrawing(Drawing drawing);
+  QByteArray createMiniatureBytes() const;
 
+  void setDrawing(Drawing drawing);
   void startNewDrawing(int width, int height);
   void setCurrentLayer(int newLayer);
+  void setDrawingColor(QColor color);
 
   QColor getDrawingColor() const;
-  void setDrawingColor(QColor color);
+  const std::vector<Layer>& getLayers() const;
 
   void drawBackground(QPainter* painter, const QRectF& rect) override;
 

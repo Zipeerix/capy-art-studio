@@ -19,10 +19,9 @@
 
 #include <qmath.h>
 
-#include <QDebug>
 #include <utility>
 
-#include "utils/Colors.hpp"
+#include "graphics/Colors.hpp"
 
 namespace capy::algorithms {
 AlphaBlender::AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction)
