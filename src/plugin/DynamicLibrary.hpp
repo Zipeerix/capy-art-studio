@@ -32,7 +32,7 @@
 #include <functional>
 #include <string>
 
-#include "utils/ErrorHandling.hpp"
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
 class DynamicLibrary {

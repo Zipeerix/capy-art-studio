@@ -23,7 +23,7 @@
 
 #include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
-#include "utils/ErrorHandling.hpp"
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
 ProjectsManager::ProjectsManager(QObject* parent)

@@ -21,7 +21,7 @@
 #include <QBrush>
 #include <cstdint>
 
-#include "utils/Colors.hpp"
+#include "Colors.hpp"
 
 namespace capy {
 class Pixel {

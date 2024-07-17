@@ -32,6 +32,7 @@ std::string getFilesystemPath(FilesystemPath of);
 std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationPath);
 std::vector<std::string> listFilesInPath(FilesystemPath applicationPath);
 std::string getFileNameFromPath(const std::string& fullPath);
+bool createFileIfItDoesntExist(const std::string& path);
 }  // namespace capy
 
 #endif  // APPLICATIONFILESYSTEM_HPP

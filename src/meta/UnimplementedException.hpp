@@ -15,17 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef GENERAL_HPP
-#define GENERAL_HPP
+#ifndef UNIMPLEMENTEDEXCEPTION_HPP
+#define UNIMPLEMENTEDEXCEPTION_HPP
 
-// TODO: Change this and 'Memory.hpp' namespace to capy::utils?
+#include <stdexcept>
+#include <string>
+
+#define UNIMPLEMENTED throw capy::UnimplementedException();
+#define TODO throw capy::UnimplementedException();
+
 namespace capy {
-int convert2DIndexto1DIndex(int x, int y, int width);
+class UnimplementedException final : std::exception {
+ public:
+  UnimplementedException() = default;
+  explicit UnimplementedException(std::string extraInfo);
 
-template <typename T, typename U>
-static void compileTimeTypeCheck();
+  const char* what() const noexcept override;
+
+ private:
+  std::string _extraInfo = "This code path is unimplemented";
+};
 }  // namespace capy
 
-#include "General.tpp"
-
-#endif  // GENERAL_HPP
+#endif  // UNIMPLEMENTEDEXCEPTION_HPP

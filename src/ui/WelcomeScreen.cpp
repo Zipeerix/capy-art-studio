@@ -21,13 +21,13 @@
 #include <QMessageBox>
 
 #include "MainWindow.hpp"
+#include "UiHelpers.hpp"
 #include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
 #include "ui/SettingsDialog.hpp"
 #include "ui/widgets/delegates/ProjectDelegate.hpp"
 #include "ui/widgets/utils/MessageBoxUtils.hpp"
 #include "ui_WelcomeScreen.h"
-#include "utils/UiHelpers.hpp"
 
 namespace capy::ui {
 WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)

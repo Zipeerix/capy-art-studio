@@ -24,7 +24,7 @@
 #include <expected>
 
 #include "io/JsonSerializable.hpp"
-#include "utils/ErrorHandling.hpp"
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
 // TODO: Derive from JsonSerializable and append document to other document?

@@ -15,22 +15,19 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ChunkFileManagerBase.hpp"
+#ifndef GENERAL_HPP
+#define GENERAL_HPP
 
+// TODO: Change this and 'Memory.hpp' namespace to capy::utils?
 namespace capy {
-ChunkFileManagerBase::ChunkFileManagerBase(const std::string& path)
-    : _fileStream(path, std::ios::binary) {}
+constexpr char nullTerminator = 0;
 
-ChunkFileManagerBase::~ChunkFileManagerBase() { _fileStream.close(); }
+int convert2DIndexto1DIndex(int x, int y, int width);
 
-bool ChunkFileManagerBase::isFileValid() const { return _fileStream.good(); }
-
-std::size_t ChunkFileManagerBase::currentReadingIndex() { return _fileStream.tellg(); }
-
-void ChunkFileManagerBase::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
-
-void ChunkFileManagerBase::moveIteratorBackBy(int offset) {
-  const auto current = currentReadingIndex();
-  setReadingIndex(current - offset);
-}
+template <typename T, typename U>
+static void compileTimeTypeCheck();
 }  // namespace capy
+
+#include "General.tpp"
+
+#endif  // GENERAL_HPP

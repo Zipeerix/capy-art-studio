@@ -20,7 +20,7 @@
 
 #include <rapidjson/document.h>
 
-#include "utils/ErrorHandling.hpp"
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
 template <class Derived>

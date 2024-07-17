@@ -63,10 +63,12 @@ void MainWindow::menuBarFileNewClicked() {
 }
 
 void MainWindow::menuBarFileSaveAsClicked() {
-  // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on exit/nth minute
+  // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on
+  // exit/nth minute
 
   const QString filter = "Capy Project Files (*.capy)";
-  const std::string filePath = QFileDialog::getSaveFileName(this, "Save Capy File", QString(), filter).toStdString();
+  const std::string filePath =
+      QFileDialog::getSaveFileName(this, "Save Capy File", QString(), filter).toStdString();
   if (filePath.empty()) {
     return;
   }

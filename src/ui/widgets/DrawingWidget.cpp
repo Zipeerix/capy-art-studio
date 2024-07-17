@@ -20,7 +20,6 @@
 #include <fmt/format.h>
 #include "algorithms/Bresenham.hpp"
 #include "io/ConsoleLogger.hpp"
-#include "utils/General.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>

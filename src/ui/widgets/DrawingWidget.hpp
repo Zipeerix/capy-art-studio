@@ -22,8 +22,8 @@
 #include "graphics/Drawing.hpp"
 #include "DrawingCanvasItem.hpp"
 #include "graphics/DrawingTools.hpp"
+#include "io/ConfigurationManager.hpp"
 #include "utils/CheckerboardPixmap.hpp"
-#include "../../io/ConfigurationManager.hpp"
 
 namespace capy::ui {
 struct Pixel {

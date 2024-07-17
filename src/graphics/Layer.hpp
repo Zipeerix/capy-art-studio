@@ -33,9 +33,14 @@ class Layer {
 
   void setPixels(std::vector<Pixel> pixels);
   void setName(std::string name);
+  std::string getName() const;
 
   const Pixel& getPixel(int x, int y) const;
+  const std::vector<Pixel>& getPixels() const;
   void drawPixel(int x, int y, const QColor& color);
+
+  int getWidth() const;
+  int getHeight() const;
 
  private:
   std::string _name;
@@ -43,8 +48,8 @@ class Layer {
   bool _visible = false;
 
   // TODO: remove when used
-  [[maybe_unused]] int _width;
-  [[maybe_unused]] int _height;
+  int _width;
+  int _height;
 
   Pixel& getMutablePixel(int x, int y);
 };

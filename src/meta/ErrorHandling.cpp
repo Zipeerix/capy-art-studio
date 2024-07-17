@@ -15,27 +15,10 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CHUNKFILEMANAGERBASE_HPP
-#define CHUNKFILEMANAGERBASE_HPP
+#include "ErrorHandling.hpp"
 
-#include <fstream>
+#include <cerrno>
 
 namespace capy {
-class ChunkFileManagerBase {
- public:
-  explicit ChunkFileManagerBase(const std::string& path);
-  ~ChunkFileManagerBase();
-
-  bool isFileValid() const;
-
-  std::size_t currentReadingIndex();
-  void setReadingIndex(std::size_t index);
-
- protected:
-  std::ifstream _fileStream;
-
-  void moveIteratorBackBy(int offset);
-};
+std::string getErrnoString() { return std::strerror(errno); }
 }  // namespace capy
-
-#endif  // CHUNKFILEMANAGERBASE_HPP

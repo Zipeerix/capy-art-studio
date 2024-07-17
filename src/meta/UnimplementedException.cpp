@@ -15,18 +15,11 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef ERRORHANDLING_HPP
-#define ERRORHANDLING_HPP
-
-#include <expected>
-#include <optional>
+#include "UnimplementedException.hpp"
 
 namespace capy {
-template <typename SuccessType, typename ErrorType>
-using Result = std::expected<SuccessType, ErrorType>;
+UnimplementedException::UnimplementedException(std::string extraInfo)
+    : _extraInfo(std::move(extraInfo)) {}
 
-template <typename ErrorType>
-using PotentialError = std::optional<ErrorType>;
+const char* UnimplementedException::what() const noexcept { return _extraInfo.c_str(); }
 }  // namespace capy
-
-#endif  // ERRORHANDLING_HPP

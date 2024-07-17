@@ -23,25 +23,34 @@
 #include <fstream>
 #include <vector>
 
-#include "ChunkFileManagerBase.hpp"
-#include "utils/ErrorHandling.hpp"
+#include "meta/ErrorHandling.hpp"
 
 namespace capy {
-class ChunkFileReader : public ChunkFileManagerBase {
+class ChunkFileReader {
  public:
   explicit ChunkFileReader(const std::string& path);
+  ~ChunkFileReader();
+
+  bool isFileValid() const;
+
+  std::size_t currentReadingIndex();
+  void setReadingIndex(std::size_t index);
 
   // TODO: also to buffer, usefull for large reads (or is move enough)
-  Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);
-  Result<uint8_t, std::string> readNextByte();
-  Result<QByteArray, std::string> readNextBytesToQByteArray(int nBytes);
-  Result<std::string, std::string> readNextString(int size, bool nullTerminated);
-  Result<std::string, std::string> readNextVariableLengthString();
+  [[nodiscard]] Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);
+  [[nodiscard]] Result<uint8_t, std::string> readNextByte();
+  [[nodiscard]] Result<QByteArray, std::string> readNextBytesToQByteArray(int nBytes);
+  [[nodiscard]] Result<std::string, std::string> readNextString(int size, bool nullTerminated);
+  [[nodiscard]] Result<std::string, std::string> readNextVariableLengthString();
 
   // TODO: Make this more generic, read below
-  Result<std::uint32_t, std::string> readNext32BitInt(bool bigEndian = false);
+  [[nodiscard]] Result<std::uint32_t, std::string> readNext32BitInt(bool bigEndian = false);
 
   // TODO: Templated read
+
+ private:
+  std::ifstream _fileStream;
+  void moveIteratorBackBy(int offset);
 };
 }  // namespace capy
 

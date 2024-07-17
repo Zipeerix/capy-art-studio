@@ -22,7 +22,9 @@
 #include <stdexcept>
 
 namespace capy {
-ChunkFileReader::ChunkFileReader(const std::string& path) : ChunkFileManagerBase(path) {}
+ChunkFileReader::ChunkFileReader(const std::string& path) : _fileStream(path, std::ios::binary) {}
+
+ChunkFileReader::~ChunkFileReader() { _fileStream.close(); }
 
 Result<std::vector<uint8_t>, std::string> ChunkFileReader::readNextBytesToVector(const int nBytes) {
   std::vector<uint8_t> vecBuffer(nBytes, 0);
@@ -56,6 +58,17 @@ Result<QByteArray, std::string> ChunkFileReader::readNextBytesToQByteArray(const
   }
 
   return qBuffer;
+}
+
+bool ChunkFileReader::isFileValid() const { return _fileStream.good(); }
+
+std::size_t ChunkFileReader::currentReadingIndex() { return _fileStream.tellg(); }
+
+void ChunkFileReader::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
+
+void ChunkFileReader::moveIteratorBackBy(const int offset) {
+  const auto current = currentReadingIndex();
+  setReadingIndex(current - offset);
 }
 
 Result<std::string, std::string> ChunkFileReader::readNextString(const int size,
