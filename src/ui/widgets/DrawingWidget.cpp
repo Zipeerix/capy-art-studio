@@ -136,7 +136,6 @@ void DrawingWidget::drawOrRemoveGridBasedOnZoomLevel(const double oldZoomFactor)
   // TODO: Save threshold on startup and then have a connect so that if its changed somewhere else
   // TODO: the saved value is changed, so that config manager doesnt have to be checked every
   // TODO: zoom tick
-  qDebug() << _zoomFactor;
   const auto zoomThreshold = _configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold);
   if (oldZoomFactor <= zoomThreshold && _zoomFactor >= zoomThreshold) {
     redrawGrid();

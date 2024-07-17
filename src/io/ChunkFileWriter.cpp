@@ -19,6 +19,7 @@
 
 #include <fmt/format.h>
 
+#include <filesystem>
 #include <fstream>
 #include <stdexcept>
 #include <vector>

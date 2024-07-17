@@ -19,7 +19,6 @@
 
 #include <qmath.h>
 
-#include <QDebug>
 #include <utility>
 
 #include "graphics/Colors.hpp"

@@ -19,7 +19,6 @@
 
 #include <fmt/format.h>
 
-#include <QDebug>
 #include <fstream>
 #include <utility>
 
