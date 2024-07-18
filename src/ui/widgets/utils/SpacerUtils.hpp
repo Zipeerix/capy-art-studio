@@ -15,48 +15,13 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Layer.hpp"
+#ifndef SPACERUTILS_HPP
+#define SPACERUTILS_HPP
 
-#include "meta/General.hpp"
+#include <QWidget>
 
 namespace capy {
-Layer::Layer(const int width, const int height, std::string name)
-    : _name(std::move(name)), _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
+QWidget* createExpandingSpacer(QWidget* parent);
 }
 
-bool Layer::isVisible() const { return _visible; }
-
-void Layer::show() { _visible = true; }
-
-void Layer::hide() { _visible = false; }
-
-void Layer::setPixels(std::vector<Pixel> pixels) { _pixels = std::move(pixels); }
-
-void Layer::setName(std::string name) { _name = std::move(name); }
-
-std::string Layer::getName() const { return _name; }
-
-int Layer::getHeight() const { return _height; }
-
-int Layer::getWidth() const { return _width; }
-
-uint64_t Layer::calculateInMemorySize() const {
-  return _pixels.size() * sizeof(Pixel) + sizeof(Layer);
-}
-
-void Layer::drawPixel(const int x, const int y, const QColor& color) {
-  auto& targetPixel = getMutablePixel(x, y);
-  targetPixel.updateFromQColor(color);
-}
-
-const Pixel& Layer::getPixel(const int x, const int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-
-const std::vector<Pixel>& Layer::getPixels() const { return _pixels; }
-
-Pixel& Layer::getMutablePixel(const int x, const int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-}  // namespace capy
+#endif //SPACERUTILS_HPP

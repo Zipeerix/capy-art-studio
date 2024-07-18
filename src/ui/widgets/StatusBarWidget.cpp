@@ -15,48 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Layer.hpp"
+#include "StatusBarWidget.hpp"
+#include "ui_StatusBarWidget.h"
+#include "meta/Converters.hpp"
 
-#include "meta/General.hpp"
-
-namespace capy {
-Layer::Layer(const int width, const int height, std::string name)
-    : _name(std::move(name)), _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
+namespace capy::ui {
+StatusBarWidget::StatusBarWidget(QWidget* parent)
+    : QWidget(parent),
+      ui(new Ui::StatusBarWidget) {
+    ui->setupUi(this);
 }
 
-bool Layer::isVisible() const { return _visible; }
-
-void Layer::show() { _visible = true; }
-
-void Layer::hide() { _visible = false; }
-
-void Layer::setPixels(std::vector<Pixel> pixels) { _pixels = std::move(pixels); }
-
-void Layer::setName(std::string name) { _name = std::move(name); }
-
-std::string Layer::getName() const { return _name; }
-
-int Layer::getHeight() const { return _height; }
-
-int Layer::getWidth() const { return _width; }
-
-uint64_t Layer::calculateInMemorySize() const {
-  return _pixels.size() * sizeof(Pixel) + sizeof(Layer);
+StatusBarWidget::~StatusBarWidget() {
+    delete ui;
 }
 
-void Layer::drawPixel(const int x, const int y, const QColor& color) {
-  auto& targetPixel = getMutablePixel(x, y);
-  targetPixel.updateFromQColor(color);
+static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers) {
+  if (layers.empty()) {
+    return 0;
+  }
+
+  const auto& exampleLayer = layers.back();
+  return layers.size() * exampleLayer.calculateInMemorySize();
 }
 
-const Pixel& Layer::getPixel(const int x, const int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
+void StatusBarWidget::update(const std::vector<Layer>& layers) {
+  const auto ramSize = convertBytesTo(calculateRamSizeOfLayers(layers), StorageSize::Megabytes);
+  ui->ramLabel->setText(QString::number(ramSize, 'f', 2) + " MB");
+  ui->layersLabel->setText(QString::number(layers.size()));
 }
-
-const std::vector<Pixel>& Layer::getPixels() const { return _pixels; }
-
-Pixel& Layer::getMutablePixel(const int x, const int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-}  // namespace capy
+} // namespace capy::ui

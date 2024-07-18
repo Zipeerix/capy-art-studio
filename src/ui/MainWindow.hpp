@@ -19,12 +19,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 #include "docks/ColorArea.hpp"
 #include "docks/LayersArea.hpp"
 #include "docks/ToolsArea.hpp"
 #include "user/Project.hpp"
 #include "widgets/DrawingWidget.hpp"
+#include "widgets/StatusBarWidget.hpp"
 #include "widgets/utils/AutoSizeSavingItem.hpp"
 
 namespace capy::ui {
@@ -47,8 +49,12 @@ class MainWindow final : public QMainWindow, AutoSizeSavingItem {
   void colorPickerColorChanged(QColor newColor) const;
 
  private:
+  std::shared_ptr<ConfigurationManager> _configurationManager;
   Ui::MainWindow* ui;
   DrawingWidget* _drawingWidget;
+  StatusBarWidget* _statusBarWidget;
+
+  QTimer _timer;
 
   ColorArea* _colorDockArea = nullptr;
   LayersArea* _layersDockArea = nullptr;
@@ -59,6 +65,8 @@ class MainWindow final : public QMainWindow, AutoSizeSavingItem {
   void setupColorDock();
   void setupLayersDock();
   void setupToolsDock();
+
+  void updateStatusBar();
 
   void closeEvent(QCloseEvent* event) override;
 

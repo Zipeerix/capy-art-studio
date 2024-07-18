@@ -79,6 +79,10 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/DrawingWidget.cpp
         src/ui/widgets/DockableWidget.hpp
         src/ui/widgets/DockableWidget.cpp
+        src/ui/widgets/StatusBarWidget.hpp
+        src/ui/widgets/StatusBarWidget.cpp
+        src/ui/widgets/utils/SpacerUtils.hpp
+        src/ui/widgets/utils/SpacerUtils.cpp
         src/ui/dialogs/NewFileDialog.cpp
         src/ui/dialogs/NewFileDialog.hpp
         src/io/ConfigurationManager.hpp
@@ -94,6 +98,8 @@ set(APPLICATION_SOURCE_FILES
         src/io/ApplicationFilesystem.cpp
         src/io/JsonSerializable.hpp
         src/io/JsonSerializable.tpp
+        src/meta/Converters.hpp
+        src/meta/Converters.cpp
         src/meta/General.hpp
         src/meta/General.cpp
         src/meta/General.tpp
@@ -114,6 +120,7 @@ set(APPLICATION_SOURCE_FILES
 
 set(APPLICATION_UI_FILES
         src/ui/MainWindow.ui
+        src/ui/widgets/StatusBarWidget.ui
         src/ui/WelcomeScreen.ui
         src/ui/ConsoleWindow.ui
         src/ui/SettingsDialog.ui

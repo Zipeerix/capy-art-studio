@@ -15,48 +15,46 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Layer.hpp"
+#include "Converters.hpp"
 
-#include "meta/General.hpp"
+#include <stdexcept>
 
 namespace capy {
-Layer::Layer(const int width, const int height, std::string name)
-    : _name(std::move(name)), _width(width), _height(height) {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
+double convertBytesTo(const uint64_t bytes, const StorageSize targetType) {
+  switch (targetType) {
+    case StorageSize::Bytes:
+      return static_cast<double>(bytes);
+
+    case StorageSize::Kilobytes:
+      return static_cast<double>(bytes) / 1024.0;
+
+    case StorageSize::Megabytes:
+      return static_cast<double>(bytes) / (1024.0 * 1024.0);  // TODO: pow
+
+    default:
+      throw std::logic_error("Invalid storage size");
+  }
 }
 
-bool Layer::isVisible() const { return _visible; }
+uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType) {
+  switch (targetType) {
+    case TimeType::Hours:
+      return seconds / 3600;
 
-void Layer::show() { _visible = true; }
+    case TimeType::Minutes:
+      return seconds / 60;
 
-void Layer::hide() { _visible = false; }
+    case TimeType::Seconds:
+      return seconds;
 
-void Layer::setPixels(std::vector<Pixel> pixels) { _pixels = std::move(pixels); }
+    case TimeType::Miliseconds:
+      return seconds * 1000;
 
-void Layer::setName(std::string name) { _name = std::move(name); }
+    case TimeType::Microseconds:
+      return seconds * 1000 * 1000; // TOOD: pow, overall refactor both
 
-std::string Layer::getName() const { return _name; }
-
-int Layer::getHeight() const { return _height; }
-
-int Layer::getWidth() const { return _width; }
-
-uint64_t Layer::calculateInMemorySize() const {
-  return _pixels.size() * sizeof(Pixel) + sizeof(Layer);
-}
-
-void Layer::drawPixel(const int x, const int y, const QColor& color) {
-  auto& targetPixel = getMutablePixel(x, y);
-  targetPixel.updateFromQColor(color);
-}
-
-const Pixel& Layer::getPixel(const int x, const int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
-}
-
-const std::vector<Pixel>& Layer::getPixels() const { return _pixels; }
-
-Pixel& Layer::getMutablePixel(const int x, const int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
+    default:
+      throw std::logic_error("Invalid time type");
+  }
 }
 }  // namespace capy

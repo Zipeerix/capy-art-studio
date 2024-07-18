@@ -27,7 +27,10 @@ class ConfigurationManager {
  public:
   enum class InternalValues : int { ProjectPaths, WindowGeometry };
 
-  enum class ApplicationSettings : int { ShowWelcomeScreen };
+  enum class ApplicationSettings : int {
+    ShowWelcomeScreen,
+    StatusBarUpdateInterval
+  };
 
   enum class DebugSetting : int {
     ShowConsole,

@@ -15,46 +15,30 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef LAYER_HPP
-#define LAYER_HPP
+#ifndef CAPY_UI_STATUSBARWIDGET_HPP
+#define CAPY_UI_STATUSBARWIDGET_HPP
 
-#include <QImage>
+#include <QWidget>
 
-#include "Pixel.hpp"
+#include "graphics/Layer.hpp"
 
-namespace capy {
-class Layer {
- public:
-  Layer(int width, int height, std::string name);
+namespace capy::ui {
+namespace Ui {
+class StatusBarWidget;
+}
 
-  bool isVisible() const;
-  void hide();
-  void show();
+class StatusBarWidget final : public QWidget {
+    Q_OBJECT
+public:
+    explicit StatusBarWidget(QWidget* parent = nullptr);
+    ~StatusBarWidget() override;
 
-  void setPixels(std::vector<Pixel> pixels);
-  void setName(std::string name);
-  std::string getName() const;
+public slots:
+    void update(const std::vector<Layer>& layers);
 
-  const Pixel& getPixel(int x, int y) const;
-  const std::vector<Pixel>& getPixels() const;
-  void drawPixel(int x, int y, const QColor& color);
-
-  int getWidth() const;
-  int getHeight() const;
-
-  uint64_t calculateInMemorySize() const;
-
- private:
-  std::string _name;
-  std::vector<Pixel> _pixels;
-  bool _visible = false;
-
-  // TODO: remove when used
-  int _width;
-  int _height;
-
-  Pixel& getMutablePixel(int x, int y);
+private:
+    Ui::StatusBarWidget* ui;
 };
-}  // namespace capy
+} // namespace capy::ui
 
-#endif  // LAYER_HPP
+#endif // CAPY_UI_STATUSBARWIDGET_HPP
