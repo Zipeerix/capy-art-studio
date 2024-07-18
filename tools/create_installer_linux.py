@@ -17,12 +17,13 @@ def get_architecture():
 
 
 APP_NAME = "CapyArtStudio"
-VERSION = "1.0"
+VERSION = "1.0"  # TODO: Get from outside source
 ARCHITECTURE = get_architecture()
 MAINTAINER = "Ziperix <ziperix@icloud.com>"
 DESCRIPTION = "Pixel Art editor"
 DEPENDENCIES = "libc6 (>= 2.15)"
 SOURCE_APP = f"{os.path.abspath(os.path.dirname(__file__))}/../conan/build/application_build/{APP_NAME}"
+DEB_NAME = f"{APP_NAME}.{sys.platform}.{VERSION}.{ARCHITECTURE}.deb"
 
 
 def create_staging_directory():
@@ -54,9 +55,8 @@ def copy_application(staging_dir):
 
 
 def build_deb_package(staging_dir):
-    deb_file = f"{APP_NAME}_{VERSION}_{ARCHITECTURE}.deb"
-    subprocess.run(["dpkg-deb", "--build", staging_dir, deb_file], check=True)
-    return deb_file
+    subprocess.run(["dpkg-deb", "--build", staging_dir, DEB_NAME], check=True)
+    return DEB_NAME
 
 
 def clean_up(staging_dir):

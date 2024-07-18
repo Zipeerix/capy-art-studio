@@ -6,8 +6,10 @@ import sys
 
 APP_NAME = "CapyArtStudio"
 APP_BUNDLE = f"{APP_NAME}.app"
+VERSION = "1.0"  # TODO: Get from outside source
 STAGING_DIR = "macos_installer_temporary_staging_folder"
-DMG_NAME = f"{APP_NAME}_{platform.machine()}.dmg"
+ARCHITECTURE = platform.machine()  # TODO: Match with linux installer
+DMG_NAME = f"{APP_NAME}.{sys.platform}.{VERSION}.{ARCHITECTURE}.dmg"
 VOLUME_NAME = APP_NAME
 SOURCE_APP = f"{os.path.abspath(os.path.dirname(__file__))}/../conan/build/application_build/{APP_BUNDLE}"
 
