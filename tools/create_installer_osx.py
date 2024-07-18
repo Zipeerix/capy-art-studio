@@ -1,0 +1,65 @@
+import os
+import platform
+import shutil
+import subprocess
+import sys
+
+APP_NAME = "CapyArtStudio"
+APP_BUNDLE = f"{APP_NAME}.app"
+STAGING_DIR = "macos_installer_temporary_staging_folder"
+DMG_NAME = f"{APP_NAME}_{platform.machine()}.dmg"
+VOLUME_NAME = APP_NAME
+SOURCE_APP = f"{os.path.abspath(os.path.dirname(__file__))}/../conan/build/application_build/{APP_BUNDLE}"
+
+
+def create_staging_directory(staging_dir):
+    if not os.path.exists(staging_dir):
+        os.makedirs(staging_dir)
+
+
+def copy_app_to_staging(source_app, staging_dir):
+    destination = os.path.join(staging_dir, APP_BUNDLE)
+    if os.path.exists(destination):
+        shutil.rmtree(destination)
+    shutil.copytree(source_app, destination)
+
+
+def create_dmg(dmg_name, volume_name, staging_dir, destination):
+    subprocess.run([
+        "hdiutil", "create", "-volname", volume_name, "-srcfolder", staging_dir,
+        "-ov", "-format", "UDZO", dmg_name
+    ], check=True)
+
+    if not os.path.exists(destination):
+        os.makedirs(destination)
+
+    final_dmg_path = destination + "/" + dmg_name
+    shutil.move(dmg_name, final_dmg_path)
+    print(f"Installer DMG file created: {final_dmg_path}")
+
+
+def clean_up(staging_dir):
+    if os.path.exists(staging_dir):
+        shutil.rmtree(staging_dir)
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 create_installer_osx.py [DESTINATION]")
+        exit()
+    if sys.platform != "darwin":
+        print("This script can only be used on OSX system")
+        exit()
+
+    destination = sys.argv[1]
+
+    try:
+        create_staging_directory(STAGING_DIR)
+        copy_app_to_staging(SOURCE_APP, STAGING_DIR)
+        create_dmg(DMG_NAME, VOLUME_NAME, STAGING_DIR, destination)
+    finally:
+        clean_up(STAGING_DIR)
+
+
+if __name__ == "__main__":
+    main()
