@@ -40,7 +40,7 @@ def clean_up(staging_dir):
 
 
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 1:
         print("Usage: python3 create_installer_osx.py")
         exit()
     if sys.platform != "darwin":
