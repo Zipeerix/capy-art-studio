@@ -58,6 +58,11 @@ WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
 
 WelcomeScreen::~WelcomeScreen() { delete ui; }
 
+void WelcomeScreen::closeEvent(QCloseEvent* event) {
+  logger::hideConsoleWindow();  // cleanup happens in Application::start
+  QMainWindow::closeEvent(event);
+}
+
 void WelcomeScreen::resizeEvent(QResizeEvent* event) {
   updateUiProjectList();
   QWidget::resizeEvent(event);

@@ -87,6 +87,14 @@ void showConsoleWindow() {
   consoleWindow->show();
 }
 
+void hideConsoleWindow() {
+  if (!isEnabled) {
+    return;
+  }
+
+  consoleWindow->hide();
+}
+
 void debug(const std::string& message, const std::string& module) {
   log(message, fmt::format("<font color=\"blue\">DEBUG<{}></font>", module));
 }

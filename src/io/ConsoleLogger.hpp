@@ -33,6 +33,7 @@ enum class Severity {
 void init();
 void cleanup();
 void showConsoleWindow();
+void hideConsoleWindow();
 
 void debug(const std::string& message, const std::string& module);
 void info(const std::string& message);

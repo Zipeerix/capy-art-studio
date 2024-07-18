@@ -30,7 +30,7 @@
 
 namespace capy {
 PotentialError<std::string> ChunkFileWriter::existingFileStrategyCheck(
-    const std::string& path, ExistingFileStrategy existingFileStrategy) {
+    const std::string& path, const ExistingFileStrategy existingFileStrategy) {
   switch (existingFileStrategy) {
     case ExistingFileStrategy::ClearAndWrite:
     case ExistingFileStrategy::Overwrite:

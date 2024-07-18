@@ -52,6 +52,11 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
+void MainWindow::closeEvent(QCloseEvent* event) {
+  logger::hideConsoleWindow();  // cleanup happens in Application::start
+  QMainWindow::closeEvent(event);
+}
+
 void MainWindow::menuBarFileNewClicked() {
   NewFileDialog dialog(this);
   dialog.exec();

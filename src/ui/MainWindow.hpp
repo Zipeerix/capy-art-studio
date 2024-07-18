@@ -59,6 +59,8 @@ class MainWindow final : public QMainWindow {
   void setupLayersDock();
   void setupToolsDock();
 
+  void closeEvent(QCloseEvent* event) override;
+
   void changeWindowTitle(const std::string& projectPath);
 };
 }  // namespace capy::ui

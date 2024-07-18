@@ -61,6 +61,7 @@ class WelcomeScreen final : public QMainWindow {
 
   int _currentColumns = 0;
 
+  void closeEvent(QCloseEvent* event) override;
   void updateUiProjectList();
 };
 }  // namespace capy::ui
