@@ -55,7 +55,6 @@ jobs:
         shell: bash
         run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-      # TODO: Cache packages to save minutes
       - name: Install conan dependencies
         run: conan install ${{ github.workspace }}/conan --build=missing
 
