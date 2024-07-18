@@ -1,11 +1,19 @@
 import os
+import platform
 import shutil
 import subprocess
+import sys
 import tempfile
+
+
+def get_deb_arch_name():
+    platform_arch = platform.architecture()
+    return platform_arch
+
 
 APP_NAME = "CapyArtStudio"
 VERSION = "1.0"
-ARCHITECTURE = "arm64"
+ARCHITECTURE = get_deb_arch_name()
 MAINTAINER = "Ziperix <ziperix@icloud.com>"
 DESCRIPTION = "Pixel Art editor"
 DEPENDENCIES = "libc6 (>= 2.15)"
