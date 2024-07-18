@@ -31,7 +31,7 @@ class ResourceManager {
 
   static QString getIconPath(Icon icon);
 
-private:
+ private:
   enum class Prefix {
     Root,
     Icons,

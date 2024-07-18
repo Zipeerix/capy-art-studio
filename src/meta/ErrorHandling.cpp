@@ -18,7 +18,11 @@
 #include "ErrorHandling.hpp"
 
 #include <cerrno>
+#include <cstring>
 
 namespace capy {
-std::string getErrnoString() { return std::strerror(errno); }
+std::string getErrnoString() {
+  const auto str = std::strerror(errno);
+  return str ? str : "Unknown error";
+}
 }  // namespace capy

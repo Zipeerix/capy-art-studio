@@ -16,6 +16,7 @@
 *******************************************************************************/
 
 #include "ResourceManager.hpp"
+
 #include <stdexcept>
 
 namespace capy {
