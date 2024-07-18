@@ -20,12 +20,14 @@
 
 #include <QMainWindow>
 
+#include "widgets/utils/AutoSizeSavingItem.hpp"
+
 namespace capy::ui {
 namespace Ui {
 class ConsoleWindow;
 }
 
-class ConsoleWindow final : public QMainWindow {
+class ConsoleWindow final : public QMainWindow, AutoSizeSavingItem {
   Q_OBJECT
  public:
   explicit ConsoleWindow(QWidget* parent = nullptr);

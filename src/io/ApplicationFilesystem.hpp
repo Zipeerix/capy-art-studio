@@ -28,6 +28,7 @@ namespace capy {
 enum class FilesystemPath : int { Palettes, Projects, PathCount };
 
 void initApplicationFilesystem();
+std::string getConfigFilePath();
 std::string getFilesystemPath(FilesystemPath of);
 std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationPath);
 std::vector<std::string> listFilesInPath(FilesystemPath applicationPath);

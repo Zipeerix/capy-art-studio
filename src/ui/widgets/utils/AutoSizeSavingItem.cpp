@@ -15,17 +15,28 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ConsoleWindow.hpp"
+#include "AutoSizeSavingItem.hpp"
 
-#include "ui_ConsoleWindow.h"
+#include <fmt/format.h>
 
-namespace capy::ui {
-ConsoleWindow::ConsoleWindow(QWidget* parent)
-    : QMainWindow(parent), AutoSizeSavingItem(this, "ConsoleWindow"), ui(new Ui::ConsoleWindow) {
-  ui->setupUi(this);
+#include "io/ConsoleLogger.hpp"
+
+namespace capy {
+AutoSizeSavingItem::AutoSizeSavingItem(QWidget* widget, std::string name)
+    : _configurationManager(ConfigurationManager::createInstance()),
+      _widget(widget),
+      _name(std::move(name)) {
+  if (_widget == nullptr) {
+    throw std::logic_error("Widget cannot be null");
+  }
+
+  const std::optional<QByteArray> geometry = _configurationManager->getWindowGeometry(_name);
+  if (geometry.has_value()) {
+    _widget->restoreGeometry(geometry.value());
+  }
 }
 
-ConsoleWindow::~ConsoleWindow() { delete ui; }
-
-void ConsoleWindow::log(const QString& message) const { ui->logTextArea->append(message + "\n"); }
-}  // namespace capy::ui
+AutoSizeSavingItem::~AutoSizeSavingItem() {
+  _configurationManager->setWindowGeometry(_name, _widget->saveGeometry());
+}
+}  // namespace capy

@@ -15,17 +15,25 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ConsoleWindow.hpp"
+#ifndef AUTOSIZESAVINGITEM_HPP
+#define AUTOSIZESAVINGITEM_HPP
 
-#include "ui_ConsoleWindow.h"
+#include <QWidget>
+#include <string>
 
-namespace capy::ui {
-ConsoleWindow::ConsoleWindow(QWidget* parent)
-    : QMainWindow(parent), AutoSizeSavingItem(this, "ConsoleWindow"), ui(new Ui::ConsoleWindow) {
-  ui->setupUi(this);
-}
+#include "../../../io/ConfigurationManager.hpp"
 
-ConsoleWindow::~ConsoleWindow() { delete ui; }
+namespace capy {
+class AutoSizeSavingItem {
+ public:
+  AutoSizeSavingItem(QWidget* widget, std::string name);
+  virtual ~AutoSizeSavingItem();
 
-void ConsoleWindow::log(const QString& message) const { ui->logTextArea->append(message + "\n"); }
-}  // namespace capy::ui
+ private:
+  std::shared_ptr<ConfigurationManager> _configurationManager;
+  QWidget* _widget;
+  std::string _name;
+};
+}  // namespace capy
+
+#endif  // AUTOSIZESAVINGITEM_HPP

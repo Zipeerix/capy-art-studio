@@ -25,13 +25,14 @@
 #include "docks/ToolsArea.hpp"
 #include "user/Project.hpp"
 #include "widgets/DrawingWidget.hpp"
+#include "widgets/utils/AutoSizeSavingItem.hpp"
 
 namespace capy::ui {
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow final : public QMainWindow {
+class MainWindow final : public QMainWindow, AutoSizeSavingItem {
   Q_OBJECT
  public:
   explicit MainWindow(QWidget* parent = nullptr);

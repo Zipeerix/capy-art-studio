@@ -32,7 +32,7 @@ namespace Ui {
 class WelcomeScreen;
 }
 
-class WelcomeScreen final : public QMainWindow {
+class WelcomeScreen final : public QMainWindow, AutoSizeSavingItem {
   Q_OBJECT
  public:
   explicit WelcomeScreen(MainWindow* mainWindow, QWidget* parent = nullptr);

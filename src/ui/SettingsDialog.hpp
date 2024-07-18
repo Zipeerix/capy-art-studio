@@ -21,13 +21,14 @@
 #include <QDialog>
 
 #include "io/ConfigurationManager.hpp"
+#include "widgets/utils/AutoSizeSavingItem.hpp"
 
 namespace capy::ui {
 namespace Ui {
 class SettingsDialog;
 }
 
-class SettingsDialog final : public QDialog {
+class SettingsDialog final : public QDialog, AutoSizeSavingItem {
   Q_OBJECT
  public:
   explicit SettingsDialog(QWidget* parent = nullptr);
