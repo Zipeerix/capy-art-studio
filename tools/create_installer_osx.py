@@ -24,18 +24,12 @@ def copy_app_to_staging(source_app, staging_dir):
     shutil.copytree(source_app, destination)
 
 
-def create_dmg(dmg_name, volume_name, staging_dir, destination):
+def create_dmg(dmg_name, volume_name, staging_dir):
     subprocess.run([
         "hdiutil", "create", "-volname", volume_name, "-srcfolder", staging_dir,
         "-ov", "-format", "UDZO", dmg_name
     ], check=True)
-
-    if not os.path.exists(destination):
-        os.makedirs(destination)
-
-    final_dmg_path = destination + "/" + dmg_name
-    shutil.move(dmg_name, final_dmg_path)
-    print(f"Installer DMG file created: {final_dmg_path}")
+    print(f"Installer DMG file created: {dmg_name}")
 
 
 def clean_up(staging_dir):
@@ -45,18 +39,16 @@ def clean_up(staging_dir):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 create_installer_osx.py [DESTINATION]")
+        print("Usage: python3 create_installer_osx.py")
         exit()
     if sys.platform != "darwin":
         print("This script can only be used on OSX system")
         exit()
 
-    destination = sys.argv[1]
-
     try:
         create_staging_directory(STAGING_DIR)
         copy_app_to_staging(SOURCE_APP, STAGING_DIR)
-        create_dmg(DMG_NAME, VOLUME_NAME, STAGING_DIR, destination)
+        create_dmg(DMG_NAME, VOLUME_NAME, STAGING_DIR)
     finally:
         clean_up(STAGING_DIR)
 
