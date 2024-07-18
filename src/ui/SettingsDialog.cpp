@@ -22,6 +22,7 @@
 namespace capy::ui {
 SettingsDialog::SettingsDialog(QWidget* parent)
     : QDialog(parent),
+      AutoSizeSavingItem(this, "SettingsDialog"),
       ui(new Ui::SettingsDialog),
       _configurationManager(ConfigurationManager::createInstance()) {
   ui->setupUi(this);

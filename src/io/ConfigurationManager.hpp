@@ -20,10 +20,12 @@
 
 #include <QSettings>
 
+#include "ApplicationFilesystem.hpp"
+
 namespace capy {
 class ConfigurationManager {
  public:
-  enum class InternalValues : int { ProjectPaths };
+  enum class InternalValues : int { ProjectPaths, WindowGeometry };
 
   enum class ApplicationSettings : int { ShowWelcomeScreen };
 
@@ -58,6 +60,9 @@ class ConfigurationManager {
   template <typename SettingValueType>
   void setGraphicsSetting(GraphicsSetting setting, SettingValueType value);
 
+  std::optional<QByteArray> getWindowGeometry(const std::string& name);
+  void setWindowGeometry(const std::string& name, const QByteArray& geometry);
+
   void addAdditionalProjectPath(const std::string& path);
   void removeAdditionalProjectPath(const std::string& pathToDelete);
   bool doesAdditionalProjectExist(const std::string& path) const;
@@ -67,7 +72,7 @@ class ConfigurationManager {
   ConfigurationManager() = default;
 
  private:
-  QSettings _settings{};
+  QSettings _settings{QString::fromStdString(getConfigFilePath()), QSettings::IniFormat};
 
   static QString getInternalValuePath(InternalValues value);
   static QString getApplicationSettingPath(ApplicationSettings setting);

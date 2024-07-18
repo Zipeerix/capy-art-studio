@@ -40,6 +40,11 @@ void initApplicationFilesystem() {
   }
 }
 
+std::string getConfigFilePath() {
+  const auto basePath = getApplicationFilesystemBasePath();
+  return basePath / "config.ini";
+}
+
 std::string getFilesystemPath(const FilesystemPath of) {
   const auto basePath = getApplicationFilesystemBasePath();
   switch (of) {

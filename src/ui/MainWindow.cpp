@@ -30,7 +30,10 @@
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), _drawingWidget(new DrawingWidget(this)) {
+    : QMainWindow(parent),
+      AutoSizeSavingItem(this, "MainWindow"),
+      ui(new Ui::MainWindow),
+      _drawingWidget(new DrawingWidget(this)) {
   ui->setupUi(this);
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);

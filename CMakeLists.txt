@@ -45,6 +45,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/MainWindow.cpp
         src/ui/WelcomeScreen.hpp
         src/ui/WelcomeScreen.cpp
+        src/ui/widgets/utils/AutoSizeSavingItem.hpp
+        src/ui/widgets/utils/AutoSizeSavingItem.cpp
         src/ui/SettingsDialog.hpp
         src/ui/SettingsDialog.cpp
         src/ui/widgets/color-pickers/DefaultColorPicker.cpp

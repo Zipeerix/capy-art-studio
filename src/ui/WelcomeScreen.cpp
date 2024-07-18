@@ -32,6 +32,7 @@
 namespace capy::ui {
 WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
     : QMainWindow(parent),
+      AutoSizeSavingItem(this, "WelcomeScreen"),
       ui(new Ui::WelcomeScreen),
       _configurationManager(ConfigurationManager::createInstance()),
       _projectsManager(this),

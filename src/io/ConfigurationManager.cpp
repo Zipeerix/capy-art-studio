@@ -34,6 +34,9 @@ QString ConfigurationManager::getInternalValuePath(const InternalValues value) {
     case InternalValues::ProjectPaths:
       return "Internal/ProjectPaths";
 
+    case InternalValues::WindowGeometry:
+      return "Internal/WindowGeometry";
+
     default:
       throw std::logic_error("Invalid value requested");
   }
@@ -134,5 +137,19 @@ bool ConfigurationManager::doesAdditionalProjectExist(const std::string& path) c
   const auto projects = getAdditionalProjectsPaths();
   return std::ranges::any_of(
       projects, [path](const std::string& alreadyAddedPath) { return alreadyAddedPath == path; });
+}
+
+std::optional<QByteArray> ConfigurationManager::getWindowGeometry(const std::string& name) {
+  const auto path =
+      getInternalValuePath(InternalValues::WindowGeometry) + "/" + QString::fromStdString(name);
+  QByteArray value = _settings.value(path, {}).toByteArray();
+
+  return value.isEmpty() ? std::nullopt : std::optional(value);
+}
+
+void ConfigurationManager::setWindowGeometry(const std::string& name, const QByteArray& geometry) {
+  const auto path =
+      getInternalValuePath(InternalValues::WindowGeometry) + "/" + QString::fromStdString(name);
+  _settings.setValue(path, geometry);
 }
 }  // namespace capy
