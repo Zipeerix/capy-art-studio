@@ -6,14 +6,19 @@ import sys
 import tempfile
 
 
-def get_deb_arch_name():
-    platform_arch = platform.architecture()
-    return platform_arch
+def get_architecture():
+    arch = platform.processor()
+    arch_map = {
+        "x86_64": "amd64",
+        "i686": "i386",
+        "aarch64": "arm64",
+    }
+    return arch_map.get(arch, arch)
 
 
 APP_NAME = "CapyArtStudio"
 VERSION = "1.0"
-ARCHITECTURE = get_deb_arch_name()
+ARCHITECTURE = get_architecture()
 MAINTAINER = "Ziperix <ziperix@icloud.com>"
 DESCRIPTION = "Pixel Art editor"
 DEPENDENCIES = "libc6 (>= 2.15)"
