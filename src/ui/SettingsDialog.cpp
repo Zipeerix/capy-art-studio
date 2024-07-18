@@ -49,8 +49,16 @@ void SettingsDialog::setupConnectionsForApplicationTab() {
                 status == Qt::Checked);
           });
 
+  ui->showStatusBackCheckbox->setChecked(_configurationManager->getApplicationSetting<bool>(
+      ConfigurationManager::ApplicationSettings::ShowStatusBar));
+  connect(ui->showStatusBackCheckbox, &QCheckBox::checkStateChanged, this,
+          [&](const Qt::CheckState status) {
+            _configurationManager->setApplicationSetting(
+                ConfigurationManager::ApplicationSettings::ShowStatusBar, status == Qt::Checked);
+          });
+
   ui->statusBarUpdateIntervalSpinbox->setValue(_configurationManager->getApplicationSetting<int>(
-    ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval));
+      ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval));
   connect(ui->statusBarUpdateIntervalSpinbox, &QSpinBox::valueChanged, this,
           [&](const int newValue) {
             _configurationManager->setApplicationSetting(

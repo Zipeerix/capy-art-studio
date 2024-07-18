@@ -24,4 +24,4 @@ QWidget* createExpandingSpacer(QWidget* parent) {
 
   return spacer;
 }
-}
+}  // namespace capy

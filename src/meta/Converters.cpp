@@ -51,7 +51,7 @@ uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType) {
       return seconds * 1000;
 
     case TimeType::Microseconds:
-      return seconds * 1000 * 1000; // TOOD: pow, overall refactor both
+      return seconds * 1000 * 1000;  // TOOD: pow, overall refactor both
 
     default:
       throw std::logic_error("Invalid time type");

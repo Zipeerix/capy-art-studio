@@ -21,14 +21,14 @@
 
 #include <QFileDialog>
 
-#include "io/ConsoleLogger.hpp"
 #include "dialogs/NewFileDialog.hpp"
-#include "widgets/utils/SpacerUtils.hpp"
+#include "io/ConsoleLogger.hpp"
+#include "meta/Converters.hpp"
 #include "ui/SettingsDialog.hpp"
 #include "ui_MainWindow.h"
-#include "meta/Converters.hpp"
 #include "widgets/DrawingWidget.hpp"
 #include "widgets/utils/MessageBoxUtils.hpp"
+#include "widgets/utils/SpacerUtils.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
@@ -45,9 +45,16 @@ MainWindow::MainWindow(QWidget* parent)
   ui->statusBar->addPermanentWidget(_statusBarWidget);
   ui->statusBar->addPermanentWidget(createExpandingSpacer(this), true);
 
-  const auto statusBarUpdateInterval = _configurationManager->getApplicationSetting<int>(ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval);
-  _timer.start(convertSecondsTo(std::max(statusBarUpdateInterval, 1), TimeType::Miliseconds));
-  connect(&_timer, &QTimer::timeout, this, &MainWindow::updateStatusBar);
+  // TODO: For now let it stay that way, the widget gets created even if disabled but timer doesnt
+  // get created TOOD: Probably change it when connections are made to settings managet to update in
+  // real time
+  const bool showStatusBar = _configurationManager->getApplicationSetting<bool>(
+      ConfigurationManager::ApplicationSettings::ShowStatusBar);
+  if (showStatusBar) {
+    setupStatusBarTimer();
+  }
+
+  ui->statusBar->setVisible(showStatusBar);
 
   connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
   connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::menuBarFileSaveAsClicked);
@@ -125,7 +132,16 @@ void MainWindow::setupToolsDock() {
   ui->toolsDock->setWidget(_toolsDockArea);
 }
 
-void MainWindow::updateStatusBar() { _statusBarWidget->update(_drawingWidget->getLayers()); }
+void MainWindow::setupStatusBarTimer() {
+  const auto statusBarUpdateInterval = _configurationManager->getApplicationSetting<int>(
+      ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval);
+  const auto updateInternalInSeconds = static_cast<int>(
+      convertSecondsTo(std::max(statusBarUpdateInterval, 1), TimeType::Miliseconds));
+  _statusBarTimer.start(updateInternalInSeconds);
+  connect(&_statusBarTimer, &QTimer::timeout, this, &MainWindow::updateStatusBar);
+}
+
+void MainWindow::updateStatusBar() const { _statusBarWidget->update(_drawingWidget->getLayers()); }
 
 void MainWindow::changeWindowTitle(const std::string& projectPath) {
   setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
