@@ -44,8 +44,6 @@ public:
   QColor getDrawingColor() const;
   const std::vector<Layer>& getLayers() const;
 
-  void drawBackground(QPainter* painter, const QRectF& rect) override;
-
   void resetZoom();
 
 private:
@@ -68,6 +66,8 @@ private:
   int _panStartY = 0;
 
   double _zoomFactor = 1.0;
+
+  void drawBackground(QPainter* painter, const QRectF& rect) override;
 
   std::optional<QPoint> mapPositionOfEventToScene(const QMouseEvent* event) const;
 
