@@ -21,6 +21,7 @@
 
 #include "../../UiHelpers.hpp"
 #include "ui/widgets/utils/ClickableLabel.hpp"
+#include "ui/widgets/utils/ResourceManager.hpp"
 #include "ui_ProjectDelegate.h"
 
 namespace capy::ui {
@@ -45,7 +46,8 @@ ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidge
 
   QPixmap miniature = _project.getMiniature();
   if (miniature.isNull()) {
-    miniature = QPixmap{":/no-image.png"};
+    miniature =
+        QPixmap{ResourceManager::getIconPath(ResourceManager::Icon::CorruptedProjectMiniatureIcon)};
   }
 
   const auto actualMiniature =

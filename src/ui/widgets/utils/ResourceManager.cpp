@@ -15,14 +15,35 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ErrorHandling.hpp"
+#include "ResourceManager.hpp"
 
-#include <cerrno>
-#include <cstring>
+#include <stdexcept>
 
 namespace capy {
-std::string getErrnoString() {
-  const auto str = std::strerror(errno);
-  return str ? str : "Unknown error";
+QString ResourceManager::getPrefixPath(const Prefix prefix) {
+  switch (prefix) {
+    case Prefix::Root:
+      return ":/";
+
+    case Prefix::Icons:
+      return ":/icons/";
+
+    default:
+      throw std::logic_error("Invalid prefix path requested");
+  }
+}
+
+QString ResourceManager::getIconPath(const Icon icon) {
+  const auto rootPath = getPrefixPath(Prefix::Icons);
+  switch (icon) {
+    case Icon::ApplicationIcon:
+      return rootPath + "icon.png";
+
+    case Icon::CorruptedProjectMiniatureIcon:
+      return rootPath + "no-image.png";
+
+    default:
+      throw std::logic_error("Invalid resource requested");
+  }
 }
 }  // namespace capy

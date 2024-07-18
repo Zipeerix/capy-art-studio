@@ -15,14 +15,30 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ErrorHandling.hpp"
+#ifndef RESOURCEMANAGER_HPP
+#define RESOURCEMANAGER_HPP
 
-#include <cerrno>
-#include <cstring>
+#include <QString>
 
 namespace capy {
-std::string getErrnoString() {
-  const auto str = std::strerror(errno);
-  return str ? str : "Unknown error";
-}
+// TODO: Change to namespace just like ConsoleLogger?
+class ResourceManager {
+ public:
+  enum class Icon {
+    ApplicationIcon,
+    CorruptedProjectMiniatureIcon,
+  };
+
+  static QString getIconPath(Icon icon);
+
+ private:
+  enum class Prefix {
+    Root,
+    Icons,
+  };
+
+  static QString getPrefixPath(Prefix prefix);
+};
 }  // namespace capy
+
+#endif  // RESOURCEMANAGER_HPP
