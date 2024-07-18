@@ -2,9 +2,9 @@ name: Build on Linux (GCC)
 
 on:
   push:
-    branches: [ "master", "feature/CAS-70_actions_cache" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "feature/CAS-70_actions_cache" ]
+    branches: [ "master" ]
 
 jobs:
   build:
