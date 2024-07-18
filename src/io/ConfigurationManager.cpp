@@ -47,6 +47,9 @@ QString ConfigurationManager::getApplicationSettingPath(const ApplicationSetting
     case ApplicationSettings::ShowWelcomeScreen:
       return "Application/ShowWelcomeScreen";
 
+    case ApplicationSettings::StatusBarUpdateInterval:
+      return "Application/StatusBarUpdateInterval";
+
     default:
       throw std::logic_error("Invalid setting requested");
   }

@@ -99,6 +99,10 @@ SettingValueType ConfigurationManager::getApplicationSetting(ApplicationSettings
       compileTimeTypeCheck<SettingValueType, bool>();
       return _settings.value(getApplicationSettingPath(setting), true).toBool();
 
+    case ApplicationSettings::StatusBarUpdateInterval:
+      compileTimeTypeCheck<SettingValueType, int>();
+      return _settings.value(getApplicationSettingPath(setting), 3).toInt();
+
     default:
       throw std::logic_error("Invalid setting requested");
   }
@@ -110,6 +114,11 @@ void ConfigurationManager::setApplicationSetting(ApplicationSettings setting,
   switch (setting) {
     case ApplicationSettings::ShowWelcomeScreen:
       compileTimeTypeCheck<SettingValueType, bool>();
+      _settings.setValue(getApplicationSettingPath(setting), value);
+      break;
+
+    case ApplicationSettings::StatusBarUpdateInterval:
+      compileTimeTypeCheck<SettingValueType, int>();
       _settings.setValue(getApplicationSettingPath(setting), value);
       break;
 

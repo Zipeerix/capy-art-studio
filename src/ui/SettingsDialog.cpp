@@ -48,6 +48,14 @@ void SettingsDialog::setupConnectionsForApplicationTab() {
                 ConfigurationManager::ApplicationSettings::ShowWelcomeScreen,
                 status == Qt::Checked);
           });
+
+  ui->statusBarUpdateIntervalSpinbox->setValue(_configurationManager->getApplicationSetting<int>(
+    ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval));
+  connect(ui->statusBarUpdateIntervalSpinbox, &QSpinBox::valueChanged, this,
+          [&](const int newValue) {
+            _configurationManager->setApplicationSetting(
+                ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval, newValue);
+          });
 }
 
 void SettingsDialog::setupConnectionsForDebugTab() {

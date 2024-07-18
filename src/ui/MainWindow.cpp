@@ -21,10 +21,12 @@
 
 #include <QFileDialog>
 
-#include "../io/ConsoleLogger.hpp"
+#include "io/ConsoleLogger.hpp"
 #include "dialogs/NewFileDialog.hpp"
+#include "widgets/utils/SpacerUtils.hpp"
 #include "ui/SettingsDialog.hpp"
 #include "ui_MainWindow.h"
+#include "meta/Converters.hpp"
 #include "widgets/DrawingWidget.hpp"
 #include "widgets/utils/MessageBoxUtils.hpp"
 
@@ -32,11 +34,20 @@ namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
       AutoSizeSavingItem(this, "MainWindow"),
+      _configurationManager(ConfigurationManager::createInstance()),
       ui(new Ui::MainWindow),
-      _drawingWidget(new DrawingWidget(this)) {
+      _drawingWidget(new DrawingWidget(this)),
+      _statusBarWidget(new StatusBarWidget(this)) {
   ui->setupUi(this);
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
+
+  ui->statusBar->addPermanentWidget(_statusBarWidget);
+  ui->statusBar->addPermanentWidget(createExpandingSpacer(this), true);
+
+  const auto statusBarUpdateInterval = _configurationManager->getApplicationSetting<int>(ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval);
+  _timer.start(convertSecondsTo(std::max(statusBarUpdateInterval, 1), TimeType::Miliseconds));
+  connect(&_timer, &QTimer::timeout, this, &MainWindow::updateStatusBar);
 
   connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::menuBarFileNewClicked);
   connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::menuBarFileSaveAsClicked);
@@ -113,6 +124,8 @@ void MainWindow::setupToolsDock() {
   _toolsDockArea = new ToolsArea(this);
   ui->toolsDock->setWidget(_toolsDockArea);
 }
+
+void MainWindow::updateStatusBar() { _statusBarWidget->update(_drawingWidget->getLayers()); }
 
 void MainWindow::changeWindowTitle(const std::string& projectPath) {
   setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
