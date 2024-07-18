@@ -67,7 +67,6 @@ jobs:
       - name: Create installer
         run: python3 ${{ github.workspace }}/tools/create_installer_linux.py
 
-      # TODO: Get installer name programatically
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
