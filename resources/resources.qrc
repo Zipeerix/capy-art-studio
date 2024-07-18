@@ -1,8 +1,8 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/icons">
         <file>icon.png</file>
     </qresource>
-    <qresource prefix="/">
+    <qresource prefix="/icons">
         <file>no-image.png</file>
     </qresource>
 </RCC>

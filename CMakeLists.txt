@@ -59,6 +59,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/utils/CheckerboardPixmap.cpp
         src/ui/widgets/utils/MessageBoxUtils.cpp
         src/ui/widgets/utils/MessageBoxUtils.hpp
+        src/ui/widgets/utils/ResourceManager.hpp
+        src/ui/widgets/utils/ResourceManager.cpp
         src/ui/layouts/FlowLayout.cpp
         src/ui/layouts/FlowLayout.hpp
         src/ui/docks/ColorArea.hpp

@@ -1,171 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>capy::ui::SettingsDialog</class>
-    <widget class="QDialog" name="capy::ui::SettingsDialog">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>563</width>
-                <height>534</height>
-            </rect>
-        </property>
-        <property name="windowTitle">
-            <string>Settings</string>
-        </property>
-        <property name="windowIcon">
-            <iconset resource="../../resources/resources.qrc">
-                <normaloff>:/icon.png</normaloff>:/icon.png
-            </iconset>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-            <property name="leftMargin">
-                <number>0</number>
-            </property>
-            <property name="topMargin">
-                <number>0</number>
-            </property>
-            <property name="rightMargin">
-                <number>0</number>
-            </property>
-            <property name="bottomMargin">
-                <number>6</number>
-            </property>
-            <item>
-                <widget class="QWidget" name="centralwidget" native="true"/>
-            </item>
-            <item>
-                <widget class="QTabWidget" name="settingsCategoryTabs">
-                    <property name="tabPosition">
-                        <enum>QTabWidget::North</enum>
-                    </property>
-                    <property name="tabShape">
-                        <enum>QTabWidget::Rounded</enum>
-                    </property>
-                    <property name="currentIndex">
-                        <number>1</number>
-                    </property>
-                    <property name="usesScrollButtons">
-                        <bool>false</bool>
-                    </property>
-                    <property name="documentMode">
-                        <bool>true</bool>
-                    </property>
-                    <widget class="QWidget" name="applicationTab">
-                        <attribute name="title">
-                            <string>Application</string>
-                        </attribute>
-                        <layout class="QVBoxLayout" name="verticalLayout_3">
-                            <item>
-                                <widget class="QCheckBox" name="showWelcomeScreenCheckbox">
-                                    <property name="text">
-                                        <string>Show Welcome Screen</string>
-                                    </property>
-                                </widget>
-                            </item>
-                            <item>
-                                <spacer name="verticalSpacer_2">
-                                    <property name="orientation">
-                                        <enum>Qt::Vertical</enum>
-                                    </property>
-                                    <property name="sizeHint" stdset="0">
-                                        <size>
-                                            <width>20</width>
-                                            <height>40</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </item>
-                        </layout>
-                    </widget>
-                    <widget class="QWidget" name="graphicsTab">
-                        <attribute name="title">
-                            <string>Graphics</string>
-                        </attribute>
-                        <layout class="QVBoxLayout" name="verticalLayout_4">
-                            <item>
-                                <widget class="QCheckBox" name="drawPixelGridCheckbox">
-                                    <property name="text">
-                                        <string>Draw Pixel Grid</string>
-                                    </property>
-                                </widget>
-                            </item>
-                            <item>
-                                <layout class="QHBoxLayout" name="horizontalLayout_4">
-                                    <item>
-                                        <widget class="QLabel" name="label">
-                                            <property name="text">
-                                                <string>Pixel Grid Width</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QDoubleSpinBox" name="pixelGridWidthSpinBox"/>
-                                    </item>
-                                </layout>
-                            </item>
-                            <item>
-                                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                                    <item>
-                                        <widget class="QLabel" name="label_2">
-                                            <property name="text">
-                                                <string>Pixel Grid Visibility Zoom Threshold</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QDoubleSpinBox" name="pixelGridZoomThresholdSpinbox"/>
-                                    </item>
-                                </layout>
-                            </item>
-                            <item>
-                                <spacer name="verticalSpacer_3">
-                                    <property name="orientation">
-                                        <enum>Qt::Vertical</enum>
-                                    </property>
-                                    <property name="sizeHint" stdset="0">
-                                        <size>
-                                            <width>20</width>
-                                            <height>393</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </item>
-                        </layout>
-                    </widget>
-                    <widget class="QWidget" name="debugTab">
-                        <attribute name="title">
-                            <string>Debug</string>
-                        </attribute>
-                        <layout class="QVBoxLayout" name="verticalLayout_2">
-                            <item>
-                                <widget class="QCheckBox" name="showConsoleCheckbox">
-                                    <property name="text">
-                                        <string>Show Debugging Console (requires restart)</string>
-                                    </property>
-                                </widget>
-                            </item>
-                            <item>
-                                <spacer name="verticalSpacer">
-                                    <property name="orientation">
-                                        <enum>Qt::Vertical</enum>
-                                    </property>
-                                    <property name="sizeHint" stdset="0">
-                                        <size>
-                                            <width>20</width>
-                                            <height>40</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </item>
-                        </layout>
-                    </widget>
-                </widget>
-            </item>
+ <class>capy::ui::SettingsDialog</class>
+ <widget class="QDialog" name="capy::ui::SettingsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>563</width>
+    <height>534</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../resources/resources.qrc">
+    <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="centralwidget" native="true"/>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="settingsCategoryTabs">
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <property name="usesScrollButtons">
+      <bool>false</bool>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="applicationTab">
+      <attribute name="title">
+       <string>Application</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="showWelcomeScreenCheckbox">
+         <property name="text">
+          <string>Show Welcome Screen</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="graphicsTab">
+      <attribute name="title">
+       <string>Graphics</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QCheckBox" name="drawPixelGridCheckbox">
+         <property name="text">
+          <string>Draw Pixel Grid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Pixel Grid Width</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="pixelGridWidthSpinBox"/>
+         </item>
         </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Pixel Grid Visibility Zoom Threshold</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="pixelGridZoomThresholdSpinbox"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>393</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="debugTab">
+      <attribute name="title">
+       <string>Debug</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="showConsoleCheckbox">
+         <property name="text">
+          <string>Show Debugging Console (requires restart)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
-    <resources>
-        <include location="../../resources/resources.qrc"/>
-    </resources>
-    <connections/>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../resources/resources.qrc"/>
+ </resources>
+ <connections/>
 </ui>
