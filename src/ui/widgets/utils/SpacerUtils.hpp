@@ -24,4 +24,4 @@ namespace capy {
 QWidget* createExpandingSpacer(QWidget* parent);
 }
 
-#endif //SPACERUTILS_HPP
+#endif  // SPACERUTILS_HPP

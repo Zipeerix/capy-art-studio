@@ -54,7 +54,7 @@ class MainWindow final : public QMainWindow, AutoSizeSavingItem {
   DrawingWidget* _drawingWidget;
   StatusBarWidget* _statusBarWidget;
 
-  QTimer _timer;
+  QTimer _statusBarTimer;
 
   ColorArea* _colorDockArea = nullptr;
   LayersArea* _layersDockArea = nullptr;
@@ -65,8 +65,9 @@ class MainWindow final : public QMainWindow, AutoSizeSavingItem {
   void setupColorDock();
   void setupLayersDock();
   void setupToolsDock();
+  void setupStatusBarTimer();
 
-  void updateStatusBar();
+  void updateStatusBar() const;
 
   void closeEvent(QCloseEvent* event) override;
 

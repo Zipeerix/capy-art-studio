@@ -95,8 +95,10 @@ void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
 template <typename SettingValueType>
 SettingValueType ConfigurationManager::getApplicationSetting(ApplicationSettings setting) const {
   switch (setting) {
+    case ApplicationSettings::ShowStatusBar:
     case ApplicationSettings::ShowWelcomeScreen:
       compileTimeTypeCheck<SettingValueType, bool>();
+      // TODO: add getter for default values and then all cases can be combined for each type
       return _settings.value(getApplicationSettingPath(setting), true).toBool();
 
     case ApplicationSettings::StatusBarUpdateInterval:
@@ -112,6 +114,7 @@ template <typename SettingValueType>
 void ConfigurationManager::setApplicationSetting(ApplicationSettings setting,
                                                  SettingValueType value) {
   switch (setting) {
+    case ApplicationSettings::ShowStatusBar:
     case ApplicationSettings::ShowWelcomeScreen:
       compileTimeTypeCheck<SettingValueType, bool>();
       _settings.setValue(getApplicationSettingPath(setting), value);

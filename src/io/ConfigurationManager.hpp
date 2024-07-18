@@ -29,6 +29,7 @@ class ConfigurationManager {
 
   enum class ApplicationSettings : int {
     ShowWelcomeScreen,
+    ShowStatusBar,
     StatusBarUpdateInterval
   };
 

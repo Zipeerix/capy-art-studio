@@ -47,6 +47,9 @@ QString ConfigurationManager::getApplicationSettingPath(const ApplicationSetting
     case ApplicationSettings::ShowWelcomeScreen:
       return "Application/ShowWelcomeScreen";
 
+    case ApplicationSettings::ShowStatusBar:
+      return "Application/ShowStatusBar";
+
     case ApplicationSettings::StatusBarUpdateInterval:
       return "Application/StatusBarUpdateInterval";
 
