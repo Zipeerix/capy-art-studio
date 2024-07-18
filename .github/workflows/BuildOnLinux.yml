@@ -2,9 +2,9 @@ name: Build on Linux (GCC)
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feature/CAS-70_actions_cache" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "feature/CAS-70_actions_cache" ]
 
 jobs:
   build:
@@ -43,6 +43,11 @@ jobs:
 
       - name: Detect Conan profiles
         run: conan profile detect
+
+      - name: Restore Conan cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.conan/data
 
       - name: Set reusable strings
         id: strings
