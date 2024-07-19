@@ -2,9 +2,9 @@ name: Build on Windows (vc++)
 
 on:
   push:
-    branches: [ "release/*", "feature/CAS-144_windows_macos_installer" ]
+    branches: [ "release/*" ]
   pull_request:
-    branches: [ "release/*", "feature/CAS-144_windows_macos_installer" ]
+    branches: [ "release/*" ]
 
 jobs:
   build:
