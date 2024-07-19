@@ -42,7 +42,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>false</bool>
@@ -103,6 +103,20 @@
        <string>Graphics</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Graphical Backend</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="backendComboBox"/>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QCheckBox" name="drawPixelGridCheckbox">
          <property name="text">

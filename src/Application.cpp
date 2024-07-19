@@ -59,5 +59,7 @@ void Application::registerMetadata() {
   QCoreApplication::setOrganizationName("Zipeerix");
   QCoreApplication::setOrganizationDomain("https://github.com/Zipeerix/capy-art-studio");
   QCoreApplication::setApplicationName("CapyArt Studio");
+
+  qRegisterMetaType<GraphicalBackend>("GraphicalBackend");
 }
 }  // namespace capy

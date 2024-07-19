@@ -19,6 +19,7 @@
 #define CONFIGURATIONMANAGER_TPP
 
 #include "ConfigurationManager.hpp"
+#include "graphics/GraphicalBackend.hpp"
 #include "meta/CompileTimeChecks.hpp"
 
 namespace capy {
@@ -53,6 +54,15 @@ void ConfigurationManager::setDebugSetting(const DebugSetting setting,
 template <typename SettingValueType>
 SettingValueType ConfigurationManager::getGraphicsSetting(const GraphicsSetting setting) const {
   switch (setting) {
+    case GraphicsSetting::GraphicalBackend:
+      // TODO: When CAS-169 gets done this should not be converted to int, this method should return
+      // GraphicsBackend
+      // TODO: and for default value use QVariant::fromValue(GraphicalBackend::QtSoftware)
+      compileTimeTypeCheck<SettingValueType, int>();
+      return _settings
+          .value(getGraphicsSettingPath(setting), static_cast<int>(GraphicalBackend::QtSoftware))
+          .toInt();
+
     case GraphicsSetting::DrawGrid:
       compileTimeTypeCheck<SettingValueType, bool>();
       return _settings.value(getGraphicsSettingPath(setting), true).toBool();
@@ -74,6 +84,10 @@ template <typename SettingValueType>
 void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
                                               const SettingValueType value) {
   switch (setting) {
+    case GraphicsSetting::GraphicalBackend:
+      compileTimeTypeCheck<SettingValueType, GraphicalBackend>();
+      break;
+
     case GraphicsSetting::DrawGrid:
       compileTimeTypeCheck<SettingValueType, bool>();
       break;

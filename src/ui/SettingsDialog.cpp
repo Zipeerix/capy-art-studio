@@ -17,6 +17,7 @@
 
 #include "SettingsDialog.hpp"
 
+#include "graphics/GraphicalBackend.hpp"
 #include "ui_SettingsDialog.h"
 
 namespace capy::ui {
@@ -26,6 +27,7 @@ SettingsDialog::SettingsDialog(QWidget* parent)
       ui(new Ui::SettingsDialog),
       _configurationManager(ConfigurationManager::createInstance()) {
   ui->setupUi(this);
+  setupComboBoxes();
 
   // TODO: Connect signals for updating settings such as drawing grid when app is running
 
@@ -102,5 +104,23 @@ void SettingsDialog::setupConnectionsForGraphicsTab() {
             _configurationManager->setGraphicsSetting(
                 ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold, newValue);
           });
+
+  // TODO: this should be GraphicsBackend in templates after CAS-169
+  ui->backendComboBox->setCurrentIndex(_configurationManager->getGraphicsSetting<int>(
+      ConfigurationManager::GraphicsSetting::GraphicalBackend));
+  connect(ui->backendComboBox, &QComboBox::currentIndexChanged, this, [&](const int newIndex) {
+    if (newIndex > 0 && newIndex < static_cast<int>(GraphicalBackend::Count)) {
+      _configurationManager->setGraphicsSetting(
+          ConfigurationManager::GraphicsSetting::GraphicalBackend, newIndex);
+    }
+  });
+}
+
+void SettingsDialog::setupComboBoxes() const {
+  for (int i = 0; i < static_cast<int>(GraphicalBackend::Count); i++) {
+    const QString backendName =
+        QString::fromStdString(getNameOfGraphicalBackend(static_cast<GraphicalBackend>(i)));
+    ui->backendComboBox->addItem(backendName, i);
+  }
 }
 }  // namespace capy::ui
