@@ -19,9 +19,9 @@
 
 #include <fmt/format.h>
 
+#include <array>
 #include <filesystem>
 #include <fstream>
-#include <array>
 #include <stdexcept>
 #include <vector>
 

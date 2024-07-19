@@ -64,7 +64,7 @@ jobs:
         run: conan build ${{ github.workspace }}/conan
 
       - name: Test
-        run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests.exe
+        run: ${{ github.workspace }}\conan\build\application_build\CapyArtStudio_Tests.exe
 
       - name: Create installer
         run: python3 ${{ github.workspace }}/tools/create_installer_windows.py

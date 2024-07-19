@@ -84,7 +84,8 @@ std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
   std::vector<std::string> filePaths;
 
   for (const auto& entry : std::filesystem::directory_iterator(path)) {
-    if (entry.is_regular_file() && isCorrectExtension(applicationPath, entry.path().extension().string())) {
+    if (entry.is_regular_file() &&
+        isCorrectExtension(applicationPath, entry.path().extension().string())) {
       filePaths.push_back(entry.path().string());
     }
   }

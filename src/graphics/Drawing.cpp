@@ -15,8 +15,9 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <stdexcept>
 #include "Drawing.hpp"
+
+#include <stdexcept>
 
 namespace capy {
 Drawing::Drawing(const int width, const int height) : _width(width), _height(height) {
