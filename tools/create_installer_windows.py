@@ -23,7 +23,7 @@ import sys
 APP_NAME = "CapyArtStudio"
 VERSION = "1.0"
 ARCHITECTURE = platform.machine()  # TODO: Match with linux installer and macos
-SOURCE_APP = fr"{os.path.abspath(os.path.dirname(__file__))}\..\conan\build\application_build\{APP_NAME}.exe"
+SOURCE_APP = fr"{os.path.abspath(os.path.dirname(__file__))}\..\conan\build\application_build\Release\{APP_NAME}.exe"
 OUTPUT_DIR = r"."
 INSTALLER_NAME = f"{APP_NAME}.{sys.platform}.{VERSION}.{ARCHITECTURE}"
 
@@ -31,7 +31,6 @@ INSTALLER_NAME = f"{APP_NAME}.{sys.platform}.{VERSION}.{ARCHITECTURE}"
 def create_inno_setup_script(app_name, version, source_app, output_dir, installer_name):
     script_content = f"""
 [Setup]
-AppId={{YOUR-GUID-HERE}}
 AppName={app_name}
 AppVersion={version}
 DefaultDirName={{pf}}\\{app_name}

@@ -1,10 +1,10 @@
-name: Build on Linux (gcc)
+name: Build on macOS (ARM) (clang)
 
 on:
   push:
-    branches: [ "master", "release/*" ]
+    branches: [ "release/*" ]
   pull_request:
-    branches: [ "master", "release/*" ]
+    branches: [ "release/*" ]
 
 jobs:
   build:
@@ -14,25 +14,28 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [ ubuntu-24.04 ]
+        # TODO: macos-13 is not ARM, but fix installer path first etc
+        os: [ macos-latest ]
         build_type: [ Release ]
-        c_compiler: [ gcc ]
+        c_compiler: [ clang ]
         include:
-          - os: ubuntu-24.04
-            c_compiler: gcc
-            cpp_compiler: g++
+          - os: macos-latest
+            c_compiler: clang
+            cpp_compiler: clang++
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install system dependencies
-        run: sudo apt-get install -y cmake
+      - name: Install cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.30.x'
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.0.0
         with:
           version: '6.7.0'
-          host: 'linux'
+          host: 'mac'
           install-deps: 'true'
           dir: '${{ github.workspace }}/qt/'
           modules: 'qtwebengine'
@@ -47,7 +50,7 @@ jobs:
       - name: Restore Conan cache
         uses: actions/cache@v3
         with:
-          key: 'conan_cache_linux'
+          key: 'conan_cache_macos'
           path: ~/.conan2/p
 
       - name: Set reusable strings
@@ -65,10 +68,10 @@ jobs:
         run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests
 
       - name: Create installer
-        run: python3 ${{ github.workspace }}/tools/create_installer_linux.py
+        run: python3 ${{ github.workspace }}/tools/create_installer_osx.py
 
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
-          name: CapyArtStudio.linux.1.0.amd64.deb
-          path: ${{ github.workspace }}/CapyArtStudio.linux.1.0.amd64.deb
+          name: CapyArtStudio.darwin.1.0.arm64.dmg
+          path: ${{ github.workspace }}/CapyArtStudio.darwin.1.0.arm64.dmg

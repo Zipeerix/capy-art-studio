@@ -17,6 +17,8 @@
 
 #include "Drawing.hpp"
 
+#include <stdexcept>
+
 namespace capy {
 Drawing::Drawing(const int width, const int height) : _width(width), _height(height) {
   _layers.emplace_back(width, height, "Base Layer");

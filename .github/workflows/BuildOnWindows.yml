@@ -1,10 +1,10 @@
-name: Build on Linux (gcc)
+name: Build on Windows (vc++)
 
 on:
   push:
-    branches: [ "master", "release/*" ]
+    branches: [ "release/*" ]
   pull_request:
-    branches: [ "master", "release/*" ]
+    branches: [ "release/*" ]
 
 jobs:
   build:
@@ -14,25 +14,27 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [ ubuntu-24.04 ]
+        os: [ windows-latest ]
         build_type: [ Release ]
-        c_compiler: [ gcc ]
+        c_compiler: [ cl ]
         include:
-          - os: ubuntu-24.04
-            c_compiler: gcc
-            cpp_compiler: g++
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install system dependencies
-        run: sudo apt-get install -y cmake
+      - name: Install cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.30.x'
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.0.0
         with:
           version: '6.7.0'
-          host: 'linux'
+          host: 'windows'
           install-deps: 'true'
           dir: '${{ github.workspace }}/qt/'
           modules: 'qtwebengine'
@@ -47,8 +49,8 @@ jobs:
       - name: Restore Conan cache
         uses: actions/cache@v3
         with:
-          key: 'conan_cache_linux'
-          path: ~/.conan2/p
+          key: 'conan_cache_windows'
+          path: C:\Users\runneradmin\.conan2\p
 
       - name: Set reusable strings
         id: strings
@@ -62,13 +64,13 @@ jobs:
         run: conan build ${{ github.workspace }}/conan
 
       - name: Test
-        run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests
+        run: ${{ github.workspace }}\conan\build\application_build\Release\CapyArtStudio_Tests.exe
 
       - name: Create installer
-        run: python3 ${{ github.workspace }}/tools/create_installer_linux.py
+        run: python3 ${{ github.workspace }}/tools/create_installer_windows.py
 
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
-          name: CapyArtStudio.linux.1.0.amd64.deb
-          path: ${{ github.workspace }}/CapyArtStudio.linux.1.0.amd64.deb
+          name: CapyArtStudio.win.1.0.amd64.exe
+          path: ${{ github.workspace }}/CapyArtStudio.win.1.0.amd64.exe

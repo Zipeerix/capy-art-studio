@@ -19,6 +19,7 @@
 
 #include <fmt/format.h>
 
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
@@ -108,7 +109,7 @@ PotentialError<std::string> ChunkFileWriter::writeString(const std::string& valu
 
 PotentialError<std::string> ChunkFileWriter::write32BitInt(const uint32_t value,
                                                            const bool bigEndian) const {
-  std::array<uint8_t, 4> bytes;
+  std::array<uint8_t, 4> bytes{};
   if (bigEndian) {
     bytes[0] = static_cast<uint8_t>((value >> 24) & 0xFF);
     bytes[1] = static_cast<uint8_t>((value >> 16) & 0xFF);

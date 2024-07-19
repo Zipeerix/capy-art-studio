@@ -19,6 +19,7 @@
 #define GENERAL_TPP
 
 #include <memory>
+#include <stdexcept>
 
 namespace capy {
 uint64_t calculateInMemorySizeOfImage(int width, int height, int layers = 1);
