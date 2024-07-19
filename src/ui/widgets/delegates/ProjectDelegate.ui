@@ -1,140 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>capy::ui::ProjectDelegate</class>
-    <widget class="QWidget" name="capy::ui::ProjectDelegate">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>100</width>
-                <height>120</height>
-            </rect>
-        </property>
-        <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-            </sizepolicy>
-        </property>
-        <property name="windowTitle">
-            <string>Form</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-            <property name="spacing">
-                <number>0</number>
-            </property>
-            <property name="leftMargin">
-                <number>6</number>
-            </property>
-            <property name="topMargin">
-                <number>6</number>
-            </property>
-            <property name="rightMargin">
-                <number>6</number>
-            </property>
-            <property name="bottomMargin">
-                <number>6</number>
-            </property>
-            <item>
-                <widget class="ClickableLabel" name="imageLabel">
-                    <property name="text">
-                        <string>Image</string>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                        <set>Qt::AlignCenter</set>
-                    </property>
-                </widget>
-            </item>
-            <item>
-                <widget class="ClickableLabel" name="nameLabel">
-                    <property name="text">
-                        <string>Name</string>
-                    </property>
-                    <property name="alignment">
-                        <set>Qt::AlignCenter</set>
-                    </property>
-                    <property name="wordWrap">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-            </item>
-            <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                    <property name="spacing">
-                        <number>1</number>
-                    </property>
-                    <item>
-                        <widget class="QPushButton" name="deleteButton">
-                            <property name="font">
-                                <font>
-                                    <pointsize>11</pointsize>
-                                    <underline>true</underline>
-                                </font>
-                            </property>
-                            <property name="styleSheet">
-                                <string notr="true">QPushButton {
-                                    background-color: transparent; /* No background color */
-                                    border: none; /* No border */
-                                    color: rgba(255, 255, 255, 100); /* Faint white text */
-                                    text-decoration: underline; /* Underline text */
-                                    }
-
-                                    QPushButton:hover {
-                                    color: rgba(255, 255, 255, 200); /* Brighter white on hover */
-                                    }
-                                </string>
-                            </property>
-                            <property name="text">
-                                <string>Delete</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="removeButton">
-                            <property name="sizePolicy">
-                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="font">
-                                <font>
-                                    <pointsize>11</pointsize>
-                                    <underline>true</underline>
-                                </font>
-                            </property>
-                            <property name="styleSheet">
-                                <string notr="true">QPushButton {
-                                    background-color: transparent; /* No background color */
-                                    border: none; /* No border */
-                                    color: rgba(255, 255, 255, 100); /* Faint white text */
-                                    text-decoration: underline; /* Underline text */
-                                    }
-
-                                    QPushButton:hover {
-                                    color: rgba(255, 255, 255, 200); /* Brighter white on hover */
-                                    }
-                                </string>
-                            </property>
-                            <property name="text">
-                                <string>Remove</string>
-                            </property>
-                        </widget>
-                    </item>
-                </layout>
-            </item>
-        </layout>
+ <class>capy::ui::ProjectDelegate</class>
+ <widget class="QWidget" name="capy::ui::ProjectDelegate">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>100</width>
+    <height>120</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="ClickableLabel" name="imageLabel">
+     <property name="text">
+      <string>Image</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
-    <customwidgets>
-        <customwidget>
-            <class>ClickableLabel</class>
-            <extends>QLabel</extends>
-            <header>ui/widgets/utils/ClickableLabel.hpp</header>
-        </customwidget>
-    </customwidgets>
-    <resources/>
-    <connections/>
+   </item>
+   <item>
+    <widget class="ClickableLabel" name="nameLabel">
+     <property name="text">
+      <string>Name</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>1</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="deleteButton">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <underline>true</underline>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+                                    background-color: transparent; /* No background color */
+                                    border: none; /* No border */
+                                    color: rgba(255, 255, 255, 100); /* Faint white text */
+                                    text-decoration: underline; /* Underline text */
+                                    }
+
+                                    QPushButton:hover {
+                                    color: rgba(255, 255, 255, 200); /* Brighter white on hover */
+                                    }
+                                </string>
+       </property>
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="removeButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+         <underline>true</underline>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+                                    background-color: transparent; /* No background color */
+                                    border: none; /* No border */
+                                    color: rgba(255, 255, 255, 100); /* Faint white text */
+                                    text-decoration: underline; /* Underline text */
+                                    }
+
+                                    QPushButton:hover {
+                                    color: rgba(255, 255, 255, 200); /* Brighter white on hover */
+                                    }
+                                </string>
+       </property>
+       <property name="text">
+        <string>Remove</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header>ui/utils/ClickableLabel.hpp</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
 </ui>
