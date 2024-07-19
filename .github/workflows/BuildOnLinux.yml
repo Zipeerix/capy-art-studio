@@ -70,5 +70,5 @@ jobs:
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
-          name: installer
+          name: CapyArtStudio.linux.1.0.amd64.deb
           path: ${{ github.workspace }}/CapyArtStudio.linux.1.0.amd64.deb
