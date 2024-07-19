@@ -39,10 +39,12 @@ static ColorChannelValue getBlendChannelValue(const ColorChannelValue currentCol
 static QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor,
                                               const QColor& addedColor) {
   const double alphaPercentage = addedColor.alpha() / 255.0;
-  const auto red = getBlendChannelValue(currentColor.red(), addedColor.red(), alphaPercentage);
-  const auto green =
+  const ColorChannelValue red =
+      getBlendChannelValue(currentColor.red(), addedColor.red(), alphaPercentage);
+  const ColorChannelValue green =
       getBlendChannelValue(currentColor.green(), addedColor.green(), alphaPercentage);
-  const auto blue = getBlendChannelValue(currentColor.blue(), addedColor.blue(), alphaPercentage);
+  const ColorChannelValue blue =
+      getBlendChannelValue(currentColor.blue(), addedColor.blue(), alphaPercentage);
   const auto alpha =
       static_cast<uint8_t>(addedColor.alpha() + (currentColor.alpha() * (1.0 - alphaPercentage)));
 
@@ -60,15 +62,15 @@ QColor AlphaBlender::blend(const int x, const int y, const int layerCount) const
   }
 
   // TODO: Maybe dont find first? since there is chance for double iteration
-  const auto indexOfFirstSolidColor = optIndexOfFirstSolidColor.value_or(0);
+  const int indexOfFirstSolidColor = optIndexOfFirstSolidColor.value_or(0);
 
-  auto currentlyCalculatedPixelValue =
+  QColor currentlyCalculatedPixelValue =
       _pixelColorGettingFunction(x, y, indexOfFirstSolidColor).convertToQColor();
 
   // apply blending to remaining layers
   for (int currentLayerIndex = indexOfFirstSolidColor; currentLayerIndex < layerCount;
        currentLayerIndex++) {
-    const auto& pixel = _pixelColorGettingFunction(x, y, currentLayerIndex);
+    const Pixel& pixel = _pixelColorGettingFunction(x, y, currentLayerIndex);
 
     // If there is no solid layer color then pretend the base layer is solid
     // even if its not

@@ -21,9 +21,8 @@
 #include <QGraphicsView>
 #include "graphics/Drawing.hpp"
 #include "DrawingCanvasItem.hpp"
-#include "graphics/DrawingTools.hpp"
 #include "io/ConfigurationManager.hpp"
-#include "utils/CheckerboardPixmap.hpp"
+#include "ui/utils/CheckerboardPixmap.hpp"
 
 namespace capy::ui {
 struct Pixel {

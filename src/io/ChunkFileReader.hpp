@@ -50,6 +50,7 @@ class ChunkFileReader {
 
  private:
   std::ifstream _fileStream;
+
   void moveIteratorBackBy(int offset);
 };
 }  // namespace capy

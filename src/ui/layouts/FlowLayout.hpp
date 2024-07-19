@@ -22,6 +22,7 @@
 #include <QRect>
 #include <QStyle>
 
+namespace capy::ui {
 class FlowLayout final : public QLayout
 {
 public:
@@ -46,9 +47,10 @@ private:
   int doLayout(const QRect &rect, bool testOnly) const;
   int smartSpacing(QStyle::PixelMetric pm) const;
 
-  QList<QLayoutItem *> itemList;
-  int m_hSpace;
-  int m_vSpace;
+  QList<QLayoutItem *> _itemList;
+  int _hSpace;
+  int _vSpace;
 };
+}
 
 #endif // CAPY_UI_FLOWLAYOUT_HPP

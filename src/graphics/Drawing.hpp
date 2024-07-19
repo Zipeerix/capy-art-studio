@@ -22,8 +22,11 @@
 
 #include "Layer.hpp"
 #include "algorithms/AlphaBlending.hpp"
+#include "utils/Dimensions.hpp"
 
 namespace capy {
+enum class DrawingTool { Pen, Eraser, Hand, Rectangle, Circle };
+
 class Drawing {
  public:
   Drawing(int width, int height);
@@ -31,8 +34,7 @@ class Drawing {
   void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
                                         std::vector<Pixel> pixels);
 
-  int getWidth() const;
-  int getHeight() const;
+  utils::Dimensions getDimensions() const;
   int getLayerCount() const;
   const Layer& getCurrentLayer() const;
   const std::vector<Layer>& getLayers() const;
@@ -44,9 +46,8 @@ class Drawing {
 
  private:
   std::vector<Layer> _layers;
+  utils::Dimensions _dimensions;
   int _currentLayer = 0;
-  int _width;
-  int _height;
 };
 }  // namespace capy
 

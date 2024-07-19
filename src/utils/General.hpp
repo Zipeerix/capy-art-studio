@@ -15,33 +15,19 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "StatusBarWidget.hpp"
-#include "ui_StatusBarWidget.h"
-#include "utils/Converters.hpp"
+#ifndef GENERAL_HPP
+#define GENERAL_HPP
 
-namespace capy::ui {
-StatusBarWidget::StatusBarWidget(QWidget* parent)
-    : QWidget(parent),
-      ui(new Ui::StatusBarWidget) {
-    ui->setupUi(this);
+#include <cstdint>
+
+// TODO: Change this and 'Memory.hpp' namespace to capy::utils?
+namespace capy::utils {
+namespace constants {
+constexpr char nullTerminator = 0;
 }
 
-StatusBarWidget::~StatusBarWidget() {
-    delete ui;
-}
+uint64_t calculateInMemorySizeOfImage(int width, int height, int layers = 1);
+int convert2DIndexto1DIndex(int x, int y, int width);
+}  // namespace capy::utils
 
-static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers) {
-  if (layers.empty()) {
-    return 0;
-  }
-
-  const auto& exampleLayer = layers.back();
-  return layers.size() * exampleLayer.calculateInMemorySize();
-}
-
-void StatusBarWidget::update(const std::vector<Layer>& layers) {
-  const auto ramSize = convertBytesTo(calculateRamSizeOfLayers(layers), utils::converters::StorageSize::Megabytes);
-  ui->ramLabel->setText(QString::number(ramSize, 'f', 2) + " MB");
-  ui->layersLabel->setText(QString::number(layers.size()));
-}
-} // namespace capy::ui
+#endif  // GENERAL_HPP

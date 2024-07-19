@@ -15,46 +15,13 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "Converters.hpp"
+#include "SpacerUtils.hpp"
 
-#include <stdexcept>
+namespace capy::ui {
+QWidget* createExpandingSpacer(QWidget* parent) {
+  auto* spacer = new QWidget(parent);
+  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-namespace capy {
-double convertBytesTo(const uint64_t bytes, const StorageSize targetType) {
-  switch (targetType) {
-    case StorageSize::Bytes:
-      return static_cast<double>(bytes);
-
-    case StorageSize::Kilobytes:
-      return static_cast<double>(bytes) / 1024.0;
-
-    case StorageSize::Megabytes:
-      return static_cast<double>(bytes) / (1024.0 * 1024.0);  // TODO: pow
-
-    default:
-      throw std::logic_error("Invalid storage size");
-  }
-}
-
-uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType) {
-  switch (targetType) {
-    case TimeType::Hours:
-      return seconds / 3600;
-
-    case TimeType::Minutes:
-      return seconds / 60;
-
-    case TimeType::Seconds:
-      return seconds;
-
-    case TimeType::Miliseconds:
-      return seconds * 1000;
-
-    case TimeType::Microseconds:
-      return seconds * 1000 * 1000;  // TOOD: pow, overall refactor both
-
-    default:
-      throw std::logic_error("Invalid time type");
-  }
+  return spacer;
 }
 }  // namespace capy

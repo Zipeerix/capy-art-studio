@@ -247,13 +247,14 @@ PotentialError<std::string> Project::save(const QByteArray& miniatureBytes,
   }
 
   // TODO: take width and height as args?
-  const auto projectWidthWriteError = fileWriter.write32BitInt(layers.back().getWidth());
+  const auto layerDimensions = layers.back().getDimensions();
+  const auto projectWidthWriteError = fileWriter.write32BitInt(layerDimensions.getWidth());
   if (projectWidthWriteError.has_value()) {
     logger::error("Unable to write project width", logger::Severity::Mild);
     return "Unable to save project file";
   }
 
-  const auto projectHeightWriteError = fileWriter.write32BitInt(layers.back().getHeight());
+  const auto projectHeightWriteError = fileWriter.write32BitInt(layerDimensions.getHeight());
   if (projectHeightWriteError.has_value()) {
     logger::error("Unable to write project height", logger::Severity::Mild);
     return "Unable to save project file";

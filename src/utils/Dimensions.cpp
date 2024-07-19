@@ -15,19 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef GENERAL_HPP
-#define GENERAL_HPP
+#include "Dimensions.hpp"
 
-// TODO: Change this and 'Memory.hpp' namespace to capy::utils?
-namespace capy {
-constexpr char nullTerminator = 0;
+namespace capy::utils {
+Dimensions::Dimensions(const int width, const int height) {
+  setWidth(width);
+  setHeight(height);
+}
 
-int convert2DIndexto1DIndex(int x, int y, int width);
+int Dimensions::getWidth() const { return _width; }
 
-template <typename T, typename U>
-static void compileTimeTypeCheck();
-}  // namespace capy
+void Dimensions::setWidth(const int newWidth) {
+  if (newWidth < 0) {
+    return;
+  }
 
-#include "General.tpp"
+  _width = newWidth;
+}
 
-#endif  // GENERAL_HPP
+int Dimensions::getHeight() const { return _height; }
+
+void Dimensions::setHeight(const int newHeight) {
+  if (newHeight < 0) {
+    return;
+  }
+
+  _height = newHeight;
+}
+
+int Dimensions::getArea() const { return _width * _height; }
+}  // namespace capy::utils

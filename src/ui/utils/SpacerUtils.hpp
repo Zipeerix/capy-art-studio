@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-namespace capy {
+namespace capy::ui {
 QWidget* createExpandingSpacer(QWidget* parent);
 }
 

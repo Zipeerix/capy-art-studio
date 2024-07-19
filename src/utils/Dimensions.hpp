@@ -15,25 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef AUTOSIZESAVINGITEM_HPP
-#define AUTOSIZESAVINGITEM_HPP
+#ifndef DIMENSIONS_HPP
+#define DIMENSIONS_HPP
 
-#include <QWidget>
-#include <string>
-
-#include "../../../io/ConfigurationManager.hpp"
-
-namespace capy {
-class AutoSizeSavingItem {
+namespace capy::utils {
+class Dimensions {
  public:
-  AutoSizeSavingItem(QWidget* widget, std::string name);
-  virtual ~AutoSizeSavingItem();
+  Dimensions(int width, int height);
+
+  int getWidth() const;
+  void setWidth(int newWidth);
+
+  int getHeight() const;
+  void setHeight(int newHeight);
+
+  int getArea() const;
 
  private:
-  std::shared_ptr<ConfigurationManager> _configurationManager;
-  QWidget* _widget;
-  std::string _name;
+  int _width = 0;
+  int _height = 0;
 };
-}  // namespace capy
+}  // namespace capy::utils
 
-#endif  // AUTOSIZESAVINGITEM_HPP
+#endif  // DIMENSIONS_HPP

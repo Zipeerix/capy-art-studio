@@ -21,7 +21,7 @@
 #include <QDialog>
 
 #include "io/ConfigurationManager.hpp"
-#include "widgets/utils/AutoSizeSavingItem.hpp"
+#include "utils/AutoSizeSavingItem.hpp"
 
 namespace capy::ui {
 namespace Ui {

@@ -15,28 +15,46 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "AutoSizeSavingItem.hpp"
+#include "Converters.hpp"
 
-#include <fmt/format.h>
+#include <stdexcept>
 
-#include "io/ConsoleLogger.hpp"
+namespace capy::utils::converters {
+double convertBytesTo(const uint64_t bytes, const StorageSize targetType) {
+  switch (targetType) {
+    case StorageSize::Bytes:
+      return static_cast<double>(bytes);
 
-namespace capy {
-AutoSizeSavingItem::AutoSizeSavingItem(QWidget* widget, std::string name)
-    : _configurationManager(ConfigurationManager::createInstance()),
-      _widget(widget),
-      _name(std::move(name)) {
-  if (_widget == nullptr) {
-    throw std::logic_error("Widget cannot be null");
-  }
+    case StorageSize::Kilobytes:
+      return static_cast<double>(bytes) / 1024.0;
 
-  const std::optional<QByteArray> geometry = _configurationManager->getWindowGeometry(_name);
-  if (geometry.has_value()) {
-    _widget->restoreGeometry(geometry.value());
+    case StorageSize::Megabytes:
+      return static_cast<double>(bytes) / (1024.0 * 1024.0);  // TODO: pow
+
+    default:
+      throw std::logic_error("Invalid storage size");
   }
 }
 
-AutoSizeSavingItem::~AutoSizeSavingItem() {
-  _configurationManager->setWindowGeometry(_name, _widget->saveGeometry());
+uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType) {
+  switch (targetType) {
+    case TimeType::Hours:
+      return seconds / 3600;
+
+    case TimeType::Minutes:
+      return seconds / 60;
+
+    case TimeType::Seconds:
+      return seconds;
+
+    case TimeType::Miliseconds:
+      return seconds * 1000;
+
+    case TimeType::Microseconds:
+      return seconds * 1000 * 1000;  // TOOD: pow, overall refactor both
+
+    default:
+      throw std::logic_error("Invalid time type");
+  }
 }
-}  // namespace capy
+}  // namespace capy::utils::converters

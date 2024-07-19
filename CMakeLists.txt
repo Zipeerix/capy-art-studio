@@ -36,7 +36,6 @@ set(APPLICATION_SOURCE_FILES
         src/user/Project.cpp
         src/graphics/Drawing.hpp
         src/graphics/Drawing.cpp
-        src/graphics/DrawingTools.hpp
         src/graphics/Pixel.hpp
         src/graphics/Pixel.cpp
         src/ui/ConsoleWindow.cpp
@@ -45,8 +44,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/MainWindow.cpp
         src/ui/WelcomeScreen.hpp
         src/ui/WelcomeScreen.cpp
-        src/ui/widgets/utils/AutoSizeSavingItem.hpp
-        src/ui/widgets/utils/AutoSizeSavingItem.cpp
+        src/ui/utils/AutoSizeSavingItem.hpp
+        src/ui/utils/AutoSizeSavingItem.cpp
         src/ui/SettingsDialog.hpp
         src/ui/SettingsDialog.cpp
         src/ui/widgets/color-pickers/DefaultColorPicker.cpp
@@ -57,12 +56,14 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/delegates/ColorRectangleDelegate.cpp
         src/ui/widgets/delegates/ProjectDelegate.hpp
         src/ui/widgets/delegates/ProjectDelegate.cpp
-        src/ui/widgets/utils/CheckerboardPixmap.hpp
-        src/ui/widgets/utils/CheckerboardPixmap.cpp
-        src/ui/widgets/utils/MessageBoxUtils.cpp
-        src/ui/widgets/utils/MessageBoxUtils.hpp
-        src/ui/widgets/utils/ResourceManager.hpp
-        src/ui/widgets/utils/ResourceManager.cpp
+        src/ui/utils/CheckerboardPixmap.hpp
+        src/ui/utils/CheckerboardPixmap.cpp
+        src/ui/utils/MessageBoxUtils.cpp
+        src/ui/utils/MessageBoxUtils.hpp
+        src/io/ResourceManager.hpp
+        src/io/ResourceManager.cpp
+        src/utils/Dimensions.cpp
+        src/utils/Dimensions.hpp
         src/ui/layouts/FlowLayout.cpp
         src/ui/layouts/FlowLayout.hpp
         src/ui/docks/ColorArea.hpp
@@ -71,8 +72,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/docks/ToolsArea.hpp
         src/ui/docks/LayersArea.cpp
         src/ui/docks/LayersArea.hpp
-        src/ui/widgets/utils/ClickableLabel.cpp
-        src/ui/widgets/utils/ClickableLabel.hpp
+        src/ui/utils/ClickableLabel.cpp
+        src/ui/utils/ClickableLabel.hpp
         src/ui/widgets/DrawingCanvasItem.hpp
         src/ui/widgets/DrawingCanvasItem.cpp
         src/ui/widgets/DrawingWidget.hpp
@@ -81,8 +82,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/DockableWidget.cpp
         src/ui/widgets/StatusBarWidget.hpp
         src/ui/widgets/StatusBarWidget.cpp
-        src/ui/widgets/utils/SpacerUtils.hpp
-        src/ui/widgets/utils/SpacerUtils.cpp
+        src/ui/utils/SpacerUtils.hpp
+        src/ui/utils/SpacerUtils.cpp
         src/ui/dialogs/NewFileDialog.cpp
         src/ui/dialogs/NewFileDialog.hpp
         src/io/ConfigurationManager.hpp
@@ -98,11 +99,12 @@ set(APPLICATION_SOURCE_FILES
         src/io/ApplicationFilesystem.cpp
         src/io/JsonSerializable.hpp
         src/io/JsonSerializable.tpp
-        src/meta/Converters.hpp
-        src/meta/Converters.cpp
-        src/meta/General.hpp
-        src/meta/General.cpp
-        src/meta/General.tpp
+        src/utils/Converters.hpp
+        src/utils/Converters.cpp
+        src/utils/General.hpp
+        src/utils/General.cpp
+        src/meta/CompileTimeChecks.hpp
+        src/meta/CompileTimeChecks.tpp
         src/meta/ErrorHandling.hpp
         src/meta/ErrorHandling.cpp
         src/meta/UnimplementedException.cpp

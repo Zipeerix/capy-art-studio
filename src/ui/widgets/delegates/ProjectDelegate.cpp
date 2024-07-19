@@ -19,9 +19,9 @@
 
 #include <utility>
 
-#include "../../UiHelpers.hpp"
-#include "ui/widgets/utils/ClickableLabel.hpp"
-#include "ui/widgets/utils/ResourceManager.hpp"
+#include "io/ResourceManager.hpp"
+#include "ui/UiHelpers.hpp"
+#include "ui/utils/ClickableLabel.hpp"
 #include "ui_ProjectDelegate.h"
 
 namespace capy::ui {

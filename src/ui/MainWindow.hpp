@@ -25,9 +25,9 @@
 #include "docks/LayersArea.hpp"
 #include "docks/ToolsArea.hpp"
 #include "user/Project.hpp"
+#include "utils/AutoSizeSavingItem.hpp"
 #include "widgets/DrawingWidget.hpp"
 #include "widgets/StatusBarWidget.hpp"
-#include "widgets/utils/AutoSizeSavingItem.hpp"
 
 namespace capy::ui {
 namespace Ui {
