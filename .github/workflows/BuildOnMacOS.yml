@@ -1,10 +1,10 @@
-name: Build on macOS (CLANG)
+name: Build on macOS (ARM) (clang)
 
 on:
   push:
-    branches: [ "master", "feature/CAS-144_windows_macos_installer" ]
+    branches: [ "release/*" ]
   pull_request:
-    branches: [ "master", "feature/CAS-144_windows_macos_installer" ]
+    branches: [ "release/*" ]
 
 jobs:
   build:

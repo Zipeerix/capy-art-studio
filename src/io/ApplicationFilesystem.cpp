@@ -42,17 +42,17 @@ void initApplicationFilesystem() {
 
 std::string getConfigFilePath() {
   const auto basePath = getApplicationFilesystemBasePath();
-  return basePath / "config.ini";
+  return (basePath / "config.ini").string();
 }
 
 std::string getFilesystemPath(const FilesystemPath of) {
   const auto basePath = getApplicationFilesystemBasePath();
   switch (of) {
     case FilesystemPath::Palettes:
-      return basePath / "palettes";
+      return (basePath / "palettes").string();
 
     case FilesystemPath::Projects:
-      return basePath / "projects";
+      return (basePath / "projects").string();
 
     case FilesystemPath::PathCount:
     default:
@@ -84,7 +84,7 @@ std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
   std::vector<std::string> filePaths;
 
   for (const auto& entry : std::filesystem::directory_iterator(path)) {
-    if (entry.is_regular_file() && isCorrectExtension(applicationPath, entry.path().extension())) {
+    if (entry.is_regular_file() && isCorrectExtension(applicationPath, entry.path().extension().string())) {
       filePaths.push_back(entry.path().string());
     }
   }

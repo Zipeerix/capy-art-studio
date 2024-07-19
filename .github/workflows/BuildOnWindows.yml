@@ -1,4 +1,4 @@
-name: Build on Windows (VC)
+name: Build on Windows (vc++)
 
 on:
   push:
