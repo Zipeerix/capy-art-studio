@@ -20,7 +20,7 @@
 
 #include <QMainWindow>
 
-#include "widgets/utils/AutoSizeSavingItem.hpp"
+#include "utils/AutoSizeSavingItem.hpp"
 
 namespace capy::ui {
 namespace Ui {

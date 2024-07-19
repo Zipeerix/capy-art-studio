@@ -24,7 +24,7 @@
 #include <QWidget>
 
 #include "algorithms/Luminance.hpp"
-#include "ui/widgets/utils/CheckerboardPixmap.hpp"
+#include "ui/utils/CheckerboardPixmap.hpp"
 
 namespace capy::ui {
 class ColorRectangleDelegate final : public QStyledItemDelegate {

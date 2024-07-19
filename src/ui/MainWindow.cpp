@@ -23,12 +23,12 @@
 
 #include "dialogs/NewFileDialog.hpp"
 #include "io/ConsoleLogger.hpp"
-#include "meta/Converters.hpp"
 #include "ui/SettingsDialog.hpp"
 #include "ui_MainWindow.h"
+#include "utils/Converters.hpp"
+#include "utils/MessageBoxUtils.hpp"
+#include "utils/SpacerUtils.hpp"
 #include "widgets/DrawingWidget.hpp"
-#include "widgets/utils/MessageBoxUtils.hpp"
-#include "widgets/utils/SpacerUtils.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
@@ -135,8 +135,8 @@ void MainWindow::setupToolsDock() {
 void MainWindow::setupStatusBarTimer() {
   const auto statusBarUpdateInterval = _configurationManager->getApplicationSetting<int>(
       ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval);
-  const auto updateInternalInSeconds = static_cast<int>(
-      convertSecondsTo(std::max(statusBarUpdateInterval, 1), TimeType::Miliseconds));
+  const auto updateInternalInSeconds = static_cast<int>(convertSecondsTo(
+      std::max(statusBarUpdateInterval, 1), utils::converters::TimeType::Miliseconds));
   _statusBarTimer.start(updateInternalInSeconds);
   connect(&_statusBarTimer, &QTimer::timeout, this, &MainWindow::updateStatusBar);
 }

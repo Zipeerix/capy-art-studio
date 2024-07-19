@@ -1,3 +1,5 @@
+# TODO: Move this monstrosity to python script that checks if subdir exists
+
 clang-format -style=file -i src/*.hpp
 clang-format -style=file -i src/*.cpp
 clang-format -style=file -i src/*.tpp

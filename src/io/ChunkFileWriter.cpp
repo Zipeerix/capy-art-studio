@@ -26,8 +26,8 @@
 #include <vector>
 
 #include "ApplicationFilesystem.hpp"
-#include "meta/General.hpp"
 #include "meta/UnimplementedException.hpp"
+#include "utils/General.hpp"
 
 namespace capy {
 PotentialError<std::string> ChunkFileWriter::existingFileStrategyCheck(
@@ -98,7 +98,7 @@ PotentialError<std::string> ChunkFileWriter::writeString(const std::string& valu
   }
 
   if (addNullTerminator) {
-    _fileStream->write(&nullTerminator, 1);
+    _fileStream->write(&utils::constants::nullTerminator, 1);
     if (_fileStream->fail()) {
       return fmt::format("Failure to write to file stream");
     }

@@ -19,7 +19,7 @@
 #define CONFIGURATIONMANAGER_TPP
 
 #include "ConfigurationManager.hpp"
-#include "meta/General.hpp"
+#include "meta/CompileTimeChecks.hpp"
 
 namespace capy {
 template <typename SettingValueType>

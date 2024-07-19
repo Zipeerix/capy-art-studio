@@ -23,7 +23,7 @@
 
 #include <fstream>
 
-#include "../io/ConsoleLogger.hpp"
+#include "io/ConsoleLogger.hpp"
 
 namespace capy {
 Palette::Palette(std::string name) : JsonSerializable(), _name(std::move(name)) {}

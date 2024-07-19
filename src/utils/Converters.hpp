@@ -15,11 +15,30 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWINGTOOLS_HPP
-#define DRAWINGTOOLS_HPP
+#ifndef CONVERTERS_HPP
+#define CONVERTERS_HPP
 
-namespace capy {
-enum class DrawingTool { Pen, Eraser, Hand, Rectangle, Circle };
-}
+#include <cstdint>
 
-#endif  // DRAWINGTOOLS_HPP
+namespace capy::utils::converters {
+enum class StorageSize {
+  Bytes,
+  Kilobytes,
+  Megabytes,
+};
+
+enum class TimeType {
+  Hours,
+  Minutes,
+  Seconds,
+  Miliseconds,
+  Microseconds,
+};
+
+// TODO: Two way enum conversions
+double convertBytesTo(uint64_t bytes, StorageSize targetType);
+// TODO: std::chrono? time_cast
+uint64_t convertSecondsTo(uint64_t seconds, TimeType targetType);
+}  // namespace capy::utils::converters
+
+#endif  // CONVERTERS_HPP

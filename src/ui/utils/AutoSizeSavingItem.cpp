@@ -15,33 +15,26 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "StatusBarWidget.hpp"
-#include "ui_StatusBarWidget.h"
-#include "utils/Converters.hpp"
+#include "AutoSizeSavingItem.hpp"
+
+#include <fmt/format.h>
 
 namespace capy::ui {
-StatusBarWidget::StatusBarWidget(QWidget* parent)
-    : QWidget(parent),
-      ui(new Ui::StatusBarWidget) {
-    ui->setupUi(this);
-}
-
-StatusBarWidget::~StatusBarWidget() {
-    delete ui;
-}
-
-static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers) {
-  if (layers.empty()) {
-    return 0;
+AutoSizeSavingItem::AutoSizeSavingItem(QWidget* widget, std::string name)
+    : _configurationManager(ConfigurationManager::createInstance()),
+      _widget(widget),
+      _name(std::move(name)) {
+  if (_widget == nullptr) {
+    throw std::logic_error("Widget cannot be null");
   }
 
-  const auto& exampleLayer = layers.back();
-  return layers.size() * exampleLayer.calculateInMemorySize();
+  const std::optional<QByteArray> geometry = _configurationManager->getWindowGeometry(_name);
+  if (geometry.has_value()) {
+    _widget->restoreGeometry(geometry.value());
+  }
 }
 
-void StatusBarWidget::update(const std::vector<Layer>& layers) {
-  const auto ramSize = convertBytesTo(calculateRamSizeOfLayers(layers), utils::converters::StorageSize::Megabytes);
-  ui->ramLabel->setText(QString::number(ramSize, 'f', 2) + " MB");
-  ui->layersLabel->setText(QString::number(layers.size()));
+AutoSizeSavingItem::~AutoSizeSavingItem() {
+  _configurationManager->setWindowGeometry(_name, _widget->saveGeometry());
 }
-} // namespace capy::ui
+}  // namespace capy

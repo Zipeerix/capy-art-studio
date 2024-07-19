@@ -20,6 +20,7 @@
 #include <fmt/format.h>
 #include "algorithms/Bresenham.hpp"
 #include "io/ConsoleLogger.hpp"
+#include "utils/General.hpp"
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
@@ -65,7 +66,7 @@ const std::vector<Layer>& DrawingWidget::getLayers() const {
 void DrawingWidget::startNewDrawing(const int width, const int height) {
   logger::info(fmt::format(
       "Creating new image with dimensions {}x{} with per layer size of {} bytes",
-      width, height, calculateInMemorySizeOfImage(width, height)));
+      width, height, utils::calculateInMemorySizeOfImage(width, height)));
   _drawing = Drawing(width, height);
   redrawScreen();
 }
@@ -75,7 +76,8 @@ void DrawingWidget::redrawScreen() {
   recreateScene();
   resetZoom();
 
-  _drawingCanvasItem = new DrawingCanvasItem(_drawing.getWidth(), _drawing.getHeight());
+  const auto drawingDimensions = _drawing.getDimensions();
+  _drawingCanvasItem = new DrawingCanvasItem(drawingDimensions.getWidth(), drawingDimensions.getHeight());
   _scene->addItem(_drawingCanvasItem);
 
   syncInternalAndExternalDrawing();
@@ -99,12 +101,13 @@ void DrawingWidget::redrawGrid() {
     pen.setWidthF(_configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
     pen.setCosmetic(true);
 
-    for (int y = 0; y <= _drawing.getHeight(); y += 1) {
-      _lines.push_back(_scene->addLine(0, y, _drawing.getWidth(), y, pen));
+    const auto drawingDimensions = _drawing.getDimensions();
+    for (int y = 0; y <= drawingDimensions.getHeight(); y += 1) {
+      _lines.push_back(_scene->addLine(0, y, drawingDimensions.getWidth(), y, pen));
     }
 
-    for (int x = 0; x <= _drawing.getWidth(); x += 1) {
-      _lines.push_back(_scene->addLine(x, 0, x, _drawing.getHeight(), pen));
+    for (int x = 0; x <= drawingDimensions.getWidth(); x += 1) {
+      _lines.push_back(_scene->addLine(x, 0, x, drawingDimensions.getHeight(), pen));
     }
   }
 }
@@ -162,10 +165,11 @@ std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
   const int mappedPositionY = qFloor(mappedPosition.y());
 
   // TODO: Performance optimization?
+  const auto drawingDimensions = _drawing.getDimensions();
   if (mappedPositionX >= 0 &&
       mappedPositionY >= 0 &&
-      mappedPositionX < _drawing.getWidth() &&
-      mappedPositionY < _drawing.getHeight()) {
+      mappedPositionX < drawingDimensions.getWidth() &&
+      mappedPositionY < drawingDimensions.getHeight()) {
     return QPoint{mappedPositionX, mappedPositionY};
   }
 

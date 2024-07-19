@@ -15,30 +15,25 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CONVERTERS_HPP
-#define CONVERTERS_HPP
+#ifndef AUTOSIZESAVINGITEM_HPP
+#define AUTOSIZESAVINGITEM_HPP
 
-#include <cstdint>
+#include <QWidget>
+#include <string>
 
-namespace capy {
-enum class StorageSize {
-  Bytes,
-  Kilobytes,
-  Megabytes,
+#include "io/ConfigurationManager.hpp"
+
+namespace capy::ui {
+class AutoSizeSavingItem {
+ public:
+  AutoSizeSavingItem(QWidget* widget, std::string name);
+  virtual ~AutoSizeSavingItem();
+
+ private:
+  std::shared_ptr<ConfigurationManager> _configurationManager;
+  QWidget* _widget;
+  std::string _name;
 };
-
-enum class TimeType {
-  Hours,
-  Minutes,
-  Seconds,
-  Miliseconds,
-  Microseconds,
-};
-
-// TODO: Two way enum conversions
-double convertBytesTo(uint64_t bytes, StorageSize targetType);
-// TODO: std::chrono? time_cast
-uint64_t convertSecondsTo(uint64_t seconds, TimeType targetType);
 }  // namespace capy
 
-#endif  // CONVERTERS_HPP
+#endif  // AUTOSIZESAVINGITEM_HPP

@@ -17,7 +17,7 @@
 
 #include "ColorArea.hpp"
 #include "ui_ColorArea.h"
-#include "ui/widgets/utils/MessageBoxUtils.hpp"
+#include "ui/utils/MessageBoxUtils.hpp"
 #include <fmt/format.h>
 #include "io/ConsoleLogger.hpp"
 #include "ui/widgets/delegates/ColorRectangleDelegate.hpp"

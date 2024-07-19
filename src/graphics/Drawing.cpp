@@ -17,16 +17,18 @@
 
 #include "Drawing.hpp"
 
+#include <fmt/format.h>
+
 #include <stdexcept>
 
+#include "io/ConsoleLogger.hpp"
+
 namespace capy {
-Drawing::Drawing(const int width, const int height) : _width(width), _height(height) {
+Drawing::Drawing(const int width, const int height) : _dimensions(width, height) {
   _layers.emplace_back(width, height, "Base Layer");
 }
 
-int Drawing::getWidth() const { return _width; }
-
-int Drawing::getHeight() const { return _height; }
+utils::Dimensions Drawing::getDimensions() const { return _dimensions; }
 
 int Drawing::getLayerCount() const { return _layers.size(); }
 
@@ -34,13 +36,22 @@ const Layer& Drawing::getCurrentLayer() const { return _layers.at(_currentLayer)
 
 const std::vector<Layer>& Drawing::getLayers() const { return _layers; }
 
-void Drawing::setCurrentLayer(const int newCurrentLayer) { _currentLayer = newCurrentLayer; }
+void Drawing::setCurrentLayer(const int newCurrentLayer) {
+  if (newCurrentLayer >= getLayerCount()) {
+    logger::error(
+        fmt::format("Attempting to set current layer to non-existent layer: {}", newCurrentLayer),
+        logger::Severity::Severe);
+    return;
+  }
+
+  _currentLayer = newCurrentLayer;
+}
 
 void Drawing::insertOrAssignLayerFromRawPixels(const int index, const std::string& name,
                                                std::vector<Pixel> pixels) {
   if (static_cast<std::size_t>(index) == _layers.size()) {
-    _layers.emplace_back(_width, _height, name);
-  } else if (!(static_cast<std::size_t>(index) < _layers.size())) {
+    _layers.emplace_back(_dimensions.getWidth(), _dimensions.getHeight(), name);
+  } else if (static_cast<std::size_t>(index) >= _layers.size()) {
     throw std::logic_error("Bad index provided, check logic");
   }
 
@@ -63,6 +74,6 @@ QColor Drawing::calculateCombinedPixelColor(const int x, const int y) const {
       [&](const int xPixel, const int yPixel, const int layer) {
         return _layers.at(layer).getPixel(xPixel, yPixel);
       });
-  return alphaBlender.blend(x, y, _layers.size());
+  return alphaBlender.blend(x, y, getLayerCount());
 }
 }  // namespace capy

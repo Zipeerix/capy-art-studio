@@ -21,6 +21,7 @@
 #include <QImage>
 
 #include "Pixel.hpp"
+#include "utils/Dimensions.hpp"
 
 namespace capy {
 class Layer {
@@ -35,23 +36,19 @@ class Layer {
   void setName(std::string name);
   std::string getName() const;
 
+  utils::Dimensions getDimensions() const;
+
   const Pixel& getPixel(int x, int y) const;
   const std::vector<Pixel>& getPixels() const;
   void drawPixel(int x, int y, const QColor& color);
-
-  int getWidth() const;
-  int getHeight() const;
 
   uint64_t calculateInMemorySize() const;
 
  private:
   std::string _name;
+  utils::Dimensions _dimensions;
   std::vector<Pixel> _pixels;
   bool _visible = false;
-
-  // TODO: remove when used
-  int _width;
-  int _height;
 
   Pixel& getMutablePixel(int x, int y);
 };

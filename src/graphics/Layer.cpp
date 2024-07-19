@@ -17,11 +17,11 @@
 
 #include "Layer.hpp"
 
-#include "meta/General.hpp"
+#include "utils/General.hpp"
 
 namespace capy {
 Layer::Layer(const int width, const int height, std::string name)
-    : _name(std::move(name)), _width(width), _height(height) {
+    : _name(std::move(name)), _dimensions(width, height) {
   _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
 }
 
@@ -37,9 +37,7 @@ void Layer::setName(std::string name) { _name = std::move(name); }
 
 std::string Layer::getName() const { return _name; }
 
-int Layer::getHeight() const { return _height; }
-
-int Layer::getWidth() const { return _width; }
+utils::Dimensions Layer::getDimensions() const { return _dimensions; }
 
 uint64_t Layer::calculateInMemorySize() const {
   return _pixels.size() * sizeof(Pixel) + sizeof(Layer);
@@ -51,12 +49,12 @@ void Layer::drawPixel(const int x, const int y, const QColor& color) {
 }
 
 const Pixel& Layer::getPixel(const int x, const int y) const {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
+  return _pixels.at(utils::convert2DIndexto1DIndex(x, y, _dimensions.getWidth()));
 }
 
 const std::vector<Pixel>& Layer::getPixels() const { return _pixels; }
 
 Pixel& Layer::getMutablePixel(const int x, const int y) {
-  return _pixels.at(convert2DIndexto1DIndex(x, y, _width));
+  return _pixels.at(utils::convert2DIndexto1DIndex(x, y, _dimensions.getWidth()));
 }
 }  // namespace capy

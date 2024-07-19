@@ -15,13 +15,20 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "SpacerUtils.hpp"
+#ifndef COMPILETIMECHECKS_TPP
+#define COMPILETIMECHECKS_TPP
+
+#include <memory>
+#include <stdexcept>
 
 namespace capy {
-QWidget* createExpandingSpacer(QWidget* parent) {
-  auto* spacer = new QWidget(parent);
-  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-  return spacer;
+template <typename T, typename U>
+static void compileTimeTypeCheck() {
+  // TODO: This probably doesn't work, check, maybe don't do any checks
+  if (!std::is_same<T, U>::value) {
+    throw std::logic_error("Compile type type check failed");
+  }
 }
 }  // namespace capy
+
+#endif  // COMPILETIMECHECKS_TPP

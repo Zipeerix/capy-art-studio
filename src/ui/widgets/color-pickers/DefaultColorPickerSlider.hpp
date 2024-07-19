@@ -22,7 +22,7 @@
 #include <QSlider>
 #include <functional>
 
-#include "ui/widgets/utils/CheckerboardPixmap.hpp"
+#include "ui/utils/CheckerboardPixmap.hpp"
 
 namespace capy::ui {
 class DefaultColorPickerSlider final : public QSlider {

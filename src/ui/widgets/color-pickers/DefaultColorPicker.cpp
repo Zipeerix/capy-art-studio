@@ -25,7 +25,6 @@
 #include <QPainter>
 #include <QPushButton>
 
-#include "../../../io/ConsoleLogger.hpp"
 #include "DefaultColorPickerSlider.hpp"
 
 // TODO: Rewrite constructor, break it down

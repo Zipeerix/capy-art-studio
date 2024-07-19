@@ -15,12 +15,14 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "General.hpp"
+#ifndef COMPILETIMECHECKS_HPP
+#define COMPILETIMECHECKS_HPP
 
 namespace capy {
-int convert2DIndexto1DIndex(const int x, const int y, const int width) { return y * width + x; }
-
-uint64_t calculateInMemorySizeOfImage(const int width, const int height, const int layers) {
-  return width * height * layers;
+template <typename T, typename U>
+static void compileTimeTypeCheck();
 }
-}  // namespace capy
+
+#include "CompileTimeChecks.tpp"
+
+#endif  // COMPILETIMECHECKS_HPP
