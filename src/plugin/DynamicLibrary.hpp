@@ -41,7 +41,7 @@ class DynamicLibrary {
 #if defined(__linux__) || defined(__APPLE__)
   using HandleType = void*;
 #elif defined(_WIN32)
-  using HandleTye = HMODULE;
+  using HandleType = HMODULE;
 #endif
 
   ~DynamicLibrary();
