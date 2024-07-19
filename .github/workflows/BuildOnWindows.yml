@@ -28,7 +28,7 @@ jobs:
       - name: Install cmake
         uses: jwlawson/actions-setup-cmake@v2
         with:
-          cmake-version: '3.16.x'
+          cmake-version: '3.30.x'
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.0.0
@@ -46,12 +46,11 @@ jobs:
       - name: Detect Conan profiles
         run: conan profile detect
 
-      #
-      #      - name: Restore Conan cache
-      #        uses: actions/cache@v3
-      #        with:
-      #          key: 'conan_cache'
-      #          path: ~/.conan2/p
+      - name: Restore Conan cache
+        uses: actions/cache@v3
+        with:
+          key: 'conan_cache'
+          path: C:\Users\runneradmin\.conan2\p
 
       - name: Set reusable strings
         id: strings
