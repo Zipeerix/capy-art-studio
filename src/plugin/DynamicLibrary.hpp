@@ -21,11 +21,12 @@
 #if defined(__linux__) || defined(__APPLE__)
 #include <dlfcn.h>
 #elif defined(_WIN32)
-#include <errhandlingapi.h>
-#include <libloaderapi.h>
+// clang-format off
 #include <windows.h>
-
+#include <libloaderapi.h>
+#include <errhandlingapi.h>
 #include <winnt.rh>
+// clang-format on
 #endif
 
 #include <expected>
