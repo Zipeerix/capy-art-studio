@@ -63,3 +63,12 @@ jobs:
 
       - name: Test
         run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests
+
+      - name: Create installer
+        run: python3 ${{ github.workspace }}/tools/create_installer_linux.py
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v3
+        with:
+          name: CapyArtStudio.linux.1.0.amd64.deb
+          path: ${{ github.workspace }}/CapyArtStudio.linux.1.0.amd64.deb
