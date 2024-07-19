@@ -2,9 +2,9 @@ name: Build on Linux (GCC)
 
 on:
   push:
-    branches: [ "master", "feature/CAS-142_github_actions_artifacts" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "feature/CAS-142_github_actions_artifacts" ]
+    branches: [ "master" ]
 
 jobs:
   build:
