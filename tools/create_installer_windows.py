@@ -31,7 +31,6 @@ INSTALLER_NAME = f"{APP_NAME}.{sys.platform}.{VERSION}.{ARCHITECTURE}"
 def create_inno_setup_script(app_name, version, source_app, output_dir, installer_name):
     script_content = f"""
 [Setup]
-AppId={{2fccf889-26ea-430f-bf8b-251dcd42fa66}}
 AppName={app_name}
 AppVersion={version}
 DefaultDirName={{pf}}\\{app_name}
