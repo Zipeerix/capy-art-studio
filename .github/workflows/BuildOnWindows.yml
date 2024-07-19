@@ -49,7 +49,7 @@ jobs:
       - name: Restore Conan cache
         uses: actions/cache@v3
         with:
-          key: 'conan_cache'
+          key: 'conan_cache_windows'
           path: C:\Users\runneradmin\.conan2\p
 
       - name: Set reusable strings
@@ -64,7 +64,7 @@ jobs:
         run: conan build ${{ github.workspace }}/conan
 
       - name: Test
-        run: ${{ github.workspace }}\conan\build\application_build\CapyArtStudio_Tests.exe
+        run: ${{ github.workspace }}\conan\build\application_build\Release\CapyArtStudio_Tests.exe
 
       - name: Create installer
         run: python3 ${{ github.workspace }}/tools/create_installer_windows.py

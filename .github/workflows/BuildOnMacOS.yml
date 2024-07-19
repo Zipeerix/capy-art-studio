@@ -49,7 +49,7 @@ jobs:
       - name: Restore Conan cache
         uses: actions/cache@v3
         with:
-          key: 'conan_cache'
+          key: 'conan_cache_macos'
           path: ~/.conan2/p
 
       - name: Set reusable strings
