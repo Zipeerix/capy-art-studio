@@ -70,6 +70,9 @@ QString ConfigurationManager::getDebugSettingPath(const DebugSetting setting) {
 
 QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setting) {
   switch (setting) {
+    case GraphicsSetting::GraphicalBackend:
+      return "Graphics/Backend";
+
     case GraphicsSetting::DrawGrid:
       return "Graphics/DrawGrid";
 

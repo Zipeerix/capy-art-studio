@@ -15,35 +15,18 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef CAPY_UI_SETTINGSWINDOW_HPP
-#define CAPY_UI_SETTINGSWINDOW_HPP
+#ifndef GRAPHICALBACKEND_HPP
+#define GRAPHICALBACKEND_HPP
 
-#include <QDialog>
+#include <QMetaType>
+#include <string>
 
-#include "io/ConfigurationManager.hpp"
-#include "utils/AutoSizeSavingItem.hpp"
+namespace capy {
+enum class GraphicalBackend { QtSoftware, Count };
 
-namespace capy::ui {
-namespace Ui {
-class SettingsDialog;
-}
+std::string getNameOfGraphicalBackend(GraphicalBackend backend);
+}  // namespace capy
 
-class SettingsDialog final : public QDialog, AutoSizeSavingItem {
-  Q_OBJECT
- public:
-  explicit SettingsDialog(QWidget* parent = nullptr);
-  ~SettingsDialog() override;
+Q_DECLARE_METATYPE(capy::GraphicalBackend);
 
- private:
-  Ui::SettingsDialog* ui;
-  std::shared_ptr<ConfigurationManager> _configurationManager;
-
-  void setupConnectionsForApplicationTab();
-  void setupConnectionsForDebugTab();
-  void setupConnectionsForGraphicsTab();
-
-  void setupComboBoxes() const;
-};
-}  // namespace capy::ui
-
-#endif  // CAPY_UI_SETTINGSWINDOW_HPP
+#endif  // GRAPHICALBACKEND_HPP
