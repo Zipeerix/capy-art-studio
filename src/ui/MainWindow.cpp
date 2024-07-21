@@ -147,10 +147,10 @@ void MainWindow::changeWindowTitle(const std::string& projectPath) {
   setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
 }
 
-void MainWindow::colorPickerColorChanged(QColor newColor) const {
+void MainWindow::colorPickerColorChanged(const QColor newColor) const {
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
                            newColor.blue(), newColor.alpha()));
-  _drawingWidget->setDrawingColor(newColor);
+  _drawingWidget->handleColorPickerColorChange(newColor);
 }
 
 void MainWindow::setProject(const Project& project) {

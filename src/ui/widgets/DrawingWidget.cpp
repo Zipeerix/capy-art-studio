@@ -52,13 +52,10 @@ void DrawingWidget::setDrawing(Drawing drawing) {
   redrawScreen();
 }
 
-void DrawingWidget::setDrawingColor(const QColor color) {
+void DrawingWidget::handleColorPickerColorChange(const QColor color) const {
   _toolbox.getPenTool()->setColor(color);
 }
 
-QColor DrawingWidget::getDrawingColor() const {
-  return _toolbox.getPenTool()->getColor();
-}
 
 const std::vector<Layer>& DrawingWidget::getLayers() const {
   return _drawing.getLayers();

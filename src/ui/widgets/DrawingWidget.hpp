@@ -43,9 +43,8 @@ public:
   void setDrawing(Drawing drawing);
   void startNewDrawing(int width, int height);
   void setCurrentLayer(int newLayer);
-  void setDrawingColor(QColor color);
+  void handleColorPickerColorChange(QColor color) const;
 
-  QColor getDrawingColor() const;
   const std::vector<Layer>& getLayers() const;
 
   void resetZoom();
