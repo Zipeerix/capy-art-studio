@@ -25,7 +25,7 @@ ToolsArea::ToolsArea(QWidget *parent) :
   ui(new Ui::ToolsArea) {
   ui->setupUi(this);
 
-  _layout = new FlowLayout(ui->scrollArea);
+  _layout = new FlowLayout(ui->scrollArea, 0, 0, 0);
   // TODO: Set spacing in cosntructor
 
   ui->scrollArea->setLayout(_layout);
