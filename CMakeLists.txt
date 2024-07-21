@@ -27,6 +27,14 @@ set(APPLICATION_SOURCE_FILES
         src/graphics/Layer.cpp
         src/graphics/GraphicalBackend.hpp
         src/graphics/GraphicalBackend.cpp
+        src/graphics/drawing-tools/IDrawingTool.hpp
+        src/graphics/drawing-tools/IDrawingTool.cpp
+        src/graphics/drawing-tools/PenTool.cpp
+        src/graphics/drawing-tools/PenTool.hpp
+        src/graphics/drawing-tools/HandTool.hpp
+        src/graphics/drawing-tools/HandTool.cpp
+        src/graphics/drawing-tools/Toolbox.hpp
+        src/graphics/drawing-tools/Toolbox.cpp
         src/managers/ProjectsManager.hpp
         src/managers/ProjectsManager.cpp
         src/managers/PalettesManager.hpp

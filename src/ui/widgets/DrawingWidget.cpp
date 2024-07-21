@@ -29,7 +29,8 @@ namespace capy::ui {
 DrawingWidget::DrawingWidget(QWidget* parent) :
   QGraphicsView(parent),
   _configurationManager(ConfigurationManager::createInstance()),
-  _drawing(0, 0) {
+  _drawing(0, 0),
+  _toolbox(this) {
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   recreateScene();
 }
@@ -52,11 +53,11 @@ void DrawingWidget::setDrawing(Drawing drawing) {
 }
 
 void DrawingWidget::setDrawingColor(const QColor color) {
-  _drawingColor = color;
+  _toolbox.getPenTool()->setColor(color);
 }
 
 QColor DrawingWidget::getDrawingColor() const {
-  return _drawingColor;
+  return _toolbox.getPenTool()->getColor();
 }
 
 const std::vector<Layer>& DrawingWidget::getLayers() const {
@@ -184,135 +185,31 @@ void DrawingWidget::drawPixelOnBothRepresentations(int x, int y, const QColor& d
 
 void DrawingWidget::mousePressEvent(QMouseEvent* event) {
   const auto clickedPixel = mapPositionOfEventToScene(event);
-  const QPointF eventPosition = event->position();
-
-  // TODO: Maybe make tools their own objects and pass clickedPixel and other data to them
-  switch (_tool) {
-    case DrawingTool::Hand: {
-      if (event->button() == Qt::LeftButton) {
-        _leftMouseButtonPressed = true;
-        _panStartX = static_cast<int>(eventPosition.x());
-        _panStartY = static_cast<int>(eventPosition.y());
-        setCursor(Qt::ClosedHandCursor);
-        event->accept();
-      }
-      return;
-    }
-
-    case DrawingTool::Pen: {
-      if (clickedPixel.has_value()) {
-        const auto clickedPixelX = clickedPixel->x();
-        const auto clickedPixelY = clickedPixel->y();
-
-        drawPixelOnBothRepresentations(clickedPixelX, clickedPixelY, _drawingColor);
-      }
-      return;
-    }
-
-    case DrawingTool::Eraser: // same as pen but set to invisible
-      break;
-
-    case DrawingTool::Rectangle:
-      break;
-
-    case DrawingTool::Circle:
-      break;
-
-    default:
-      break;
+  if (_toolbox.getCurrentToolInterface()->mousePressEvent(event, clickedPixel)) {
+    event->accept();
+  } else {
+    event->ignore();
   }
-
-  // or maybe base to base class
-  event->ignore();
 }
 
 void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
-  switch (_tool) {
-    case DrawingTool::Hand: {
-      if (event->button() == Qt::LeftButton) {
-        _leftMouseButtonPressed = false;
-        setCursor(Qt::ArrowCursor);
-        event->accept();
-      }
-      return;
-    }
-    case DrawingTool::Pen: {
-      _lastContinousDrawingPoint = std::nullopt;
-      return;
-    }
-    case DrawingTool::Eraser:
-      break;
-
-    case DrawingTool::Rectangle:
-      break;
-
-    case DrawingTool::Circle:
-      break;
-
-    default:
-      break;
+  const auto clickedPixel = mapPositionOfEventToScene(event);
+  if (_toolbox.getCurrentToolInterface()->mouseReleaseEvent(event, clickedPixel)) {
+    event->accept();
+  } else {
+    event->ignore();
   }
-
-  // or maybe pass to base class
-  event->ignore();
 }
 
 void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
   const auto movingThroughPixel = mapPositionOfEventToScene(event);
-  const QPointF eventPosition = event->position();
+  //const QPointF eventPosition = event->position();
 
-  switch (_tool) {
-    case DrawingTool::Hand: {
-      if (_leftMouseButtonPressed) {
-        horizontalScrollBar()->setValue(
-            static_cast<int>(horizontalScrollBar()->value() - (eventPosition.x() - _panStartX)));
-        verticalScrollBar()->setValue(
-            static_cast<int>(verticalScrollBar()->value() - (eventPosition.y() - _panStartY)));
-        _panStartX = static_cast<int>(eventPosition.x());
-        _panStartY = static_cast<int>(eventPosition.y());
-        event->accept();
-      }
-      return;
-    }
-
-    case DrawingTool::Pen: {
-      if (movingThroughPixel.has_value()) {
-        const auto clickedPixelX = movingThroughPixel->x();
-        const auto clickedPixelY = movingThroughPixel->y();
-
-        if (_lastContinousDrawingPoint.has_value()) {
-          // TODO: Move this to a method or cleanup/tool_to_class seperation
-          static const auto pixelDrawingAction = [&](int x, int y) {
-            drawPixelOnBothRepresentations(x, y, _drawingColor);
-          };
-
-          algorithms::applyBresenham(_lastContinousDrawingPoint->x(),
-                                     _lastContinousDrawingPoint->y(),
-                                     clickedPixelX,
-                                     clickedPixelY,
-                                     pixelDrawingAction);
-        }
-
-        _lastContinousDrawingPoint = movingThroughPixel.value();
-        // pixelDrawingAction(clickedPixelX, clickedPixelY...)
-      } else {
-        _lastContinousDrawingPoint = std::nullopt;
-      }
-      return;
-    }
-
-    case DrawingTool::Eraser:
-      break;
-
-    case DrawingTool::Rectangle:
-      break;
-
-    case DrawingTool::Circle:
-      break;
+  if (_toolbox.getCurrentToolInterface()->mouseMoveEvent(event, movingThroughPixel)) {
+    event->accept();
+  } else {
+    event->ignore();
   }
-
-  // or maybe pass to base class
-  event->ignore();
 }
 
 void DrawingWidget::wheelEvent(QWheelEvent* event) {

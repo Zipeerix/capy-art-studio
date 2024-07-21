@@ -15,38 +15,40 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
-
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
-#include "utils/Dimensions.hpp"
+#include "Toolbox.hpp"
+#include "ui/widgets/DrawingWidget.hpp"
 
 namespace capy {
-class Drawing {
- public:
-  Drawing(int width, int height);
+Toolbox::Toolbox(ui::DrawingWidget* drawingWidget) :
+  _drawingWidget(drawingWidget),
+  _penTool(std::make_unique<PenTool>(_drawingWidget)),
+  _handTool(std::make_unique<HandTool>(_drawingWidget)) {
+}
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
+PenTool* Toolbox::getPenTool() const {
+  return _penTool.get();
+}
 
-  utils::Dimensions getDimensions() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
+HandTool* Toolbox::getHandTool() const {
+  return _handTool.get();
+}
 
-  void setCurrentLayer(int newCurrentLayer);
+IDrawingTool* Toolbox::getCurrentToolInterface() const {
+  switch (_currentTool) {
+    case DrawingTool::Hand:
+      return reinterpret_cast<IDrawingTool*>(_handTool.get());
 
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
+    case DrawingTool::Pen:
+      return reinterpret_cast<IDrawingTool*>(_penTool.get());
 
- private:
-  std::vector<Layer> _layers;
-  utils::Dimensions _dimensions;
-  int _currentLayer = 0;
-};
-}  // namespace capy
+    default:
+      throw std::logic_error("Invalid current tool");
+  }
+}
 
-#endif  // DRAWING_HPP
+void Toolbox::switchTool(const DrawingTool newTool) {
+  getCurrentToolInterface()->onSwitchOutOf();
+  _currentTool = newTool;
+  getCurrentToolInterface()->onSwitchTo();
+}
+} // capy

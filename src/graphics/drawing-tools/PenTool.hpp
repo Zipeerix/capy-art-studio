@@ -15,38 +15,32 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#ifndef PENTOOL_HPP
+#define PENTOOL_HPP
 
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
-#include "utils/Dimensions.hpp"
+#include <QColor>
+#include "IDrawingTool.hpp"
 
 namespace capy {
-class Drawing {
- public:
-  Drawing(int width, int height);
+class PenTool final : public IDrawingTool {
+public:
+  explicit PenTool(ui::DrawingWidget* drawingWidget);
+  ~PenTool() override = default;
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
+  void setColor(QColor newColor);
+  QColor getColor() const;
 
-  utils::Dimensions getDimensions() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
+  void onSwitchTo() override;
+  void onSwitchOutOf() override;
 
-  void setCurrentLayer(int newCurrentLayer);
+  bool mousePressEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
+  bool mouseMoveEvent(QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) override;
+  bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
 
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
-
- private:
-  std::vector<Layer> _layers;
-  utils::Dimensions _dimensions;
-  int _currentLayer = 0;
+private:
+  QColor _color{0, 0, 0, 255};
+  std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
 };
-}  // namespace capy
+} // capy
 
-#endif  // DRAWING_HPP
+#endif //PENTOOL_HPP

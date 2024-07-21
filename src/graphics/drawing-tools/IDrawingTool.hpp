@@ -15,38 +15,37 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#ifndef IDRAWINGTOOL_HPP
+#define IDRAWINGTOOL_HPP
 
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
-#include "utils/Dimensions.hpp"
+#include <QMouseEvent>
+#include <QPoint>
+#include <optional>
 
 namespace capy {
-class Drawing {
- public:
-  Drawing(int width, int height);
+namespace ui {
+class DrawingWidget;
+}
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
-
-  utils::Dimensions getDimensions() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
-
-  void setCurrentLayer(int newCurrentLayer);
-
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
-
- private:
-  std::vector<Layer> _layers;
-  utils::Dimensions _dimensions;
-  int _currentLayer = 0;
+enum class DrawingTool {
+  Hand,
+  Pen
 };
-}  // namespace capy
 
-#endif  // DRAWING_HPP
+class IDrawingTool {
+public:
+  explicit IDrawingTool(ui::DrawingWidget* drawingWidget);
+  virtual ~IDrawingTool() = default;
+
+  virtual void onSwitchTo() = 0;
+  virtual void onSwitchOutOf() = 0;
+  virtual bool mousePressEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) = 0;
+  virtual bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) = 0;
+  virtual bool mouseMoveEvent(QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) = 0;
+
+protected:
+  ui::DrawingWidget* _drawingWidget;
+};
+} // capy
+
+#endif //IDRAWINGTOOL_HPP

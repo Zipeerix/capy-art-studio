@@ -19,8 +19,11 @@
 #define DRAWINGWIDGET_HPP
 
 #include <QGraphicsView>
+#include <memory>
+#include "graphics/drawing-tools/PenTool.hpp"
 #include "graphics/Drawing.hpp"
 #include "DrawingCanvasItem.hpp"
+#include "graphics/drawing-tools/Toolbox.hpp"
 #include "io/ConfigurationManager.hpp"
 #include "ui/utils/CheckerboardPixmap.hpp"
 
@@ -35,6 +38,8 @@ public:
 
   QByteArray createMiniatureBytes() const;
 
+  void drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor);
+
   void setDrawing(Drawing drawing);
   void startNewDrawing(int width, int height);
   void setCurrentLayer(int newLayer);
@@ -48,7 +53,6 @@ public:
 private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   CheckerboardPixmap _checkerboardPixmap;
-  QColor _drawingColor = QColor(0, 0, 0, 255);
 
   std::vector<QGraphicsLineItem*> _lines;
 
@@ -56,21 +60,13 @@ private:
   QGraphicsScene* _scene = nullptr;
 
   Drawing _drawing;
-  DrawingTool _tool = DrawingTool::Pen;
-
-  std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
-
-  bool _leftMouseButtonPressed = false;
-  int _panStartX = 0;
-  int _panStartY = 0;
+  Toolbox _toolbox;
 
   double _zoomFactor = 1.0;
 
   void drawBackground(QPainter* painter, const QRectF& rect) override;
 
   std::optional<QPoint> mapPositionOfEventToScene(const QMouseEvent* event) const;
-
-  void drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor);
 
   void redrawScreen();
   void redrawGrid();

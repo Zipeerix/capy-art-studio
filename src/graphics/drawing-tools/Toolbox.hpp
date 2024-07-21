@@ -15,38 +15,34 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef DRAWING_HPP
-#define DRAWING_HPP
+#ifndef TOOLBOX_HPP
+#define TOOLBOX_HPP
 
-#include <vector>
-
-#include "Layer.hpp"
-#include "algorithms/AlphaBlending.hpp"
-#include "utils/Dimensions.hpp"
+#include <memory>
+#include "HandTool.hpp"
+#include "PenTool.hpp"
 
 namespace capy {
-class Drawing {
- public:
-  Drawing(int width, int height);
+namespace ui {
+class DrawingWidget;
+}
 
-  void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
-                                        std::vector<Pixel> pixels);
+class Toolbox {
+public:
+  explicit Toolbox(ui::DrawingWidget* drawingWidget);
 
-  utils::Dimensions getDimensions() const;
-  int getLayerCount() const;
-  const Layer& getCurrentLayer() const;
-  const std::vector<Layer>& getLayers() const;
+  IDrawingTool* getCurrentToolInterface() const;
+  void switchTool(DrawingTool newTool);
 
-  void setCurrentLayer(int newCurrentLayer);
+  PenTool* getPenTool() const;
+  HandTool* getHandTool() const;
 
-  void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
-  QColor calculateCombinedPixelColor(int x, int y) const;
-
- private:
-  std::vector<Layer> _layers;
-  utils::Dimensions _dimensions;
-  int _currentLayer = 0;
+private:
+  ui::DrawingWidget* _drawingWidget;
+  std::unique_ptr<PenTool> _penTool;
+  std::unique_ptr<HandTool> _handTool;
+  DrawingTool _currentTool = DrawingTool::Pen;
 };
-}  // namespace capy
+} // capy
 
-#endif  // DRAWING_HPP
+#endif //TOOLBOX_HPP
