@@ -1,18 +1,18 @@
 name: Build on Linux (gcc)
 on:
   push:
-    branches: [ "master", "release/*" ]
+    branches: ["master", "release/*"]
   pull_request:
-    branches: [ "master", "release/*" ]
+    branches: ["master", "release/*"]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-24.04 ]
-        build_type: [ Release ]
-        c_compiler: [ gcc ]
+        os: [ubuntu-24.04]
+        build_type: [Release]
+        c_compiler: [gcc]
         include:
           - os: ubuntu-24.04
             c_compiler: gcc
@@ -46,8 +46,7 @@ jobs:
       - name: Install conan dependencies
         run: conan install ${{ github.workspace }}/conan --build=missing
       - name: Build
-        run:
-          conan build ${{ github.workspace }}/conan -o CapyArtStudio/*:skip_static_analysis=True
+        run: conan build ${{ github.workspace }}/conan -o CapyArtStudio/*:skip_static_analysis=True
       - name: Test
         run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests
       - name: Create installer
