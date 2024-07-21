@@ -1,0 +1,19 @@
+---
+Checks: "*,
+        -bugprone-*,
+        -clang-analyzer-*,
+        -modernize-*,
+        -cppcoreguidelines-*,
+        -zircon-*,
+        -readability-*,
+        -misc-*,
+        -performance-*
+"
+WarningsAsErrors: '*'
+HeaderFilterRegex: ''
+FormatStyle: none
+
+
+
+
+
