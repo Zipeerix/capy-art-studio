@@ -32,7 +32,7 @@ TEST(algorithms, alpha_blending_one_layer)
     return layers.at(layer);
   });
 
-  const auto blendResult = blender.blend(0, 0, layers.size());
+  const auto blendResult = blender.blend(0, 0, static_cast<int>(layers.size()));
   ASSERT_EQ(blendResult, QColor(128, 128, 128, 255));
 }
 
@@ -45,7 +45,7 @@ TEST(algorithms, alpha_blending_two_layers)
             return layers.at(layer);
           });
 
-  const auto blendResult = blender.blend(0, 0, layers.size());
+  const auto blendResult = blender.blend(0, 0, static_cast<int>(layers.size()));
   ASSERT_EQ(blendResult, QColor(64, 64, 64, 255));
 }
 
@@ -58,7 +58,7 @@ TEST(algorithms, alpha_blending_two_layers_transparent_base)
             return layers.at(layer);
           });
 
-  const auto blendResult = blender.blend(0, 0, layers.size());
+  const auto blendResult = blender.blend(0, 0, static_cast<int>(layers.size()));
   ASSERT_EQ(blendResult, QColor(64, 64, 64, 255));
 }
 
@@ -75,6 +75,6 @@ TEST(algorithms, alpha_blending_n_layers)
             return layers.at(layer);
           });
 
-  const auto blendResult = blender.blend(0, 0, layers.size());
+  const auto blendResult = blender.blend(0, 0, static_cast<int>(layers.size()));
   ASSERT_EQ(blendResult, QColor(158, 127, 27, 254));
 }

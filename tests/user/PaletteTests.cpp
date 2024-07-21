@@ -26,7 +26,7 @@ using namespace testing;
 
 TEST(user, palette_json_loading)
 {
-  const auto testJsonPath = "tests/user/resources/TestPalette.json";
+  const auto* const testJsonPath = "tests/user/resources/TestPalette.json";
 
   const auto paletteOpt = capy::Palette::createFromJson(testJsonPath);
   ASSERT_TRUE(paletteOpt.has_value());
@@ -50,8 +50,8 @@ TEST(user, palette_json_loading)
 
 TEST(user, palette_json_exporting)
 {
-  const auto testJsonPathIn = "tests/user/resources/TestPalette.json";
-  const auto testJsonPathOut = "tests/user/resources/TestPalette_export.json";
+  const auto* const testJsonPathIn = "tests/user/resources/TestPalette.json";
+  const auto* const testJsonPathOut = "tests/user/resources/TestPalette_export.json";
 
   const auto paletteOpt = capy::Palette::createFromJson(testJsonPathIn);
   ASSERT_TRUE(paletteOpt.has_value());
