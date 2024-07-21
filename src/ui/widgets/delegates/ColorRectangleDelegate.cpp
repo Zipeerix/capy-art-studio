@@ -17,11 +17,16 @@
 
 #include "ColorRectangleDelegate.hpp"
 
-namespace capy::ui {
-ColorRectangleDelegate::ColorRectangleDelegate(QWidget *parent) : QStyledItemDelegate(parent) {}
+namespace capy::ui
+{
+ColorRectangleDelegate::ColorRectangleDelegate(QWidget* parent) :
+    QStyledItemDelegate(parent)
+{
+}
 
-void ColorRectangleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
-                                   const QModelIndex &index) const {
+void ColorRectangleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
+                                   const QModelIndex& index) const
+{
   painter->save();
 
   painter->drawTiledPixmap(option.rect, _checkerboardPixmap);
@@ -35,4 +40,4 @@ void ColorRectangleDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 
   painter->restore();
 }
-}  // namespace capy::ui
+} // namespace capy::ui

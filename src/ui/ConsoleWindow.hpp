@@ -22,22 +22,25 @@
 
 #include "utils/AutoSizeSavingItem.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class ConsoleWindow;
 }
 
-class ConsoleWindow final : public QMainWindow, AutoSizeSavingItem {
+class ConsoleWindow final : public QMainWindow, AutoSizeSavingItem
+{
   Q_OBJECT
- public:
+public:
   explicit ConsoleWindow(QWidget* parent = nullptr);
   ~ConsoleWindow() override;
 
-  void log(const QString&) const;
+  void log(const QString& message) const;
 
- private:
+private:
   Ui::ConsoleWindow* ui;
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // CONSOLEWINDOW_HPP
+#endif // CONSOLEWINDOW_HPP

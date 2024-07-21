@@ -26,20 +26,22 @@
 #include "algorithms/Luminance.hpp"
 #include "ui/utils/CheckerboardPixmap.hpp"
 
-namespace capy::ui {
-class ColorRectangleDelegate final : public QStyledItemDelegate {
+namespace capy::ui
+{
+class ColorRectangleDelegate final : public QStyledItemDelegate
+{
   Q_OBJECT
- public:
-  explicit ColorRectangleDelegate(QWidget *parent = nullptr);
+public:
+  explicit ColorRectangleDelegate(QWidget* parent = nullptr);
 
-  void paint(QPainter *painter, const QStyleOptionViewItem &option,
-             const QModelIndex &index) const override;
+  void paint(QPainter* painter, const QStyleOptionViewItem& option,
+             const QModelIndex& index) const override;
 
   // TODO: Other methods here i think allow for editing of he data
 
- private:
+private:
   CheckerboardPixmap _checkerboardPixmap{};
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // COLORRECTANGLEDELEGATE_HPP
+#endif // COLORRECTANGLEDELEGATE_HPP

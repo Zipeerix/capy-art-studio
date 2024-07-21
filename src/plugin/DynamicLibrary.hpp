@@ -35,9 +35,11 @@
 
 #include "meta/ErrorHandling.hpp"
 
-namespace capy {
-class DynamicLibrary {
- public:
+namespace capy
+{
+class DynamicLibrary
+{
+public:
 #if defined(__linux__) || defined(__APPLE__)
   using HandleType = void*;
 #elif defined(_WIN32)
@@ -50,10 +52,10 @@ class DynamicLibrary {
 
   bool isValid() const;
 
-  template <typename SymbolType>
+  template<typename SymbolType>
   [[nodiscard]] Result<SymbolType, std::string> getSymbol(const std::string& name);
 
- private:
+private:
   std::string _libPath;
   HandleType _libHandle;
 
@@ -61,8 +63,8 @@ class DynamicLibrary {
 
   static std::string getErrorMessage();
 };
-}  // namespace capy
+} // namespace capy
 
 #include "DynamicLibrary.tpp"
 
-#endif  // DYNAMICLIBRARY_HPP
+#endif // DYNAMICLIBRARY_HPP

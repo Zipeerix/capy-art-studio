@@ -22,22 +22,25 @@
 
 #include "graphics/Layer.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class StatusBarWidget;
 }
 
-class StatusBarWidget final : public QWidget {
-    Q_OBJECT
+class StatusBarWidget final : public QWidget
+{
+  Q_OBJECT
 public:
-    explicit StatusBarWidget(QWidget* parent = nullptr);
-    ~StatusBarWidget() override;
+  explicit StatusBarWidget(QWidget* parent = nullptr);
+  ~StatusBarWidget() override;
 
 public slots:
-    void update(const std::vector<Layer>& layers);
+  void update(const std::vector<Layer>& layers);
 
 private:
-    Ui::StatusBarWidget* ui;
+  Ui::StatusBarWidget* ui;
 };
 } // namespace capy::ui
 

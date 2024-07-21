@@ -19,22 +19,27 @@
 
 #include <fmt/format.h>
 
-namespace capy::ui {
-AutoSizeSavingItem::AutoSizeSavingItem(QWidget* widget, std::string name)
-    : _configurationManager(ConfigurationManager::createInstance()),
-      _widget(widget),
-      _name(std::move(name)) {
-  if (_widget == nullptr) {
+namespace capy::ui
+{
+AutoSizeSavingItem::AutoSizeSavingItem(QWidget* widget, std::string name) :
+    _configurationManager(ConfigurationManager::createInstance()),
+    _widget(widget),
+    _name(std::move(name))
+{
+  if (_widget == nullptr)
+  {
     throw std::logic_error("Widget cannot be null");
   }
 
   const std::optional<QByteArray> geometry = _configurationManager->getWindowGeometry(_name);
-  if (geometry.has_value()) {
+  if (geometry.has_value())
+  {
     _widget->restoreGeometry(geometry.value());
   }
 }
 
-AutoSizeSavingItem::~AutoSizeSavingItem() {
+AutoSizeSavingItem::~AutoSizeSavingItem()
+{
   _configurationManager->setWindowGeometry(_name, _widget->saveGeometry());
 }
-}  // namespace capy
+} // namespace capy::ui

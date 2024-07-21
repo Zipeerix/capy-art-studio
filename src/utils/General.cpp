@@ -17,10 +17,15 @@
 
 #include "General.hpp"
 
-namespace capy::utils {
-int convert2DIndexto1DIndex(const int x, const int y, const int width) { return y * width + x; }
-
-uint64_t calculateInMemorySizeOfImage(const int width, const int height, const int layers) {
-  return width * height * layers;
+namespace capy::utils
+{
+int convert2DIndexto1DIndex(const int x, const int y, const int width)
+{
+  return y * width + x;
 }
-}  // namespace capy::utils
+
+uint64_t calculateInMemorySizeOfImage(const int width, const int height, const int layers)
+{
+  return static_cast<uint64_t>(width) * height * layers;
+}
+} // namespace capy::utils

@@ -22,15 +22,16 @@
 #include <QRect>
 #include <QStyle>
 
-namespace capy::ui {
+namespace capy::ui
+{
 class FlowLayout final : public QLayout
 {
 public:
-  explicit FlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
+  explicit FlowLayout(QWidget* parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
   explicit FlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
   ~FlowLayout() override;
 
-  void addItem(QLayoutItem *item) override;
+  void addItem(QLayoutItem* item) override;
   int horizontalSpacing() const;
   int verticalSpacing() const;
   Qt::Orientations expandingDirections() const override;
@@ -39,18 +40,18 @@ public:
   int count() const override;
   QLayoutItem* itemAt(int index) const override;
   QSize minimumSize() const override;
-  void setGeometry(const QRect &rect) override;
+  void setGeometry(const QRect& rect) override;
   QSize sizeHint() const override;
   QLayoutItem* takeAt(int index) override;
 
 private:
-  int doLayout(const QRect &rect, bool testOnly) const;
+  int doLayout(const QRect& rect, bool testOnly) const;
   int smartSpacing(QStyle::PixelMetric pm) const;
 
-  QList<QLayoutItem *> _itemList;
+  QList<QLayoutItem*> _itemList;
   int _hSpace;
   int _vSpace;
 };
-}
+} // namespace capy::ui
 
 #endif // CAPY_UI_FLOWLAYOUT_HPP

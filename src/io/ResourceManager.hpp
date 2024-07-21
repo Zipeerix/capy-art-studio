@@ -20,16 +20,20 @@
 
 #include <QString>
 
-namespace capy {
+namespace capy
+{
 // TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
+class ResourceManager
+{
+public:
+  enum class Icon
+  {
     ApplicationIcon,
     CorruptedProjectMiniatureIcon,
   };
 
-  enum class ToolIcon {
+  enum class ToolIcon
+  {
     Pen,
     Hand
   };
@@ -37,8 +41,9 @@ class ResourceManager {
   static QString getIconPath(Icon icon);
   static QString getToolIconPath(ToolIcon toolIcon);
 
- private:
-  enum class Prefix {
+private:
+  enum class Prefix
+  {
     Root,
     Icons,
     ToolsIcons,
@@ -46,6 +51,6 @@ class ResourceManager {
 
   static QString getPrefixPath(Prefix prefix);
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // RESOURCEMANAGER_HPP
+#endif // RESOURCEMANAGER_HPP

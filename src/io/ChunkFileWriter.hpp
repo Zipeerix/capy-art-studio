@@ -18,22 +18,25 @@
 #ifndef CHUNKFILEWRITER_HPP
 #define CHUNKFILEWRITER_HPP
 
-#include <QByteArray>
 #include <fstream>
+#include <QByteArray>
 
 #include "meta/ErrorHandling.hpp"
 
-namespace capy {
-class ChunkFileWriter {
- public:
-  enum class ExistingFileStrategy {
+namespace capy
+{
+class ChunkFileWriter
+{
+public:
+  enum class ExistingFileStrategy
+  {
     ClearAndWrite,
     Overwrite,
     Error,
   };
 
-  [[nodiscard]] static PotentialError<std::string> existingFileStrategyCheck(
-      const std::string& path, ExistingFileStrategy existingFileStrategy);
+  [[nodiscard]] static PotentialError<std::string>
+  existingFileStrategyCheck(const std::string& path, ExistingFileStrategy existingFileStrategy);
 
   explicit ChunkFileWriter(const std::string& path);
   ~ChunkFileWriter();
@@ -48,13 +51,13 @@ class ChunkFileWriter {
   [[nodiscard]] PotentialError<std::string> write32BitInt(uint32_t value,
                                                           bool bigEndian = false) const;
 
- private:
+private:
   // TODO: Rrevert back to value not pointer
   std::shared_ptr<std::ofstream> _fileStream = nullptr;
 
   // TODO: ChunkFileWriter.tpp, template <typename StlIntefaceType> writeStlType and use in all
   // data() .size() same for reader
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // CHUNKFILEWRITER_HPP
+#endif // CHUNKFILEWRITER_HPP

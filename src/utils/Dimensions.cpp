@@ -17,31 +17,46 @@
 
 #include "Dimensions.hpp"
 
-namespace capy::utils {
-Dimensions::Dimensions(const int width, const int height) {
+namespace capy::utils
+{
+Dimensions::Dimensions(const int width, const int height)
+{
   setWidth(width);
   setHeight(height);
 }
 
-int Dimensions::getWidth() const { return _width; }
+int Dimensions::getWidth() const
+{
+  return _width;
+}
 
-void Dimensions::setWidth(const int newWidth) {
-  if (newWidth < 0) {
+void Dimensions::setWidth(const int newWidth)
+{
+  if (newWidth < 0)
+  {
     return;
   }
 
   _width = newWidth;
 }
 
-int Dimensions::getHeight() const { return _height; }
+int Dimensions::getHeight() const
+{
+  return _height;
+}
 
-void Dimensions::setHeight(const int newHeight) {
-  if (newHeight < 0) {
+void Dimensions::setHeight(const int newHeight)
+{
+  if (newHeight < 0)
+  {
     return;
   }
 
   _height = newHeight;
 }
 
-int Dimensions::getArea() const { return _width * _height; }
-}  // namespace capy::utils
+int Dimensions::getArea() const
+{
+  return _width * _height;
+}
+} // namespace capy::utils

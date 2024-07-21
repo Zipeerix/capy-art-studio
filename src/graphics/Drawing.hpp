@@ -20,13 +20,15 @@
 
 #include <vector>
 
-#include "Layer.hpp"
 #include "algorithms/AlphaBlending.hpp"
+#include "Layer.hpp"
 #include "utils/Dimensions.hpp"
 
-namespace capy {
-class Drawing {
- public:
+namespace capy
+{
+class Drawing
+{
+public:
   Drawing(int width, int height);
 
   void insertOrAssignLayerFromRawPixels(int index, const std::string& name,
@@ -42,11 +44,11 @@ class Drawing {
   void drawPixelOnCurrentLayerInternalRepresentationOnly(int x, int y, const QColor& color);
   QColor calculateCombinedPixelColor(int x, int y) const;
 
- private:
+private:
   std::vector<Layer> _layers;
   utils::Dimensions _dimensions;
   int _currentLayer = 0;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // DRAWING_HPP
+#endif // DRAWING_HPP

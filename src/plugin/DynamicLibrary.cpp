@@ -21,18 +21,25 @@
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy {
-DynamicLibrary::DynamicLibrary(std::string path, HandleType libHandle)
-    : _libPath(std::move(path)), _libHandle(libHandle) {}
+namespace capy
+{
+DynamicLibrary::DynamicLibrary(std::string path, HandleType libHandle) :
+    _libPath(std::move(path)),
+    _libHandle(libHandle)
+{
+}
 
-DynamicLibrary::~DynamicLibrary() {
-  if (_libHandle != nullptr) {
+DynamicLibrary::~DynamicLibrary()
+{
+  if (_libHandle != nullptr)
+  {
 #if defined(__linux__) || defined(__APPLE__)
-    int close_successful = dlclose(_libHandle) == 0;
+    const bool close_successful = dlclose(_libHandle) == 0;
 #elif defined(_WIN32)
     int close_successful = FreeLibrary(_libHandle) != 0;
 #endif
-    if (!close_successful) {
+    if (!close_successful)
+    {
       // it's a destructor, and it doesn't really matter if it fails to be honest so just log it
       const std::string err_msg = "Error when unloading dynamic library at: '" + _libPath +
                                   "'. Error: " + getErrorMessage();
@@ -41,37 +48,45 @@ DynamicLibrary::~DynamicLibrary() {
   }
 }
 
-bool DynamicLibrary::isValid() const { return _libHandle != nullptr; }
+bool DynamicLibrary::isValid() const
+{
+  return _libHandle != nullptr;
+}
 
-Result<DynamicLibrary, std::string> DynamicLibrary::fromFile(const std::string& path) {
+Result<DynamicLibrary, std::string> DynamicLibrary::fromFile(const std::string& path)
+{
 #if defined(__linux__) || defined(__APPLE__)
-  const auto libHandle = dlopen(path.c_str(), RTLD_NOW);
+  auto* const libHandle = dlopen(path.c_str(), RTLD_NOW);
 #elif defined(_WIN32)
   const auto libHandle = LoadLibraryA(path.c_str());
 #endif
 
-  if (libHandle == nullptr) {
+  if (libHandle == nullptr)
+  {
     return std::unexpected("Unable to open dynamic library at " + path);
   }
 
   return DynamicLibrary(path, libHandle);
 }
 
-std::string DynamicLibrary::getErrorMessage() {
+std::string DynamicLibrary::getErrorMessage()
+{
 #if defined(__linux__) || defined(__APPLE__)
   const char* err = dlerror();
   return err == nullptr ? "Unknown error (id=0)" : std::string(err);
 #elif defined(_WIN32)
   DWORD error = GetLastError();
-  if (error == 0) {
+  if (error == 0)
+  {
     return "Unknown error (id=0)";
   }
 
   LPSTR buffer = nullptr;
 
-  size_t size = FormatMessageA(
-      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-      NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&buffer, 0, NULL);
+  size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+                                       FORMAT_MESSAGE_IGNORE_INSERTS,
+                               NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                               (LPSTR) &buffer, 0, NULL);
 
   std::string message(buffer, size);
 
@@ -80,4 +95,4 @@ std::string DynamicLibrary::getErrorMessage() {
   return message;
 #endif
 }
-}  // namespace capy
+} // namespace capy

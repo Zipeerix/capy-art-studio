@@ -18,12 +18,14 @@
 #ifndef DRAWINGCANVASITEM_HPP
 #define DRAWINGCANVASITEM_HPP
 
-#include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
-namespace capy::ui {
-class DrawingCanvasItem final : public QGraphicsItem {
+namespace capy::ui
+{
+class DrawingCanvasItem final : public QGraphicsItem
+{
 public:
   using ColorCalculatingFunction = std::function<QColor(int, int)>;
 
@@ -39,11 +41,10 @@ private:
 
   QRectF boundingRect() const override;
 
-  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-             QWidget* widget) override;
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
   void fillCanvas();
 };
-}
+} // namespace capy::ui
 
 #endif //DRAWINGCANVASITEM_HPP

@@ -22,18 +22,20 @@
 
 #include "graphics/Pixel.hpp"
 
-namespace capy::algorithms {
-class AlphaBlender {
- public:
+namespace capy::algorithms
+{
+class AlphaBlender
+{
+public:
   using PixelColorGettingFunction = std::function<Pixel(int, int, int)>;
 
   explicit AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction);
 
   QColor blend(int x, int y, int layerCount) const;
 
- private:
+private:
   PixelColorGettingFunction _pixelColorGettingFunction;
 };
-}  // namespace capy::algorithms
+} // namespace capy::algorithms
 
-#endif  // ALPHABLENDING_HPP
+#endif // ALPHABLENDING_HPP

@@ -23,14 +23,18 @@
 
 #include "ConsoleLogger.hpp"
 
-namespace capy {
-std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance() {
-  static std::shared_ptr<ConfigurationManager> singletonEntity(new ConfigurationManager());
+namespace capy
+{
+std::shared_ptr<ConfigurationManager> ConfigurationManager::createInstance()
+{
+  const static std::shared_ptr<ConfigurationManager> singletonEntity(new ConfigurationManager());
   return singletonEntity;
 }
 
-QString ConfigurationManager::getInternalValuePath(const InternalValues value) {
-  switch (value) {
+QString ConfigurationManager::getInternalValuePath(const InternalValues value)
+{
+  switch (value)
+  {
     case InternalValues::ProjectPaths:
       return "Internal/ProjectPaths";
 
@@ -42,8 +46,10 @@ QString ConfigurationManager::getInternalValuePath(const InternalValues value) {
   }
 }
 
-QString ConfigurationManager::getApplicationSettingPath(const ApplicationSettings setting) {
-  switch (setting) {
+QString ConfigurationManager::getApplicationSettingPath(const ApplicationSettings setting)
+{
+  switch (setting)
+  {
     case ApplicationSettings::ShowWelcomeScreen:
       return "Application/ShowWelcomeScreen";
 
@@ -58,8 +64,10 @@ QString ConfigurationManager::getApplicationSettingPath(const ApplicationSetting
   }
 }
 
-QString ConfigurationManager::getDebugSettingPath(const DebugSetting setting) {
-  switch (setting) {
+QString ConfigurationManager::getDebugSettingPath(const DebugSetting setting)
+{
+  switch (setting)
+  {
     case DebugSetting::ShowConsole:
       return "Debug/ShowConsole";
 
@@ -68,8 +76,10 @@ QString ConfigurationManager::getDebugSettingPath(const DebugSetting setting) {
   }
 }
 
-QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setting) {
-  switch (setting) {
+QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setting)
+{
+  switch (setting)
+  {
     case GraphicsSetting::GraphicalBackend:
       return "Graphics/Backend";
 
@@ -87,11 +97,13 @@ QString ConfigurationManager::getGraphicsSettingPath(const GraphicsSetting setti
   }
 }
 
-void ConfigurationManager::addAdditionalProjectPath(const std::string& path) {
+void ConfigurationManager::addAdditionalProjectPath(const std::string& path)
+{
   const auto valuePath = getInternalValuePath(InternalValues::ProjectPaths);
   auto list = _settings.value(valuePath, {}).toStringList();
 
-  if (doesAdditionalProjectExist(path)) {
+  if (doesAdditionalProjectExist(path))
+  {
     logger::error(fmt::format("There is a duplicate project with path: {}", path),
                   logger::Severity::Mild);
     return;
@@ -103,7 +115,8 @@ void ConfigurationManager::addAdditionalProjectPath(const std::string& path) {
   _settings.sync();
 }
 
-void ConfigurationManager::removeAdditionalProjectPath(const std::string& pathToDelete) {
+void ConfigurationManager::removeAdditionalProjectPath(const std::string& pathToDelete)
+{
   const auto valuePath = getInternalValuePath(InternalValues::ProjectPaths);
   auto list = _settings.value(valuePath, {}).toStringList();
 
@@ -117,20 +130,23 @@ void ConfigurationManager::removeAdditionalProjectPath(const std::string& pathTo
   _settings.sync();
 }
 
-std::vector<std::string> ConfigurationManager::getAdditionalProjectsPaths() const {
+std::vector<std::string> ConfigurationManager::getAdditionalProjectsPaths() const
+{
   const auto internalList =
-      _settings.value(getInternalValuePath(InternalValues::ProjectPaths), {}).toStringList();
+          _settings.value(getInternalValuePath(InternalValues::ProjectPaths), {}).toStringList();
 
   std::vector<std::string> listToReturn{};
   listToReturn.reserve(internalList.size());
 
-  for (const auto& path : internalList) {
+  for (const auto& path: internalList)
+  {
     const bool isDuplicate =
-        std::ranges::any_of(listToReturn, [path](const std::string& alreadyAddedPath) {
-          return alreadyAddedPath == path.toStdString();
-        });
+            std::ranges::any_of(listToReturn, [path](const std::string& alreadyAddedPath) {
+              return alreadyAddedPath == path.toStdString();
+            });
 
-    if (isDuplicate) {
+    if (isDuplicate)
+    {
       logger::error(fmt::format("There is a duplicate project with path: {}", path.toStdString()),
                     logger::Severity::Mild);
       continue;
@@ -142,23 +158,27 @@ std::vector<std::string> ConfigurationManager::getAdditionalProjectsPaths() cons
   return listToReturn;
 }
 
-bool ConfigurationManager::doesAdditionalProjectExist(const std::string& path) const {
+bool ConfigurationManager::doesAdditionalProjectExist(const std::string& path) const
+{
   const auto projects = getAdditionalProjectsPaths();
-  return std::ranges::any_of(
-      projects, [path](const std::string& alreadyAddedPath) { return alreadyAddedPath == path; });
+  return std::ranges::any_of(projects, [path](const std::string& alreadyAddedPath) {
+    return alreadyAddedPath == path;
+  });
 }
 
-std::optional<QByteArray> ConfigurationManager::getWindowGeometry(const std::string& name) {
+std::optional<QByteArray> ConfigurationManager::getWindowGeometry(const std::string& name) const
+{
   const auto path =
-      getInternalValuePath(InternalValues::WindowGeometry) + "/" + QString::fromStdString(name);
+          getInternalValuePath(InternalValues::WindowGeometry) + "/" + QString::fromStdString(name);
   QByteArray value = _settings.value(path, {}).toByteArray();
 
   return value.isEmpty() ? std::nullopt : std::optional(value);
 }
 
-void ConfigurationManager::setWindowGeometry(const std::string& name, const QByteArray& geometry) {
+void ConfigurationManager::setWindowGeometry(const std::string& name, const QByteArray& geometry)
+{
   const auto path =
-      getInternalValuePath(InternalValues::WindowGeometry) + "/" + QString::fromStdString(name);
+          getInternalValuePath(InternalValues::WindowGeometry) + "/" + QString::fromStdString(name);
   _settings.setValue(path, geometry);
 }
-}  // namespace capy
+} // namespace capy

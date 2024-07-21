@@ -23,9 +23,11 @@
 #include "Pixel.hpp"
 #include "utils/Dimensions.hpp"
 
-namespace capy {
-class Layer {
- public:
+namespace capy
+{
+class Layer
+{
+public:
   Layer(int width, int height, std::string name);
 
   bool isVisible() const;
@@ -44,7 +46,7 @@ class Layer {
 
   uint64_t calculateInMemorySize() const;
 
- private:
+private:
   std::string _name;
   utils::Dimensions _dimensions;
   std::vector<Pixel> _pixels;
@@ -52,6 +54,6 @@ class Layer {
 
   Pixel& getMutablePixel(int x, int y);
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // LAYER_HPP
+#endif // LAYER_HPP

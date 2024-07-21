@@ -19,22 +19,36 @@
 
 #include <QPainter>
 
-namespace capy::ui {
-CheckerboardPixmap::CheckerboardPixmap() : QPixmap(16, 16) {
-  fill(getCheckerboardFillColor());
-  QPainter painter(this);
+namespace capy::ui
+{
+namespace constants
+{
+constexpr int checkerboardWidth = 8;
+constexpr int checkerboardHeight = 8;
+} // namespace constants
 
-  painter.fillRect(0, 0, 8, 8, getCheckerboardRectangleColor());
-  painter.fillRect(8, 8, 8, 8, getCheckerboardRectangleColor());
+CheckerboardPixmap::CheckerboardPixmap() :
+    QPixmap(16, 16)
+{
+  fill(getCheckerboardFillColor());
+  QPainter painter{this};
+
+  painter.fillRect(0, 0, constants::checkerboardWidth, constants::checkerboardHeight,
+                   getCheckerboardRectangleColor());
+  painter.fillRect(constants::checkerboardWidth, constants::checkerboardHeight,
+                   constants::checkerboardWidth, constants::checkerboardHeight,
+                   getCheckerboardRectangleColor());
 }
 
-QColor CheckerboardPixmap::getCheckerboardFillColor() {
+QColor CheckerboardPixmap::getCheckerboardFillColor()
+{
   // TODO: in dark mode: Qt::black if not overriden in settings
   return Qt::white;
 }
 
-QColor CheckerboardPixmap::getCheckerboardRectangleColor() {
+QColor CheckerboardPixmap::getCheckerboardRectangleColor()
+{
   // TODO: in dark mode: Qt::darkGray if not overriden in settings
   return Qt::lightGray;
 }
-}  // namespace capy::ui
+} // namespace capy::ui

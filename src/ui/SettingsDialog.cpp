@@ -20,12 +20,14 @@
 #include "graphics/GraphicalBackend.hpp"
 #include "ui_SettingsDialog.h"
 
-namespace capy::ui {
-SettingsDialog::SettingsDialog(QWidget* parent)
-    : QDialog(parent),
-      AutoSizeSavingItem(this, "SettingsDialog"),
-      ui(new Ui::SettingsDialog),
-      _configurationManager(ConfigurationManager::createInstance()) {
+namespace capy::ui
+{
+SettingsDialog::SettingsDialog(QWidget* parent) :
+    QDialog(parent),
+    AutoSizeSavingItem(this, "SettingsDialog"),
+    ui(new Ui::SettingsDialog),
+    _configurationManager(ConfigurationManager::createInstance())
+{
   ui->setupUi(this);
   setupComboBoxes();
 
@@ -39,40 +41,46 @@ SettingsDialog::SettingsDialog(QWidget* parent)
   setupConnectionsForGraphicsTab();
 }
 
-SettingsDialog::~SettingsDialog() { delete ui; }
+SettingsDialog::~SettingsDialog()
+{
+  delete ui;
+}
 
-void SettingsDialog::setupConnectionsForApplicationTab() {
+void SettingsDialog::setupConnectionsForApplicationTab()
+{
   ui->showWelcomeScreenCheckbox->setChecked(_configurationManager->getApplicationSetting<bool>(
-      ConfigurationManager::ApplicationSettings::ShowWelcomeScreen));
+          ConfigurationManager::ApplicationSettings::ShowWelcomeScreen));
   connect(ui->showWelcomeScreenCheckbox, &QCheckBox::checkStateChanged, this,
           [&](const Qt::CheckState status) {
             _configurationManager->setApplicationSetting(
-                ConfigurationManager::ApplicationSettings::ShowWelcomeScreen,
-                status == Qt::Checked);
+                    ConfigurationManager::ApplicationSettings::ShowWelcomeScreen,
+                    status == Qt::Checked);
           });
 
   ui->showStatusBackCheckbox->setChecked(_configurationManager->getApplicationSetting<bool>(
-      ConfigurationManager::ApplicationSettings::ShowStatusBar));
+          ConfigurationManager::ApplicationSettings::ShowStatusBar));
   connect(ui->showStatusBackCheckbox, &QCheckBox::checkStateChanged, this,
           [&](const Qt::CheckState status) {
             _configurationManager->setApplicationSetting(
-                ConfigurationManager::ApplicationSettings::ShowStatusBar, status == Qt::Checked);
+                    ConfigurationManager::ApplicationSettings::ShowStatusBar,
+                    status == Qt::Checked);
           });
 
   ui->statusBarUpdateIntervalSpinbox->setValue(_configurationManager->getApplicationSetting<int>(
-      ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval));
+          ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval));
   connect(ui->statusBarUpdateIntervalSpinbox, &QSpinBox::valueChanged, this,
           [&](const int newValue) {
             _configurationManager->setApplicationSetting(
-                ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval, newValue);
+                    ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval, newValue);
           });
 }
 
-void SettingsDialog::setupConnectionsForDebugTab() {
+void SettingsDialog::setupConnectionsForDebugTab()
+{
   // TODO: Maybe in settings manager have connectToUi, this will based on type create following two
   // TODO things for it
   ui->showConsoleCheckbox->setChecked(_configurationManager->getDebugSetting<bool>(
-      ConfigurationManager::DebugSetting::ShowConsole));
+          ConfigurationManager::DebugSetting::ShowConsole));
   connect(ui->showConsoleCheckbox, &QCheckBox::checkStateChanged, this,
           [&](const Qt::CheckState status) {
             _configurationManager->setDebugSetting(ConfigurationManager::DebugSetting::ShowConsole,
@@ -80,47 +88,51 @@ void SettingsDialog::setupConnectionsForDebugTab() {
           });
 }
 
-void SettingsDialog::setupConnectionsForGraphicsTab() {
+void SettingsDialog::setupConnectionsForGraphicsTab()
+{
   ui->drawPixelGridCheckbox->setChecked(_configurationManager->getGraphicsSetting<bool>(
-      ConfigurationManager::GraphicsSetting::DrawGrid));
+          ConfigurationManager::GraphicsSetting::DrawGrid));
   connect(ui->drawPixelGridCheckbox, &QCheckBox::checkStateChanged, this,
           [&](const Qt::CheckState status) {
             _configurationManager->setGraphicsSetting(
-                ConfigurationManager::GraphicsSetting::DrawGrid, status == Qt::Checked);
+                    ConfigurationManager::GraphicsSetting::DrawGrid, status == Qt::Checked);
           });
 
   ui->pixelGridWidthSpinBox->setValue(_configurationManager->getGraphicsSetting<double>(
-      ConfigurationManager::GraphicsSetting::GridWidth));
+          ConfigurationManager::GraphicsSetting::GridWidth));
   connect(ui->pixelGridWidthSpinBox, &QDoubleSpinBox::valueChanged, this,
           [&](const double newValue) {
             _configurationManager->setGraphicsSetting(
-                ConfigurationManager::GraphicsSetting::GridWidth, newValue);
+                    ConfigurationManager::GraphicsSetting::GridWidth, newValue);
           });
 
   ui->pixelGridZoomThresholdSpinbox->setValue(_configurationManager->getGraphicsSetting<double>(
-      ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold));
+          ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold));
   connect(ui->pixelGridZoomThresholdSpinbox, &QDoubleSpinBox::valueChanged, this,
           [&](const double newValue) {
             _configurationManager->setGraphicsSetting(
-                ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold, newValue);
+                    ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold, newValue);
           });
 
   // TODO: this should be GraphicsBackend in templates after CAS-169
   ui->backendComboBox->setCurrentIndex(_configurationManager->getGraphicsSetting<int>(
-      ConfigurationManager::GraphicsSetting::GraphicalBackend));
+          ConfigurationManager::GraphicsSetting::GraphicalBackend));
   connect(ui->backendComboBox, &QComboBox::currentIndexChanged, this, [&](const int newIndex) {
-    if (newIndex > 0 && newIndex < static_cast<int>(GraphicalBackend::Count)) {
+    if (newIndex >= 0 && newIndex < static_cast<int>(GraphicalBackend::Count))
+    {
       _configurationManager->setGraphicsSetting(
-          ConfigurationManager::GraphicsSetting::GraphicalBackend, newIndex);
+              ConfigurationManager::GraphicsSetting::GraphicalBackend, newIndex);
     }
   });
 }
 
-void SettingsDialog::setupComboBoxes() const {
-  for (int i = 0; i < static_cast<int>(GraphicalBackend::Count); i++) {
+void SettingsDialog::setupComboBoxes() const
+{
+  for (int i = 0; i < static_cast<int>(GraphicalBackend::Count); i++)
+  {
     const QString backendName =
-        QString::fromStdString(getNameOfGraphicalBackend(static_cast<GraphicalBackend>(i)));
+            QString::fromStdString(getNameOfGraphicalBackend(static_cast<GraphicalBackend>(i)));
     ui->backendComboBox->addItem(backendName, i);
   }
 }
-}  // namespace capy::ui
+} // namespace capy::ui

@@ -17,48 +17,67 @@
 
 #include "ProjectsModel.hpp"
 
-namespace capy::models {
-ProjectsModel::ProjectsModel(QObject* parent) : QAbstractListModel(parent) {}
-
-bool ProjectsModel::doesProjectExist(const std::string& name) const {
-  return std::ranges::any_of(_projects,
-                             [name](const auto& project) { return project.getName() == name; });
+namespace capy::models
+{
+ProjectsModel::ProjectsModel(QObject* parent) :
+    QAbstractListModel(parent)
+{
 }
 
-void ProjectsModel::setProjects(std::vector<Project> projects) {
+bool ProjectsModel::doesProjectExist(const std::string& name) const
+{
+  return std::ranges::any_of(_projects, [name](const auto& project) {
+    return project.getName() == name;
+  });
+}
+
+void ProjectsModel::setProjects(std::vector<Project> projects)
+{
   beginResetModel();
   _projects = std::move(projects);
   endResetModel();
 }
 
-const Project& ProjectsModel::getProject(const int index) const { return _projects.at(index); }
-
-const std::vector<Project>& ProjectsModel::getProjects() const { return _projects; }
-
-int ProjectsModel::rowCount([[maybe_unused]] const QModelIndex& parent) const {
-  return _projects.size();
+const Project& ProjectsModel::getProject(const int index) const
+{
+  return _projects.at(index);
 }
 
-QVariant ProjectsModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid() || isRowOutsideModel(index)) {
-    return QVariant();
+const std::vector<Project>& ProjectsModel::getProjects() const
+{
+  return _projects;
+}
+
+int ProjectsModel::rowCount([[maybe_unused]] const QModelIndex& parent) const
+{
+  return static_cast<int>(_projects.size());
+}
+
+QVariant ProjectsModel::data(const QModelIndex& index, int role) const
+{
+  if (!index.isValid() || isRowOutsideModel(index))
+  {
+    return {};
   }
 
   const auto& project = _projects.at(index.row());
-  switch (role) {
+  switch (role)
+  {
     case Qt::DisplayRole:
       return QString::fromStdString(project.getName());
 
     default:
-      return QVariant();
+      return {};
   }
 }
 
-bool ProjectsModel::isRowOutsideModel(const QModelIndex& index) const {
+bool ProjectsModel::isRowOutsideModel(const QModelIndex& index) const
+{
   return isRowOutsideModel(index.row());
 }
 
-bool ProjectsModel::isRowOutsideModel(const int index) const {
+bool ProjectsModel::isRowOutsideModel(const int index) const
+{
   return index < 0 || static_cast<size_t>(index) >= _projects.size();
 }
-}  // namespace capy::models
+} // namespace capy::models

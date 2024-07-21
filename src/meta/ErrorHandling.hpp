@@ -22,14 +22,15 @@
 #include <optional>
 #include <string>
 
-namespace capy {
-template <typename SuccessType, typename ErrorType>
+namespace capy
+{
+template<typename SuccessType, typename ErrorType>
 using Result = std::expected<SuccessType, ErrorType>;
 
-template <typename ErrorType>
+template<typename ErrorType>
 using PotentialError = std::optional<ErrorType>;
 
 std::string getErrnoString();
-}  // namespace capy
+} // namespace capy
 
-#endif  // ERRORHANDLING_HPP
+#endif // ERRORHANDLING_HPP

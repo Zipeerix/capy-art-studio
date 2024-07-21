@@ -18,21 +18,24 @@
 #ifndef DRAWINGWIDGET_HPP
 #define DRAWINGWIDGET_HPP
 
-#include <QGraphicsView>
 #include <memory>
-#include "graphics/drawing-tools/PenTool.hpp"
-#include "graphics/Drawing.hpp"
+#include <QGraphicsView>
+
 #include "DrawingCanvasItem.hpp"
+#include "graphics/drawing-tools/PenTool.hpp"
 #include "graphics/drawing-tools/Toolbox.hpp"
+#include "graphics/Drawing.hpp"
 #include "io/ConfigurationManager.hpp"
 #include "ui/utils/CheckerboardPixmap.hpp"
 
-namespace capy::ui {
+namespace capy::ui
+{
 struct Pixel {
   uint8_t r, g, b, a;
 };
 
-class DrawingWidget final : public QGraphicsView {
+class DrawingWidget final : public QGraphicsView
+{
 public:
   explicit DrawingWidget(QWidget* parent);
 
@@ -84,6 +87,6 @@ private:
   void mouseMoveEvent(QMouseEvent* event) override;
   void wheelEvent(QWheelEvent* event) override;
 };
-}
+} // namespace capy::ui
 
 #endif //DRAWINGWIDGET_HPP

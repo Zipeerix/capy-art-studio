@@ -21,68 +21,95 @@
 
 #include <stdexcept>
 
-namespace capy {
-ChunkFileReader::ChunkFileReader(const std::string& path) : _fileStream(path, std::ios::binary) {}
+namespace capy
+{
+ChunkFileReader::ChunkFileReader(const std::string& path) :
+    _fileStream(path, std::ios::binary)
+{
+}
 
-ChunkFileReader::~ChunkFileReader() { _fileStream.close(); }
+ChunkFileReader::~ChunkFileReader()
+{
+  _fileStream.close();
+}
 
-Result<std::vector<uint8_t>, std::string> ChunkFileReader::readNextBytesToVector(const int nBytes) {
+Result<std::vector<uint8_t>, std::string> ChunkFileReader::readNextBytesToVector(const int nBytes)
+{
   std::vector<uint8_t> vecBuffer(nBytes, 0);
 
   _fileStream.read(reinterpret_cast<char*>(vecBuffer.data()), nBytes);
-  if (_fileStream.gcount() != nBytes) {
+  if (_fileStream.gcount() != nBytes)
+  {
     return std::unexpected(fmt::format("Unable to read further {} bytes", nBytes));
   }
 
   return vecBuffer;
 }
 
-Result<uint8_t, std::string> ChunkFileReader::readNextByte() {
+Result<uint8_t, std::string> ChunkFileReader::readNextByte()
+{
   uint8_t data = 0x00;
 
   _fileStream.read(reinterpret_cast<char*>(&data), 1);
-  if (_fileStream.gcount() != 1) {
+  if (_fileStream.gcount() != 1)
+  {
     return std::unexpected("Unable to read further 1 bytes");
   }
 
   return data;
 }
 
-Result<QByteArray, std::string> ChunkFileReader::readNextBytesToQByteArray(const int nBytes) {
+Result<QByteArray, std::string> ChunkFileReader::readNextBytesToQByteArray(const int nBytes)
+{
   // TODO: Combine this and to vector since api is the same
   QByteArray qBuffer(nBytes, 0);
 
   _fileStream.read(qBuffer.data(), nBytes);
-  if (_fileStream.gcount() != nBytes) {
+  if (_fileStream.gcount() != nBytes)
+  {
     return std::unexpected(fmt::format("Unable to read further {} bytes", nBytes));
   }
 
   return qBuffer;
 }
 
-bool ChunkFileReader::isFileValid() const { return _fileStream.good(); }
+bool ChunkFileReader::isFileValid() const
+{
+  return _fileStream.good();
+}
 
-std::size_t ChunkFileReader::currentReadingIndex() { return _fileStream.tellg(); }
+std::streamoff ChunkFileReader::currentReadingIndex()
+{
+  return _fileStream.tellg();
+}
 
-void ChunkFileReader::setReadingIndex(std::size_t index) { _fileStream.seekg(index); }
+void ChunkFileReader::setReadingIndex(const std::streamoff index)
+{
+  _fileStream.seekg(index);
+}
 
-void ChunkFileReader::moveIteratorBackBy(const int offset) {
+void ChunkFileReader::moveIteratorBackBy(const int offset)
+{
   const auto current = currentReadingIndex();
   setReadingIndex(current - offset);
 }
 
 Result<std::string, std::string> ChunkFileReader::readNextString(const int size,
-                                                                 const bool nullTerminated) {
-  if (size < 0) {
+                                                                 const bool nullTerminated)
+{
+  if (size < 0)
+  {
     throw std::invalid_argument("Invalid size argument for string reading");
   }
 
-  if (size == 0) {
+  if (size == 0)
+  {
     return "";
   }
 
   const auto rawCharsRes = readNextBytesToVector(size);
-  if (!rawCharsRes.has_value()) {
+  if (!rawCharsRes.has_value())
+  {
     return std::unexpected(rawCharsRes.error());
   }
 
@@ -91,16 +118,20 @@ Result<std::string, std::string> ChunkFileReader::readNextString(const int size,
   return std::string{rawChars.begin(), nullTerminated ? rawChars.end() - 1 : rawChars.end()};
 }
 
-Result<std::string, std::string> ChunkFileReader::readNextVariableLengthString() {
+Result<std::string, std::string> ChunkFileReader::readNextVariableLengthString()
+{
   std::string buffer;
-  while (true) {
+  while (true)
+  {
     const auto nextByteReadRes = readNextByte();
-    if (!nextByteReadRes.has_value()) {
+    if (!nextByteReadRes.has_value())
+    {
       return std::unexpected("Unexpected end of file before reaching null terminator");
     }
 
     const auto nextByte = nextByteReadRes.value();
-    if (nextByte == 0x00) {
+    if (nextByte == 0x00)
+    {
       return buffer;
     }
 
@@ -108,22 +139,27 @@ Result<std::string, std::string> ChunkFileReader::readNextVariableLengthString()
   }
 }
 
-Result<std::uint32_t, std::string> ChunkFileReader::readNext32BitInt(const bool bigEndian) {
+Result<std::uint32_t, std::string> ChunkFileReader::readNext32BitInt(const bool bigEndian)
+{
   const auto bytesRes = readNextBytesToVector(sizeof(std::uint32_t));
-  if (!bytesRes.has_value()) {
+  if (!bytesRes.has_value())
+  {
     return std::unexpected(bytesRes.error());
   }
 
   const auto& bytes = bytesRes.value();
 
   // TODO: Refactor below
-  uint32_t value;
-  if (bigEndian) {
+  uint32_t value = 0;
+  if (bigEndian)
+  {
     value = (static_cast<uint32_t>(static_cast<uint8_t>(bytes[3])) |
              (static_cast<uint32_t>(static_cast<uint8_t>(bytes[2])) << 8) |
              (static_cast<uint32_t>(static_cast<uint8_t>(bytes[1])) << 16) |
              (static_cast<uint32_t>(static_cast<uint8_t>(bytes[0])) << 24));
-  } else {
+  }
+  else
+  {
     value = (static_cast<uint32_t>(static_cast<uint8_t>(bytes[0])) |
              (static_cast<uint32_t>(static_cast<uint8_t>(bytes[1])) << 8) |
              (static_cast<uint32_t>(static_cast<uint8_t>(bytes[2])) << 16) |
@@ -132,4 +168,4 @@ Result<std::uint32_t, std::string> ChunkFileReader::readNext32BitInt(const bool 
 
   return value;
 }
-}  // namespace capy
+} // namespace capy

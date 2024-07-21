@@ -16,31 +16,39 @@
 *******************************************************************************/
 
 #include "Toolbox.hpp"
+
 #include <stdexcept>
+
 #include "ui/widgets/DrawingWidget.hpp"
 
-namespace capy {
+namespace capy
+{
 Toolbox::Toolbox(ui::DrawingWidget* drawingWidget) :
-  _drawingWidget(drawingWidget),
-  _penTool(std::make_unique<PenTool>(_drawingWidget)),
-  _handTool(std::make_unique<HandTool>(_drawingWidget)) {
+    _drawingWidget(drawingWidget),
+    _penTool(std::make_unique<PenTool>(_drawingWidget)),
+    _handTool(std::make_unique<HandTool>(_drawingWidget))
+{
 }
 
-PenTool* Toolbox::getPenTool() const {
+PenTool* Toolbox::getPenTool() const
+{
   return _penTool.get();
 }
 
-HandTool* Toolbox::getHandTool() const {
+HandTool* Toolbox::getHandTool() const
+{
   return _handTool.get();
 }
 
-IDrawingTool* Toolbox::getCurrentToolInterface() const {
-  switch (_currentTool) {
+IDrawingTool* Toolbox::getCurrentToolInterface() const
+{
+  switch (_currentTool)
+  {
     case DrawingTool::Hand:
-      return reinterpret_cast<IDrawingTool*>(_handTool.get());
+      return _handTool.get();
 
     case DrawingTool::Pen:
-      return reinterpret_cast<IDrawingTool*>(_penTool.get());
+      return _penTool.get();
 
     case DrawingTool::Count:
     default:
@@ -48,8 +56,10 @@ IDrawingTool* Toolbox::getCurrentToolInterface() const {
   }
 }
 
-void Toolbox::switchTool(const DrawingTool newTool) {
-  if (newTool == DrawingTool::Count) {
+void Toolbox::switchTool(const DrawingTool newTool)
+{
+  if (newTool == DrawingTool::Count)
+  {
     throw std::logic_error("Invalid tool");
   }
 
@@ -57,4 +67,4 @@ void Toolbox::switchTool(const DrawingTool newTool) {
   _currentTool = newTool;
   getCurrentToolInterface()->onSwitchTo();
 }
-} // capy
+} // namespace capy

@@ -24,8 +24,14 @@
 // TODO: Refactor? Maybe seperate file for listFilesInPath  cuz its utils
 // TODO: maybe io namespace
 
-namespace capy {
-enum class FilesystemPath : int { Palettes, Projects, PathCount };
+namespace capy
+{
+enum class FilesystemPath : int
+{
+  Palettes,
+  Projects,
+  PathCount
+};
 
 void initApplicationFilesystem();
 std::string getConfigFilePath();
@@ -34,6 +40,6 @@ std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationP
 std::vector<std::string> listFilesInPath(FilesystemPath applicationPath);
 std::string getFileNameFromPath(const std::string& fullPath);
 bool createFileIfItDoesntExist(const std::string& path);
-}  // namespace capy
+} // namespace capy
 
-#endif  // APPLICATIONFILESYSTEM_HPP
+#endif // APPLICATIONFILESYSTEM_HPP

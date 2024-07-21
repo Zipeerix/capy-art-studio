@@ -17,11 +17,13 @@
 
 #include "SpacerUtils.hpp"
 
-namespace capy::ui {
-QWidget* createExpandingSpacer(QWidget* parent) {
+namespace capy::ui
+{
+QWidget* createExpandingSpacer(QWidget* parent)
+{
   auto* spacer = new QWidget(parent);
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
   return spacer;
 }
-}  // namespace capy
+} // namespace capy::ui

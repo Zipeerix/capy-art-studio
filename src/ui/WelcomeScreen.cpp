@@ -20,23 +20,26 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include "MainWindow.hpp"
-#include "SettingsDialog.hpp"
-#include "UiHelpers.hpp"
 #include "io/ApplicationFilesystem.hpp"
 #include "io/ConsoleLogger.hpp"
+#include "MainWindow.hpp"
+#include "SettingsDialog.hpp"
 #include "ui_WelcomeScreen.h"
+#include "UiHelpers.hpp"
 #include "utils/MessageBoxUtils.hpp"
 #include "widgets/delegates/ProjectDelegate.hpp"
 
-namespace capy::ui {
-WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
-    : QMainWindow(parent),
-      AutoSizeSavingItem(this, "WelcomeScreen"),
-      ui(new Ui::WelcomeScreen),
-      _configurationManager(ConfigurationManager::createInstance()),
-      _projectsManager(this),
-      _mainWindow(mainWindow) {
+namespace capy::ui
+{
+WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent) :
+    QMainWindow(parent),
+    AutoSizeSavingItem(this, "WelcomeScreen"),
+    ui(new Ui::WelcomeScreen),
+    _configurationManager(ConfigurationManager::createInstance()),
+    _projectsManager(this),
+    _mainWindow(mainWindow),
+    _projectAreaLayout(new FlowLayout(ui->scrollAreaWidgetContents))
+{
   ui->setupUi(this);
 
   connect(ui->createProjectButton, &QPushButton::clicked, this,
@@ -48,7 +51,6 @@ WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
   connect(ui->exitButton, &QPushButton::clicked, this, &QApplication::exit);
   connect(ui->continueButton, &QPushButton::clicked, this, &WelcomeScreen::continueButtonClicked);
 
-  _projectAreaLayout = new FlowLayout(ui->scrollAreaWidgetContents);
   ui->scrollAreaWidgetContents->setLayout(_projectAreaLayout);
 
   connect(&_projectsManager, &ProjectsManager::projectsUpdated, this,
@@ -57,22 +59,29 @@ WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent)
   _projectsManager.loadProjectsFromFilesystem();
 }
 
-WelcomeScreen::~WelcomeScreen() { delete ui; }
+WelcomeScreen::~WelcomeScreen()
+{
+  delete ui;
+}
 
-void WelcomeScreen::closeEvent(QCloseEvent* event) {
-  logger::hideConsoleWindow();  // cleanup happens in Application::start
+void WelcomeScreen::closeEvent(QCloseEvent* event)
+{
+  logger::hideConsoleWindow(); // cleanup happens in Application::start
   QMainWindow::closeEvent(event);
 }
 
-void WelcomeScreen::resizeEvent(QResizeEvent* event) {
+void WelcomeScreen::resizeEvent(QResizeEvent* event)
+{
   updateUiProjectList();
   QWidget::resizeEvent(event);
 }
 
-void WelcomeScreen::updateUiProjectList() {
+void WelcomeScreen::updateUiProjectList()
+{
   clearLayout(_projectAreaLayout);
 
-  for (const auto& project : _projectsManager.getProjects()) {
+  for (const auto& project: _projectsManager.getProjects())
+  {
     const bool isProjectInternal = _projectsManager.isProjectInternal(project);
     auto* delegate = new ProjectDelegate(project, isProjectInternal, this);
     connect(delegate, &ProjectDelegate::itemClicked, this, &WelcomeScreen::projectClicked);
@@ -83,22 +92,27 @@ void WelcomeScreen::updateUiProjectList() {
   }
 }
 
-void WelcomeScreen::createNewProjectClicked() {
+void WelcomeScreen::createNewProjectClicked()
+{
   // TODO Reuse new file dialog
 }
 
-void WelcomeScreen::openProjectClicked() {
+void WelcomeScreen::openProjectClicked()
+{
   // TODO add project to list using ConfigurationManager and open it
   const QString filter = "Capy Project Files (*.capy)";
   const std::string filePath =
-      QFileDialog::getOpenFileName(this, "Open Capy File", QString(), filter).toStdString();
-  if (filePath.empty()) {
+          QFileDialog::getOpenFileName(this, "Open Capy File", QString(), filter).toStdString();
+  if (filePath.empty())
+  {
     return;
   }
 
-  if (_configurationManager->doesAdditionalProjectExist(filePath)) {
-    return execMessageBox(this, QMessageBox::Icon::Information,
-                          "This file is already in your project list");
+  if (_configurationManager->doesAdditionalProjectExist(filePath))
+  {
+    execMessageBox(this, QMessageBox::Icon::Information,
+                   "This file is already in your project list");
+    return;
   }
 
   _projectsManager.addProject(filePath);
@@ -106,21 +120,25 @@ void WelcomeScreen::openProjectClicked() {
   // TODO: Open project that was loaded
 }
 
-void WelcomeScreen::importProjectClicked() {
+void WelcomeScreen::importProjectClicked()
+{
   // TODO: Import a png/jpg and convert to capy
 }
 
-void WelcomeScreen::continueButtonClicked() {
+void WelcomeScreen::continueButtonClicked()
+{
   _mainWindow->show();
   this->hide();
 }
 
-void WelcomeScreen::settingsClicked() {
+void WelcomeScreen::settingsClicked()
+{
   SettingsDialog settingsDialog{this};
   settingsDialog.exec();
 }
 
-void WelcomeScreen::projectClicked(const Project& project) {
+void WelcomeScreen::projectClicked(const Project& project)
+{
   logger::info(fmt::format("Attempting to open project at {}", project.getPath()));
 
   // TODO: Maybe make drawing unique_ptr for memory saving
@@ -129,13 +147,14 @@ void WelcomeScreen::projectClicked(const Project& project) {
   hide();
 }
 
-void WelcomeScreen::projectRemoveClicked(const Project& project) {
+void WelcomeScreen::projectRemoveClicked(const Project& project)
+{
   const auto& projectPath = project.getPath();
 
   logger::info(fmt::format("Attempting to remove project at {}", projectPath));
 
-  if (!showConfirmationDialog(this,
-                              "Are you sure you want to remove this project from the list?")) {
+  if (!showConfirmationDialog(this, "Are you sure you want to remove this project from the list?"))
+  {
     return;
   }
 
@@ -143,18 +162,20 @@ void WelcomeScreen::projectRemoveClicked(const Project& project) {
   _projectsManager.removeProject(projectPath);
 }
 
-void WelcomeScreen::projectDeleteClicked(const Project& project) {
+void WelcomeScreen::projectDeleteClicked(const Project& project)
+{
   const auto& projectPath = project.getPath();
 
   logger::info(fmt::format("Attempting to delete project at {}", projectPath));
 
-  if (!showConfirmationDialog(this, "Are you sure you want to delete this project?")) {
+  if (!showConfirmationDialog(this, "Are you sure you want to delete this project?"))
+  {
     return;
   }
 
   // TODO: Maybe accept project instead of path
   _projectsManager.deleteProject(projectPath, [&](const std::string& error) {
-    return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+    execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
   });
 }
-}  // namespace capy::ui
+} // namespace capy::ui

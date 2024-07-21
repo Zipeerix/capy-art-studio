@@ -17,11 +17,16 @@
 
 #include "ClickableLabel.hpp"
 
-namespace capy::ui {
-ClickableLabel::ClickableLabel(QWidget* parent) : QLabel(parent) {}
+namespace capy::ui
+{
+ClickableLabel::ClickableLabel(QWidget* parent) :
+    QLabel(parent)
+{
+}
 
-void ClickableLabel::mousePressEvent(QMouseEvent* event) {
+void ClickableLabel::mousePressEvent(QMouseEvent* event)
+{
   emit clicked();
   QLabel::mousePressEvent(event);
 }
-}  // namespace capy::ui
+} // namespace capy::ui

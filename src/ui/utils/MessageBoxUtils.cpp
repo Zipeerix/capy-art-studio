@@ -21,19 +21,18 @@
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy::ui {
-bool showConfirmationDialog(QWidget* parent, const std::string& message) {
-  const QMessageBox::StandardButton reply = QMessageBox::question(
-      parent, "Confirmation", QString::fromStdString(message), QMessageBox::Yes | QMessageBox::No);
-  return reply == QMessageBox::Yes;
-}
-
-static QString getMessageBoxTitleBasedOnType(const QMessageBox::Icon type) {
-  switch (type) {
+namespace capy::ui
+{
+namespace
+{
+QString getMessageBoxTitleBasedOnType(const QMessageBox::Icon type)
+{
+  switch (type)
+  {
     case QMessageBox::NoIcon:
       logger::warning(
-          "Created messagebox using helper but with NoIcon type - this is probably a bug",
-          logger::Severity::Mild);
+              "Created messagebox using helper but with NoIcon type - this is probably a bug",
+              logger::Severity::Mild);
       return "MessageBox";
 
     case QMessageBox::Information:
@@ -52,12 +51,22 @@ static QString getMessageBoxTitleBasedOnType(const QMessageBox::Icon type) {
       throw std::logic_error("Invalid QMessageBox type provided to helper");
   }
 }
+} // namespace
 
-void execMessageBox(QWidget* parent, const QMessageBox::Icon type, const QString& text) {
+bool showConfirmationDialog(QWidget* parent, const std::string& message)
+{
+  const QMessageBox::StandardButton reply =
+          QMessageBox::question(parent, "Confirmation", QString::fromStdString(message),
+                                QMessageBox::Yes | QMessageBox::No);
+  return reply == QMessageBox::Yes;
+}
+
+void execMessageBox(QWidget* parent, const QMessageBox::Icon type, const QString& text)
+{
   QMessageBox messageBox(parent);
   messageBox.setIcon(type);
   messageBox.setWindowTitle(getMessageBoxTitleBasedOnType(type));
   messageBox.setText(text);
   messageBox.exec();
 }
-}  // namespace capy::ui
+} // namespace capy::ui

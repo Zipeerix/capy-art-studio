@@ -20,9 +20,10 @@
 
 #include <QColor>
 
-namespace capy::algorithms {
+namespace capy::algorithms
+{
 int calculateLuminance(const QColor& color);
 QColor blackOrWhiteBasedOnLuminance(const QColor& color);
-}  // namespace capy::algorithms
+} // namespace capy::algorithms
 
-#endif  // LUMINANCE_HPP
+#endif // LUMINANCE_HPP

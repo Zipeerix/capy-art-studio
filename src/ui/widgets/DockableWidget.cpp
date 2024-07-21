@@ -19,18 +19,20 @@
 
 #include <QDockWidget>
 
-namespace capy::ui {
+namespace capy::ui
+{
 DockableWidget::DockableWidget(QWidget* parent) :
-  QDockWidget(parent) {
+    QDockWidget(parent)
+{
   const QPalette palette = this->palette();
   const auto backgroundColor = palette.color(QPalette::Window);
   const auto borderColor = palette.color(QPalette::Shadow);
   setStyleSheet(QString("QDockWidget::title {"
-                                    "    background: %1;"
-                                    "    border: 1px solid %2;"
-                                    "    padding: 5px;"
-                                    "}")
-                                .arg(backgroundColor.name())
-                                .arg(borderColor.name()));
+                        "    background: %1;"
+                        "    border: 1px solid %2;"
+                        "    padding: 5px;"
+                        "}")
+                        .arg(backgroundColor.name())
+                        .arg(borderColor.name()));
 }
-}
+} // namespace capy::ui

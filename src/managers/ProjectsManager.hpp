@@ -18,14 +18,16 @@
 #ifndef PROJECTSMANAGER_HPP
 #define PROJECTSMANAGER_HPP
 
-#include "Manager.hpp"
 #include "io/ConfigurationManager.hpp"
+#include "Manager.hpp"
 #include "models/ProjectsModel.hpp"
 
-namespace capy {
-class ProjectsManager final : public QObject {
+namespace capy
+{
+class ProjectsManager final : public QObject
+{
   Q_OBJECT
- public:
+public:
   explicit ProjectsManager(QObject* parent);
 
   // TODO: base class Manager and also dont pass throguh model fns just have model() method
@@ -40,13 +42,13 @@ class ProjectsManager final : public QObject {
   void removeProject(const std::string& projectPath);
   void deleteProject(const std::string& projectPath, const ManagerErrorHandler& errorHandler);
 
- signals:
+signals:
   void projectsUpdated();
 
- private:
+private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   models::ProjectsModel _model;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // PROJECTSMANAGER_HPP
+#endif // PROJECTSMANAGER_HPP

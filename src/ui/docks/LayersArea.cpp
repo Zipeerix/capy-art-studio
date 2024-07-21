@@ -16,17 +16,20 @@
 *******************************************************************************/
 
 #include "LayersArea.hpp"
+
 #include "ui_LayersArea.h"
 
-namespace capy::ui {
-LayersArea::LayersArea(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::LayersArea) {
+namespace capy::ui
+{
+LayersArea::LayersArea(QWidget* parent) :
+    QWidget(parent),
+    ui(new Ui::LayersArea)
+{
   ui->setupUi(this);
 }
 
-LayersArea::~LayersArea() {
-    delete ui;
+LayersArea::~LayersArea()
+{
+  delete ui;
 }
 } // namespace capy::ui
-

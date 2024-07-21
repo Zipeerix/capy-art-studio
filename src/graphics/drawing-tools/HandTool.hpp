@@ -20,8 +20,10 @@
 
 #include "IDrawingTool.hpp"
 
-namespace capy {
-class HandTool final : public IDrawingTool {
+namespace capy
+{
+class HandTool final : public IDrawingTool
+{
 public:
   explicit HandTool(ui::DrawingWidget* drawingWidget);
   ~HandTool() override = default;
@@ -38,6 +40,6 @@ private:
   int _panStartX = 0;
   int _panStartY = 0;
 };
-} // capy
+} // namespace capy
 
 #endif //HANDTOOL_HPP

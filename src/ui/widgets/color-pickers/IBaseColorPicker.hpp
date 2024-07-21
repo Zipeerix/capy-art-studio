@@ -18,13 +18,15 @@
 #ifndef IBASECOLORPICKER_HPP
 #define IBASECOLORPICKER_HPP
 
-namespace capy::ui {
+namespace capy::ui
+{
 // TODO: class that all color pickers will implement so they can be
 // interchanged, can a signal be here?
-class IBaseColorPicker {
- public:
- private:
+class IBaseColorPicker
+{
+public:
+private:
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // IBASECOLORPICKER_HPP
+#endif // IBASECOLORPICKER_HPP

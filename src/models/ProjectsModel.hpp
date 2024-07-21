@@ -22,10 +22,12 @@
 
 #include "user/Project.hpp"
 
-namespace capy::models {
-class ProjectsModel final : public QAbstractListModel {
+namespace capy::models
+{
+class ProjectsModel final : public QAbstractListModel
+{
   Q_OBJECT
- public:
+public:
   explicit ProjectsModel(QObject* parent = nullptr);
 
   int rowCount(const QModelIndex& parent) const override;
@@ -37,12 +39,12 @@ class ProjectsModel final : public QAbstractListModel {
   const Project& getProject(int index) const;
   const std::vector<Project>& getProjects() const;
 
- private:
+private:
   std::vector<Project> _projects;
 
   bool isRowOutsideModel(const QModelIndex& index) const;
   bool isRowOutsideModel(int index) const;
 };
-}  // namespace capy::models
+} // namespace capy::models
 
-#endif  // PROJECTSMODEL_HPP
+#endif // PROJECTSMODEL_HPP

@@ -18,14 +18,16 @@
 #ifndef PIXEL_HPP
 #define PIXEL_HPP
 
-#include <QBrush>
 #include <cstdint>
+#include <QBrush>
 
 #include "Colors.hpp"
 
-namespace capy {
-class Pixel {
- public:
+namespace capy
+{
+class Pixel
+{
+public:
   Pixel(ColorChannelValue r, ColorChannelValue g, ColorChannelValue b, uint8_t alpha);
 
   static Pixel white(uint8_t alpha = constants::alpha::solidColor);
@@ -45,12 +47,12 @@ class Pixel {
   bool isSolid() const;
   bool isTransparent() const;
 
- private:
+private:
   ColorChannelValue _r;
   ColorChannelValue _g;
   ColorChannelValue _b;
   uint8_t _alpha;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // PIXEL_HPP
+#endif // PIXEL_HPP

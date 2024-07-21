@@ -17,17 +17,23 @@
 
 #include "ExternalPlugin.hpp"
 
-namespace capy {
-ExternalPlugin::ExternalPlugin(const DynamicLibrary& dynLib) : _dynLib(dynLib) {
-  if (!_dynLib.isValid()) {
+namespace capy
+{
+ExternalPlugin::ExternalPlugin(const DynamicLibrary& dynLib) :
+    _dynLib(dynLib)
+{
+  if (!_dynLib.isValid())
+  {
     throw std::logic_error(
-        "Attempting to create plugin with invalid dynamib library, check error handling");
+            "Attempting to create plugin with invalid dynamib library, check error handling");
   }
 }
 
-Result<ExternalPlugin, std::string> ExternalPlugin::fromFile(const std::string& path) {
+Result<ExternalPlugin, std::string> ExternalPlugin::fromFile(const std::string& path)
+{
   const auto dynLibLoadRes = DynamicLibrary::fromFile(path);
-  if (!dynLibLoadRes.has_value()) {
+  if (!dynLibLoadRes.has_value())
+  {
     return std::unexpected("Unable to load plugin as its file is invalid/corrupted");
   }
 
@@ -38,4 +44,4 @@ Result<ExternalPlugin, std::string> ExternalPlugin::fromFile(const std::string& 
 
   return ExternalPlugin(dynLib);
 }
-}  // namespace capy
+} // namespace capy

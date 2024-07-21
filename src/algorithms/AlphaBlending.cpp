@@ -23,40 +23,50 @@
 
 #include "graphics/Colors.hpp"
 
-namespace capy::algorithms {
-AlphaBlender::AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction)
-    : _pixelColorGettingFunction(std::move(pixelColorGettingFunction)) {}
-
-static ColorChannelValue getBlendChannelValue(const ColorChannelValue currentColor,
-                                              const ColorChannelValue addedColor,
-                                              const double alphaPercentage) {
+namespace capy::algorithms
+{
+namespace
+{
+ColorChannelValue getBlendChannelValue(const ColorChannelValue currentColor,
+                                       const ColorChannelValue addedColor,
+                                       const double alphaPercentage)
+{
   const double fromAdded = addedColor * alphaPercentage;
   const double fromCurrent = currentColor * (1.0 - alphaPercentage);
 
   return static_cast<ColorChannelValue>(std::round(fromAdded + fromCurrent));
 }
 
-static QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor,
-                                              const QColor& addedColor) {
+QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor, const QColor& addedColor)
+{
   const double alphaPercentage = addedColor.alpha() / 255.0;
   const ColorChannelValue red =
-      getBlendChannelValue(currentColor.red(), addedColor.red(), alphaPercentage);
+          getBlendChannelValue(currentColor.red(), addedColor.red(), alphaPercentage);
   const ColorChannelValue green =
-      getBlendChannelValue(currentColor.green(), addedColor.green(), alphaPercentage);
+          getBlendChannelValue(currentColor.green(), addedColor.green(), alphaPercentage);
   const ColorChannelValue blue =
-      getBlendChannelValue(currentColor.blue(), addedColor.blue(), alphaPercentage);
-  const auto alpha =
-      static_cast<uint8_t>(addedColor.alpha() + (currentColor.alpha() * (1.0 - alphaPercentage)));
+          getBlendChannelValue(currentColor.blue(), addedColor.blue(), alphaPercentage);
+  const auto alpha = static_cast<uint8_t>(addedColor.alpha() +
+                                          (currentColor.alpha() * (1.0 - alphaPercentage)));
 
   return {red, green, blue, alpha};
 }
+} // namespace
 
-QColor AlphaBlender::blend(const int x, const int y, const int layerCount) const {
+AlphaBlender::AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction) :
+    _pixelColorGettingFunction(std::move(pixelColorGettingFunction))
+{
+}
+
+QColor AlphaBlender::blend(const int x, const int y, const int layerCount) const
+{
   // find first solid color to use as base
   std::optional<int> optIndexOfFirstSolidColor = std::nullopt;
-  for (int currentLayerIndex = 0; currentLayerIndex < layerCount; currentLayerIndex++) {
+  for (int currentLayerIndex = 0; currentLayerIndex < layerCount; currentLayerIndex++)
+  {
     const auto& pixel = _pixelColorGettingFunction(x, y, currentLayerIndex);
-    if (pixel.isSolid()) {
+    if (pixel.isSolid())
+    {
       optIndexOfFirstSolidColor = currentLayerIndex;
     }
   }
@@ -65,29 +75,32 @@ QColor AlphaBlender::blend(const int x, const int y, const int layerCount) const
   const int indexOfFirstSolidColor = optIndexOfFirstSolidColor.value_or(0);
 
   QColor currentlyCalculatedPixelValue =
-      _pixelColorGettingFunction(x, y, indexOfFirstSolidColor).convertToQColor();
+          _pixelColorGettingFunction(x, y, indexOfFirstSolidColor).convertToQColor();
 
   // apply blending to remaining layers
   for (int currentLayerIndex = indexOfFirstSolidColor; currentLayerIndex < layerCount;
-       currentLayerIndex++) {
+       currentLayerIndex++)
+  {
     const Pixel& pixel = _pixelColorGettingFunction(x, y, currentLayerIndex);
 
     // If there is no solid layer color then pretend the base layer is solid
     // even if its not
-    if (pixel.isTransparent() && optIndexOfFirstSolidColor.has_value()) {
+    if (pixel.isTransparent() && optIndexOfFirstSolidColor.has_value())
+    {
       continue;
     }
 
     auto currentPixelColor = pixel.convertToQColor();
-    if (!optIndexOfFirstSolidColor.has_value() && currentLayerIndex == 0) {
+    if (!optIndexOfFirstSolidColor.has_value() && currentLayerIndex == 0)
+    {
       // Pretend base layer has solid alpha
       currentPixelColor.setAlpha(constants::alpha::solidColor);
     }
 
     currentlyCalculatedPixelValue =
-        applyAlphaBlendBetweenTwoPixels(currentlyCalculatedPixelValue, currentPixelColor);
+            applyAlphaBlendBetweenTwoPixels(currentlyCalculatedPixelValue, currentPixelColor);
   }
 
   return currentlyCalculatedPixelValue;
 }
-}  // namespace capy::algorithms
+} // namespace capy::algorithms

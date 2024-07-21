@@ -18,15 +18,17 @@
 #ifndef FILEDOWNLOADERS_HPP
 #define FILEDOWNLOADERS_HPP
 
+#include <cstdint>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QObject>
-#include <cstdint>
 
-namespace capy {
-class AsyncFileDownloader final : public QObject {
+namespace capy
+{
+class AsyncFileDownloader final : public QObject
+{
   Q_OBJECT
- public:
+public:
   explicit AsyncFileDownloader(QObject* parent = nullptr);
   ~AsyncFileDownloader() override = default;
 
@@ -34,17 +36,17 @@ class AsyncFileDownloader final : public QObject {
 
   const std::vector<uint8_t>& getDownloadedData() const;
 
- signals:
+signals:
   void finished(bool success);
 
- private slots:
+private slots:
   void fileDownloaded(QNetworkReply* reply);
 
- private:
+private:
   std::string _currentUrl;
   QNetworkAccessManager _networkAccessManager;
   std::vector<uint8_t> _downloadedData;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // FILEDOWNLOADERS_HPP
+#endif // FILEDOWNLOADERS_HPP

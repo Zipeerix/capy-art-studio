@@ -19,35 +19,52 @@
 
 #include <fmt/format.h>
 
-#include <QStandardPaths>
 #include <filesystem>
 #include <fstream>
+#include <QStandardPaths>
 #include <string>
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy {
-static std::filesystem::path getApplicationFilesystemBasePath() {
+namespace capy
+{
+
+namespace
+{
+bool isCorrectExtension(const FilesystemPath applicationPath, const std::string& extension)
+{
+  const auto validExtensions = getCorrectExtensionsForPath(applicationPath);
+  return std::ranges::find(validExtensions, extension) != validExtensions.end();
+}
+
+std::filesystem::path getApplicationFilesystemBasePath()
+{
   const auto path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
   return std::filesystem::path(path.toStdString()) / "capy-art-studio";
 }
+} // namespace
 
-void initApplicationFilesystem() {
-  for (int i = 0; i < static_cast<int>(FilesystemPath::PathCount); i++) {
+void initApplicationFilesystem()
+{
+  for (int i = 0; i < static_cast<int>(FilesystemPath::PathCount); i++)
+  {
     const auto path = getFilesystemPath(static_cast<FilesystemPath>(i));
     logger::info(fmt::format("Creating folder if it doesnt exist: {}", path));
     std::filesystem::create_directories(path);
   }
 }
 
-std::string getConfigFilePath() {
+std::string getConfigFilePath()
+{
   const auto basePath = getApplicationFilesystemBasePath();
   return (basePath / "config.ini").string();
 }
 
-std::string getFilesystemPath(const FilesystemPath of) {
+std::string getFilesystemPath(const FilesystemPath of)
+{
   const auto basePath = getApplicationFilesystemBasePath();
-  switch (of) {
+  switch (of)
+  {
     case FilesystemPath::Palettes:
       return (basePath / "palettes").string();
 
@@ -60,8 +77,10 @@ std::string getFilesystemPath(const FilesystemPath of) {
   }
 }
 
-std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationPath) {
-  switch (applicationPath) {
+std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationPath)
+{
+  switch (applicationPath)
+  {
     case FilesystemPath::Palettes:
       return {".json"};
 
@@ -74,18 +93,16 @@ std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationP
   }
 }
 
-static bool isCorrectExtension(const FilesystemPath applicationPath, const std::string& extension) {
-  const auto validExtensions = getCorrectExtensionsForPath(applicationPath);
-  return std::ranges::find(validExtensions, extension) != validExtensions.end();
-}
-
-std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
+std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath)
+{
   const auto path = getFilesystemPath(applicationPath);
   std::vector<std::string> filePaths;
 
-  for (const auto& entry : std::filesystem::directory_iterator(path)) {
+  for (const auto& entry: std::filesystem::directory_iterator(path))
+  {
     if (entry.is_regular_file() &&
-        isCorrectExtension(applicationPath, entry.path().extension().string())) {
+        isCorrectExtension(applicationPath, entry.path().extension().string()))
+    {
       filePaths.push_back(entry.path().string());
     }
   }
@@ -93,12 +110,14 @@ std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath) {
   return filePaths;
 }
 
-std::string getFileNameFromPath(const std::string& fullPath) {
+std::string getFileNameFromPath(const std::string& fullPath)
+{
   const std::filesystem::path pathObj{fullPath};
   return pathObj.filename().string();
 }
 
-bool createFileIfItDoesntExist(const std::string& path) {
+bool createFileIfItDoesntExist(const std::string& path)
+{
   std::ofstream file;
   file.open(path, std::ios::out);
 
@@ -107,4 +126,4 @@ bool createFileIfItDoesntExist(const std::string& path) {
 
   return isFileGood;
 }
-}  // namespace capy
+} // namespace capy

@@ -19,55 +19,71 @@
 
 #include <fmt/format.h>
 
+#include <graphics/Colors.hpp>
 #include <ranges>
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy::models {
-PaletteModel::PaletteModel(QObject* parent) : QAbstractListModel(parent) {}
-
-bool PaletteModel::doesPaletteExist(const std::string& name) const {
-  return std::ranges::any_of(_palettes,
-                             [name](const auto& palette) { return palette.getName() == name; });
+namespace capy::models
+{
+PaletteModel::PaletteModel(QObject* parent) :
+    QAbstractListModel(parent)
+{
 }
 
-std::vector<PaletteColor> PaletteModel::getColors(const int index) const {
-  if (isRowOutsideModel(index)) {
+bool PaletteModel::doesPaletteExist(const std::string& name) const
+{
+  return std::ranges::any_of(_palettes, [name](const auto& palette) {
+    return palette.getName() == name;
+  });
+}
+
+std::vector<PaletteColor> PaletteModel::getColors(const int index) const
+{
+  if (isRowOutsideModel(index))
+  {
     logger::error(
-        fmt::format("Attempting to get colors of non-existent palette with index {}", index),
-        logger::Severity::Mild);
+            fmt::format("Attempting to get colors of non-existent palette with index {}", index),
+            logger::Severity::Mild);
     return {};
   }
 
   return _palettes.at(index).getAllColors();
 }
 
-PaletteColor PaletteModel::getColor(const int index, const int colorIndex) const {
-  if (isRowOutsideModel(index)) {
+PaletteColor PaletteModel::getColor(const int index, const int colorIndex) const
+{
+  if (isRowOutsideModel(index))
+  {
     logger::error(
-        fmt::format("Attempting to get colors of non-existent palette with index {}", index),
-        logger::Severity::Mild);
-    return PaletteColor{QColor(0, 0, 0, 255), "ERROR"};
+            fmt::format("Attempting to get colors of non-existent palette with index {}", index),
+            logger::Severity::Mild);
+    // TODO: Change to optional and return error
+    return PaletteColor{QColor(0, 0, 0, constants::alpha::solidColor), "ERROR"};
   }
 
   const auto& palette = _palettes.at(index);
   return palette.getColor(colorIndex);
 }
 
-PotentialError<std::string> PaletteModel::addColorToPalette(
-    const int paletteIndex, const QColor color, const std::optional<std::string>& hint) {
-  if (isRowOutsideModel(paletteIndex)) {
-    logger::error(
-        fmt::format("Attempting to add color to non-existent palette with index {}", paletteIndex),
-        logger::Severity::Mild);
+PotentialError<std::string> PaletteModel::addColorToPalette(const int paletteIndex,
+                                                            const QColor color,
+                                                            const std::optional<std::string>& hint)
+{
+  if (isRowOutsideModel(paletteIndex))
+  {
+    logger::error(fmt::format("Attempting to add color to non-existent palette with index {}",
+                              paletteIndex),
+                  logger::Severity::Mild);
     return {};
   }
 
   auto& palette = _palettes.at(paletteIndex);
   palette.addColor(color, hint);
-  const auto paletteSaveError = updatePaletteFile(paletteIndex, true);
-  if (paletteSaveError.has_value()) {
-    return paletteSaveError.value();
+  auto paletteSaveError = updatePaletteFile(paletteIndex, true);
+  if (paletteSaveError.has_value())
+  {
+    return paletteSaveError;
     // TODO: if unable to save then remove the color from model
   }
 
@@ -75,8 +91,10 @@ PotentialError<std::string> PaletteModel::addColorToPalette(
 }
 
 PotentialError<std::string> PaletteModel::removeColorFromPalette(const int paletteIndex,
-                                                                 const int colorIndex) {
-  if (isRowOutsideModel(paletteIndex)) {
+                                                                 const int colorIndex)
+{
+  if (isRowOutsideModel(paletteIndex))
+  {
     logger::error(fmt::format("Attempting to remove color from non-existent palette with index {}",
                               paletteIndex),
                   logger::Severity::Mild);
@@ -85,9 +103,10 @@ PotentialError<std::string> PaletteModel::removeColorFromPalette(const int palet
 
   auto& palette = _palettes.at(paletteIndex);
   palette.removeColor(colorIndex);
-  const auto paletteSaveError = updatePaletteFile(paletteIndex, true);
-  if (paletteSaveError.has_value()) {
-    return paletteSaveError.value();
+  auto paletteSaveError = updatePaletteFile(paletteIndex, true);
+  if (paletteSaveError.has_value())
+  {
+    return paletteSaveError;
     // TODO: if unable to save then remove the color from model
   }
 
@@ -95,53 +114,66 @@ PotentialError<std::string> PaletteModel::removeColorFromPalette(const int palet
 }
 
 PotentialError<std::string> PaletteModel::updatePaletteFile(const int paletteIndex,
-                                                            const bool emitDataChanged) {
+                                                            const bool emitDataChanged)
+{
   auto& palette = _palettes.at(paletteIndex);
   const auto paletteSaveError = palette.saveToJson(std::nullopt);
-  if (paletteSaveError.has_value()) {
+  if (paletteSaveError.has_value())
+  {
     return "Unable to save palette due to: " + paletteSaveError.value();
-  } else {
-    if (emitDataChanged) {
-      emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
-    }
   }
 
-  return {};
+  if (emitDataChanged)
+  {
+    emit dataChanged(index(paletteIndex), index(paletteIndex), {Qt::DisplayRole});
+  }
+
+  return std::nullopt;
 }
 
-void PaletteModel::setPalettes(std::vector<Palette> palettes) {
+void PaletteModel::setPalettes(std::vector<Palette> palettes)
+{
   beginResetModel();
   _palettes = std::move(palettes);
   endResetModel();
 }
 
-const Palette& PaletteModel::getPalette(const int index) const { return _palettes.at(index); }
-
-int PaletteModel::rowCount([[maybe_unused]] const QModelIndex& parent) const {
-  return _palettes.size();
+const Palette& PaletteModel::getPalette(const int index) const
+{
+  return _palettes.at(index);
 }
 
-QVariant PaletteModel::data(const QModelIndex& index, int role) const {
+int PaletteModel::rowCount([[maybe_unused]] const QModelIndex& parent) const
+{
+  return static_cast<int>(_palettes.size());
+}
+
+QVariant PaletteModel::data(const QModelIndex& index, int role) const
+{
   // TODO: Maybe do QAbstractItemModel and have Palette's data as columns
-  if (!index.isValid() || isRowOutsideModel(index)) {
-    return QVariant();
+  if (!index.isValid() || isRowOutsideModel(index))
+  {
+    return {};
   }
 
   const auto& palette = _palettes.at(index.row());
-  switch (role) {
+  switch (role)
+  {
     case Qt::DisplayRole:
       return QString::fromStdString(palette.getName());
 
     default:
-      return QVariant();
+      return {};
   }
 }
 
-bool PaletteModel::isRowOutsideModel(const QModelIndex& index) const {
+bool PaletteModel::isRowOutsideModel(const QModelIndex& index) const
+{
   return isRowOutsideModel(index.row());
 }
 
-bool PaletteModel::isRowOutsideModel(const int index) const {
+bool PaletteModel::isRowOutsideModel(const int index) const
+{
   return index < 0 || static_cast<size_t>(index) >= _palettes.size();
 }
-}  // namespace capy::models
+} // namespace capy::models

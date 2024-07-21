@@ -23,10 +23,12 @@
 
 #include "user/Palette.hpp"
 
-namespace capy::models {
-class PaletteModel final : public QAbstractListModel {
+namespace capy::models
+{
+class PaletteModel final : public QAbstractListModel
+{
   Q_OBJECT
- public:
+public:
   explicit PaletteModel(QObject* parent = nullptr);
 
   int rowCount(const QModelIndex& parent) const override;
@@ -38,8 +40,8 @@ class PaletteModel final : public QAbstractListModel {
 
   [[nodiscard]] PotentialError<std::string> removeColorFromPalette(int paletteIndex,
                                                                    int colorIndex);
-  [[nodiscard]] PotentialError<std::string> addColorToPalette(
-      int paletteIndex, QColor color, const std::optional<std::string>& hint);
+  [[nodiscard]] PotentialError<std::string>
+  addColorToPalette(int paletteIndex, QColor color, const std::optional<std::string>& hint);
   [[nodiscard]] PotentialError<std::string> updatePaletteFile(int paletteIndex,
                                                               bool emitDataChanged);
 
@@ -48,12 +50,12 @@ class PaletteModel final : public QAbstractListModel {
   void setPalettes(std::vector<Palette> palettes);
   const Palette& getPalette(int index) const;
 
- private:
+private:
   std::vector<Palette> _palettes;
 
   bool isRowOutsideModel(const QModelIndex& index) const;
   bool isRowOutsideModel(int index) const;
 };
-}  // namespace capy::models
+} // namespace capy::models
 
-#endif  // PALETTEMODEL_HPP
+#endif // PALETTEMODEL_HPP

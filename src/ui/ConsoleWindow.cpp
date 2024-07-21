@@ -19,13 +19,23 @@
 
 #include "ui_ConsoleWindow.h"
 
-namespace capy::ui {
-ConsoleWindow::ConsoleWindow(QWidget* parent)
-    : QMainWindow(parent), AutoSizeSavingItem(this, "ConsoleWindow"), ui(new Ui::ConsoleWindow) {
+namespace capy::ui
+{
+ConsoleWindow::ConsoleWindow(QWidget* parent) :
+    QMainWindow(parent),
+    AutoSizeSavingItem(this, "ConsoleWindow"),
+    ui(new Ui::ConsoleWindow)
+{
   ui->setupUi(this);
 }
 
-ConsoleWindow::~ConsoleWindow() { delete ui; }
+ConsoleWindow::~ConsoleWindow()
+{
+  delete ui;
+}
 
-void ConsoleWindow::log(const QString& message) const { ui->logTextArea->append(message + "\n"); }
-}  // namespace capy::ui
+void ConsoleWindow::log(const QString& message) const
+{
+  ui->logTextArea->append(message + "\n");
+}
+} // namespace capy::ui

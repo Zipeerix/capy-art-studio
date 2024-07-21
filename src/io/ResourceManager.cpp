@@ -19,9 +19,12 @@
 
 #include <stdexcept>
 
-namespace capy {
-QString ResourceManager::getPrefixPath(const Prefix prefix) {
-  switch (prefix) {
+namespace capy
+{
+QString ResourceManager::getPrefixPath(const Prefix prefix)
+{
+  switch (prefix)
+  {
     case Prefix::Root:
       return ":/";
 
@@ -36,9 +39,11 @@ QString ResourceManager::getPrefixPath(const Prefix prefix) {
   }
 }
 
-QString ResourceManager::getIconPath(const Icon icon) {
+QString ResourceManager::getIconPath(const Icon icon)
+{
   const auto rootPath = getPrefixPath(Prefix::Icons);
-  switch (icon) {
+  switch (icon)
+  {
     case Icon::ApplicationIcon:
       return rootPath + "icon.png";
 
@@ -50,9 +55,11 @@ QString ResourceManager::getIconPath(const Icon icon) {
   }
 }
 
-QString ResourceManager::getToolIconPath(const ToolIcon toolIcon) {
+QString ResourceManager::getToolIconPath(const ToolIcon toolIcon)
+{
   const auto rootPath = getPrefixPath(Prefix::ToolsIcons);
-  switch (toolIcon) {
+  switch (toolIcon)
+  {
     case ToolIcon::Pen:
       return rootPath + "pencil.png";
 
@@ -63,4 +70,4 @@ QString ResourceManager::getToolIconPath(const ToolIcon toolIcon) {
       throw std::logic_error("Invalid resource requested");
   }
 }
-}  // namespace capy
+} // namespace capy

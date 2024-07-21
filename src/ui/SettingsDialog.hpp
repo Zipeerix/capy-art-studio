@@ -23,18 +23,21 @@
 #include "io/ConfigurationManager.hpp"
 #include "utils/AutoSizeSavingItem.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class SettingsDialog;
 }
 
-class SettingsDialog final : public QDialog, AutoSizeSavingItem {
+class SettingsDialog final : public QDialog, AutoSizeSavingItem
+{
   Q_OBJECT
- public:
+public:
   explicit SettingsDialog(QWidget* parent = nullptr);
   ~SettingsDialog() override;
 
- private:
+private:
   Ui::SettingsDialog* ui;
   std::shared_ptr<ConfigurationManager> _configurationManager;
 
@@ -44,6 +47,6 @@ class SettingsDialog final : public QDialog, AutoSizeSavingItem {
 
   void setupComboBoxes() const;
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // CAPY_UI_SETTINGSWINDOW_HPP
+#endif // CAPY_UI_SETTINGSWINDOW_HPP

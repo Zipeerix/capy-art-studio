@@ -19,15 +19,19 @@
 #define TOOLBOX_HPP
 
 #include <memory>
+
 #include "HandTool.hpp"
 #include "PenTool.hpp"
 
-namespace capy {
-namespace ui {
+namespace capy
+{
+namespace ui
+{
 class DrawingWidget;
 }
 
-class Toolbox {
+class Toolbox
+{
 public:
   explicit Toolbox(ui::DrawingWidget* drawingWidget);
 
@@ -43,6 +47,6 @@ private:
   std::unique_ptr<HandTool> _handTool;
   DrawingTool _currentTool = DrawingTool::Pen;
 };
-} // capy
+} // namespace capy
 
 #endif //TOOLBOX_HPP

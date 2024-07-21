@@ -21,39 +21,51 @@
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy::models {
-PaletteColorTableModel::PaletteColorTableModel(QObject* parent) : QAbstractTableModel(parent) {}
+namespace capy::models
+{
+PaletteColorTableModel::PaletteColorTableModel(QObject* parent) :
+    QAbstractTableModel(parent)
+{
+}
 
-void PaletteColorTableModel::setColors(std::vector<PaletteColor> colors) {
+void PaletteColorTableModel::setColors(std::vector<PaletteColor> colors)
+{
   beginResetModel();
   _colors = std::move(colors);
   endResetModel();
 }
 
-void PaletteColorTableModel::notifyThatColorWasRemovedFromThePalette(const int colorIndex) {
+void PaletteColorTableModel::notifyThatColorWasRemovedFromThePalette(const int colorIndex)
+{
   beginRemoveRows(QModelIndex(), colorIndex, colorIndex);
   _colors.erase(_colors.begin() + colorIndex);
   endRemoveRows();
 }
 
-int PaletteColorTableModel::rowCount([[maybe_unused]] const QModelIndex& parent) const {
-  return _colors.size();
+int PaletteColorTableModel::rowCount([[maybe_unused]] const QModelIndex& parent) const
+{
+  return static_cast<int>(_colors.size());
 }
 
-int PaletteColorTableModel::columnCount([[maybe_unused]] const QModelIndex& parent) const {
+int PaletteColorTableModel::columnCount([[maybe_unused]] const QModelIndex& parent) const
+{
   return static_cast<int>(ColumnName::ColumnCount);
 }
 
-QVariant PaletteColorTableModel::data(const QModelIndex& index, const int role) const {
-  if (!index.isValid() || isRowOutsideModel(index)) {
-    return QVariant();
+QVariant PaletteColorTableModel::data(const QModelIndex& index, const int role) const
+{
+  if (!index.isValid() || isRowOutsideModel(index))
+  {
+    return {};
   }
 
   const auto& paletteColor = _colors.at(index.row());
   const auto color = paletteColor.color;
-  switch (role) {
+  switch (role)
+  {
     case Qt::DisplayRole: {
-      switch (index.column()) {
+      switch (index.column())
+      {
         case static_cast<int>(ColumnName::Color):
           return color;
 
@@ -64,19 +76,21 @@ QVariant PaletteColorTableModel::data(const QModelIndex& index, const int role) 
           return QString::fromStdString(paletteColor.hint.value_or(""));
 
         default:
-          return QVariant();
+          return {};
       }
     }
 
     default:
-      return QVariant();
+      return {};
   }
 }
 
 QVariant PaletteColorTableModel::headerData(const int section,
                                             [[maybe_unused]] const Qt::Orientation orientation,
-                                            [[maybe_unused]] const int role) const {
-  switch (section) {
+                                            [[maybe_unused]] const int role) const
+{
+  switch (section)
+  {
     case static_cast<int>(ColumnName::Color):
       return "Color";
 
@@ -87,15 +101,17 @@ QVariant PaletteColorTableModel::headerData(const int section,
       return "Hint";
 
     default:
-      return QVariant();
+      return {};
   }
 }
 
-bool PaletteColorTableModel::isRowOutsideModel(const QModelIndex& index) const {
+bool PaletteColorTableModel::isRowOutsideModel(const QModelIndex& index) const
+{
   return isRowOutsideModel(index.row());
 }
 
-bool PaletteColorTableModel::isRowOutsideModel(const int index) const {
+bool PaletteColorTableModel::isRowOutsideModel(const int index) const
+{
   return index < 0 || static_cast<size_t>(index) >= _colors.size();
 }
-}  // namespace capy::models
+} // namespace capy::models

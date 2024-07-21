@@ -21,8 +21,10 @@
 #include <QString>
 #include <string>
 
-namespace capy::logger {
-enum class Severity {
+namespace capy::logger
+{
+enum class Severity
+{
   Default,
   Expected,
   Mild,
@@ -39,6 +41,6 @@ void debug(const std::string& message, const std::string& module);
 void info(const std::string& message);
 void warning(const std::string& message, Severity severity);
 void error(const std::string& message, Severity severity);
-}  // namespace capy::logger
+} // namespace capy::logger
 
-#endif  // CONSOLEMANAGER_HPP
+#endif // CONSOLEMANAGER_HPP

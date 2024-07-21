@@ -20,9 +20,11 @@
 #include <cerrno>
 #include <cstring>
 
-namespace capy {
-std::string getErrnoString() {
-  const auto str = std::strerror(errno);
-  return str ? str : "Unknown error";
+namespace capy
+{
+std::string getErrnoString()
+{
+  auto* const str = std::strerror(errno);
+  return str != nullptr ? str : "Unknown error";
 }
-}  // namespace capy
+} // namespace capy

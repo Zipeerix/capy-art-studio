@@ -17,7 +17,8 @@
 
 #include "Application.hpp"
 
-int main() {
-  capy::Application application{};
+int main()
+{
+  const capy::Application application{};
   return application.start();
 }

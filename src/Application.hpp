@@ -22,21 +22,23 @@
 
 #include "io/ConfigurationManager.hpp"
 
-namespace capy {
-class Application {
- public:
+namespace capy
+{
+class Application
+{
+public:
   Application();
   ~Application();
 
   [[nodiscard]] int start() const;
 
- private:
+private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   QApplication _guiApplication;
   int _cmdArgcOverwrite = 0;
 
   static void registerMetadata();
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // APPLICATION_HPP
+#endif // APPLICATION_HPP

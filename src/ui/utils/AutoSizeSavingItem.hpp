@@ -23,17 +23,19 @@
 
 #include "io/ConfigurationManager.hpp"
 
-namespace capy::ui {
-class AutoSizeSavingItem {
- public:
+namespace capy::ui
+{
+class AutoSizeSavingItem
+{
+public:
   AutoSizeSavingItem(QWidget* widget, std::string name);
   virtual ~AutoSizeSavingItem();
 
- private:
+private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   QWidget* _widget;
   std::string _name;
 };
-}  // namespace capy
+} // namespace capy::ui
 
-#endif  // AUTOSIZESAVINGITEM_HPP
+#endif // AUTOSIZESAVINGITEM_HPP

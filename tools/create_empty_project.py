@@ -62,7 +62,8 @@ def save_byte_list_to_file(byte_list, file_path):
 
 def main():
     if len(sys.argv) != 6:
-        print("Usage: python3 create_empty_project.py [WIDTH] [HEIGHT] [LAYERS] [MINIATURE_PATH] [OUTPUT_PATH]")
+        print(
+            "Usage: python3 create_empty_project.py [WIDTH] [HEIGHT] [LAYERS] [MINIATURE_PATH] [OUTPUT_PATH]")
         exit()
 
     # Magic string CAPY
@@ -80,7 +81,8 @@ def main():
 
     layers_data_bytes = generate_random_layers_data(width, height, layers)
 
-    full_file_bytes = file_bytes + list(miniature_len_bytes) + miniature_bytes + layers_data_bytes
+    full_file_bytes = file_bytes + \
+        list(miniature_len_bytes) + miniature_bytes + layers_data_bytes
 
     save_byte_list_to_file(full_file_bytes, output_path)
 

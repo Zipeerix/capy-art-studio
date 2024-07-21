@@ -18,17 +18,19 @@
 #ifndef COLORPICKERSLIDER_HPP
 #define COLORPICKERSLIDER_HPP
 
+#include <functional>
 #include <QGradientStops>
 #include <QSlider>
-#include <functional>
 
 #include "ui/utils/CheckerboardPixmap.hpp"
 
-namespace capy::ui {
-class DefaultColorPickerSlider final : public QSlider {
+namespace capy::ui
+{
+class DefaultColorPickerSlider final : public QSlider
+{
   Q_OBJECT
 
- public:
+public:
   explicit DefaultColorPickerSlider(Qt::Orientation orientation, QWidget* parent = nullptr);
   explicit DefaultColorPickerSlider(QWidget* parent = nullptr);
   ~DefaultColorPickerSlider() override = default;
@@ -38,11 +40,11 @@ class DefaultColorPickerSlider final : public QSlider {
 
   void paintEvent(QPaintEvent* event) override;
 
- private:
+private:
   QGradientStops _gradientStops;
   CheckerboardPixmap _checkerboardPixmap;
   bool _renderCheckerboard = false;
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // COLORPICKERSLIDER_HPP
+#endif // COLORPICKERSLIDER_HPP

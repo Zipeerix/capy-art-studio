@@ -22,19 +22,25 @@
 #include "ui/MainWindow.hpp"
 #include "ui/WelcomeScreen.hpp"
 
-namespace capy {
-Application::Application()
-    : _configurationManager(ConfigurationManager::createInstance()),
-      _guiApplication(_cmdArgcOverwrite, nullptr) {
+namespace capy
+{
+Application::Application() :
+    _configurationManager(ConfigurationManager::createInstance()),
+    _guiApplication(_cmdArgcOverwrite, nullptr)
+{
   QApplication::setAttribute(
-      Qt::AA_DontUseNativeMenuBar);  // NOLINT(*-static-accessed-through-instance)
+          Qt::AA_DontUseNativeMenuBar); // NOLINT(*-static-accessed-through-instance)
 }
 
-Application::~Application() { logger::cleanup(); }
+Application::~Application()
+{
+  logger::cleanup();
+}
 
-int Application::start() const {
-  if (_configurationManager->getDebugSetting<bool>(
-          ConfigurationManager::DebugSetting::ShowConsole)) {
+int Application::start() const
+{
+  if (_configurationManager->getDebugSetting<bool>(ConfigurationManager::DebugSetting::ShowConsole))
+  {
     logger::init();
     logger::showConsoleWindow();
   }
@@ -45,21 +51,23 @@ int Application::start() const {
   QMainWindow* firstWindowToShow = &mainWindow;
   std::unique_ptr<ui::WelcomeScreen> welcomeScreen = nullptr;
   if (_configurationManager->getApplicationSetting<bool>(
-          ConfigurationManager::ApplicationSettings::ShowWelcomeScreen)) {
+              ConfigurationManager::ApplicationSettings::ShowWelcomeScreen))
+  {
     welcomeScreen = std::make_unique<ui::WelcomeScreen>(&mainWindow);
     firstWindowToShow = welcomeScreen.get();
   }
 
   firstWindowToShow->show();
 
-  return _guiApplication.exec();  // NOLINT(*-static-accessed-through-instance)
+  return _guiApplication.exec(); // NOLINT(*-static-accessed-through-instance)
 }
 
-void Application::registerMetadata() {
+void Application::registerMetadata()
+{
   QCoreApplication::setOrganizationName("Zipeerix");
   QCoreApplication::setOrganizationDomain("https://github.com/Zipeerix/capy-art-studio");
   QCoreApplication::setApplicationName("CapyArt Studio");
 
   qRegisterMetaType<GraphicalBackend>("GraphicalBackend");
 }
-}  // namespace capy
+} // namespace capy

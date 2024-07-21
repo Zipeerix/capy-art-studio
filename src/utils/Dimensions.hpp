@@ -18,9 +18,11 @@
 #ifndef DIMENSIONS_HPP
 #define DIMENSIONS_HPP
 
-namespace capy::utils {
-class Dimensions {
- public:
+namespace capy::utils
+{
+class Dimensions
+{
+public:
   Dimensions(int width, int height);
 
   int getWidth() const;
@@ -31,10 +33,10 @@ class Dimensions {
 
   int getArea() const;
 
- private:
+private:
   int _width = 0;
   int _height = 0;
 };
-}  // namespace capy::utils
+} // namespace capy::utils
 
-#endif  // DIMENSIONS_HPP
+#endif // DIMENSIONS_HPP
