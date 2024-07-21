@@ -10,7 +10,7 @@ class CapyArtStudio(ConanFile):
     name = "CapyArtStudio"
     version = "1.0"
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeToolchain", "CMakeDeps"
+    generators = "CMakeDeps"
     options = {"skip_static_analysis": [True, False]}
     default_options = {"skip_static_analysis": False}
 
