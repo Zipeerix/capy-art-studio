@@ -11,6 +11,8 @@ class CapyArtStudio(ConanFile):
     version = "1.0"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"
+    options = {"skip_static_analysis": [True, False]}
+    default_options = {"skip_static_analysis": False}
 
     # TODO: Move building tests seperatetly to here conan test? Don't build both at build()
 
@@ -28,5 +30,9 @@ class CapyArtStudio(ConanFile):
         path = os.path.join(self.source_folder, "CMakeLists.txt")
         cmake_file = load(self, path)
         cmake = CMake(self)
+        
+        if self.options["skip_static_analysis"]:
+            cmake.definitions["SKIP_STATIC_ANALYSIS"] = "true"
+
         cmake.configure()
         cmake.build()
