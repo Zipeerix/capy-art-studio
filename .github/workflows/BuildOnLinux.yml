@@ -47,7 +47,7 @@ jobs:
         run: conan install ${{ github.workspace }}/conan --build=missing
       - name: Build
         run:
-          conan build ${{ github.workspace }}/conan -o CapyArtStudio:skip_static_analysis=True
+          conan build ${{ github.workspace }}/conan -o CapyArtStudio/*:skip_static_analysis=True
       - name: Test
         run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests
       - name: Create installer
