@@ -5,7 +5,8 @@ project(
         VERSION 1.0
         LANGUAGES CXX)
 
-#set(CMAKE_CXX_CLANG_TIDY clang-tidy; -format-style='file';)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_CLANG_TIDY clang-tidy; -format-style='file';)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -204,7 +205,7 @@ set_target_properties(
         PROPERTIES # C++ Settings
         CXX_STANDARD 23
         CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
+        CXX_EXTENSIONS OFF
         # Qt application settings
         MACOSX_BUNDLE_GUI_IDENTIFIER com.example.capyartstudio
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -235,7 +236,7 @@ else ()
 
     target_link_libraries(CapyArtStudio_Tests PRIVATE GTest::GTest ${LIBS_TO_LINK})
 
-    set_target_properties(CapyArtStudio_Tests PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES)
+    set_target_properties(CapyArtStudio_Tests PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS OFF)
 
     if (GMock_FOUND)
         target_link_libraries(CapyArtStudio_Tests INTERFACE GTest::GMock)
