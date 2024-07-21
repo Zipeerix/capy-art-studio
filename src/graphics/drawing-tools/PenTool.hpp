@@ -15,37 +15,32 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef PENTOOL_HPP
+#define PENTOOL_HPP
 
-#include <QString>
+#include <QColor>
+#include "IDrawingTool.hpp"
 
 namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+class PenTool final : public IDrawingTool {
+public:
+  explicit PenTool(ui::DrawingWidget* drawingWidget);
+  ~PenTool() override = default;
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+  void setColor(QColor newColor);
+  QColor getColor() const;
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
+  void onSwitchTo() override;
+  void onSwitchOutOf() override;
 
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
+  bool mousePressEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
+  bool mouseMoveEvent(QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) override;
+  bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
 
-  static QString getPrefixPath(Prefix prefix);
+private:
+  QColor _color{0, 0, 0, 255};
+  std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
 };
-}  // namespace capy
+} // capy
 
-#endif  // RESOURCEMANAGER_HPP
+#endif //PENTOOL_HPP

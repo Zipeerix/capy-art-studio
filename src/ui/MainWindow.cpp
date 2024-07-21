@@ -18,9 +18,8 @@
 #include "MainWindow.hpp"
 
 #include <fmt/format.h>
-
 #include <QFileDialog>
-
+#include <QString>
 #include "dialogs/NewFileDialog.hpp"
 #include "io/ConsoleLogger.hpp"
 #include "ui/SettingsDialog.hpp"
@@ -29,6 +28,7 @@
 #include "utils/MessageBoxUtils.hpp"
 #include "utils/SpacerUtils.hpp"
 #include "widgets/DrawingWidget.hpp"
+#include "widgets/delegates/ToolButton.hpp"
 
 namespace capy::ui {
 MainWindow::MainWindow(QWidget* parent)
@@ -130,6 +130,16 @@ void MainWindow::setupLayersDock() {
 void MainWindow::setupToolsDock() {
   _toolsDockArea = new ToolsArea(this);
   ui->toolsDock->setWidget(_toolsDockArea);
+
+  for (int i = 0; i < static_cast<int>(DrawingTool::Count); i++) {
+    const auto drawingTool = static_cast<DrawingTool>(i);
+    const QString buttonName = QString::fromStdString(getDrawingToolName(drawingTool));
+
+    ToolButton* createdButon = _toolsDockArea->addToolButton(drawingTool);
+    connect(createdButon, &ToolButton::clicked, this, [&, drawingTool]() {
+      _drawingWidget->switchTool(drawingTool);
+    });
+  }
 }
 
 void MainWindow::setupStatusBarTimer() {
@@ -147,10 +157,10 @@ void MainWindow::changeWindowTitle(const std::string& projectPath) {
   setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
 }
 
-void MainWindow::colorPickerColorChanged(QColor newColor) const {
+void MainWindow::colorPickerColorChanged(const QColor newColor) const {
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
                            newColor.blue(), newColor.alpha()));
-  _drawingWidget->setDrawingColor(newColor);
+  _drawingWidget->handleColorPickerColorChange(newColor);
 }
 
 void MainWindow::setProject(const Project& project) {

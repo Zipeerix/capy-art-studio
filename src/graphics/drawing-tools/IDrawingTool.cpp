@@ -15,37 +15,25 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
-
-#include <QString>
+#include "IDrawingTool.hpp"
+#include <stdexcept>
 
 namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+std::string getDrawingToolName(const DrawingTool drawingTool) {
+  switch (drawingTool) {
+  case DrawingTool::Hand:
+    return "Hand";
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+    case DrawingTool::Pen:
+      return "Pen";
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
+    case DrawingTool::Count:
+    default:
+      throw std::logic_error("Invalid tool");
+  }
+}
 
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
-
-  static QString getPrefixPath(Prefix prefix);
-};
-}  // namespace capy
-
-#endif  // RESOURCEMANAGER_HPP
+IDrawingTool::IDrawingTool(ui::DrawingWidget* drawingWidget) :
+  _drawingWidget(drawingWidget) {
+}
+} // capy

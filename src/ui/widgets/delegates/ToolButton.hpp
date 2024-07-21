@@ -15,37 +15,22 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef TOOLBUTTON_HPP
+#define TOOLBUTTON_HPP
 
-#include <QString>
+#include <QPushButton>
 
-namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+#include "graphics/drawing-tools/IDrawingTool.hpp"
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+// TODO: Make remove and set stylesheet in each button
+namespace capy::ui {
+class ToolButton final : public QPushButton {
+public:
+  explicit ToolButton(DrawingTool tool, QWidget* parent);
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
-
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
-
-  static QString getPrefixPath(Prefix prefix);
+  void paintAsClicked();
+  void paintAsUnclicked();
 };
-}  // namespace capy
+} // namespace capy::ui
 
-#endif  // RESOURCEMANAGER_HPP
+#endif //TOOLBUTTON_HPP

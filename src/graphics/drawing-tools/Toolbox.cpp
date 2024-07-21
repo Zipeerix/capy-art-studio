@@ -15,37 +15,46 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
-
-#include <QString>
+#include "Toolbox.hpp"
+#include <stdexcept>
+#include "ui/widgets/DrawingWidget.hpp"
 
 namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+Toolbox::Toolbox(ui::DrawingWidget* drawingWidget) :
+  _drawingWidget(drawingWidget),
+  _penTool(std::make_unique<PenTool>(_drawingWidget)),
+  _handTool(std::make_unique<HandTool>(_drawingWidget)) {
+}
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+PenTool* Toolbox::getPenTool() const {
+  return _penTool.get();
+}
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
+HandTool* Toolbox::getHandTool() const {
+  return _handTool.get();
+}
 
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
+IDrawingTool* Toolbox::getCurrentToolInterface() const {
+  switch (_currentTool) {
+    case DrawingTool::Hand:
+      return reinterpret_cast<IDrawingTool*>(_handTool.get());
 
-  static QString getPrefixPath(Prefix prefix);
-};
-}  // namespace capy
+    case DrawingTool::Pen:
+      return reinterpret_cast<IDrawingTool*>(_penTool.get());
 
-#endif  // RESOURCEMANAGER_HPP
+    case DrawingTool::Count:
+    default:
+      throw std::logic_error("Invalid current tool");
+  }
+}
+
+void Toolbox::switchTool(const DrawingTool newTool) {
+  if (newTool == DrawingTool::Count) {
+    throw std::logic_error("Invalid tool");
+  }
+
+  getCurrentToolInterface()->onSwitchOutOf();
+  _currentTool = newTool;
+  getCurrentToolInterface()->onSwitchTo();
+}
+} // capy

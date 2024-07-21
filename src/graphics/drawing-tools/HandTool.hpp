@@ -15,37 +15,29 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef HANDTOOL_HPP
+#define HANDTOOL_HPP
 
-#include <QString>
+#include "IDrawingTool.hpp"
 
 namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+class HandTool final : public IDrawingTool {
+public:
+  explicit HandTool(ui::DrawingWidget* drawingWidget);
+  ~HandTool() override = default;
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+  void onSwitchTo() override;
+  void onSwitchOutOf() override;
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
+  bool mousePressEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
+  bool mouseMoveEvent(QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) override;
+  bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
 
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
-
-  static QString getPrefixPath(Prefix prefix);
+private:
+  bool _leftMouseButtonPressed = false;
+  int _panStartX = 0;
+  int _panStartY = 0;
 };
-}  // namespace capy
+} // capy
 
-#endif  // RESOURCEMANAGER_HPP
+#endif //HANDTOOL_HPP

@@ -15,37 +15,42 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#include <stdexcept>
+#include "ToolButton.hpp"
+#include "io/ResourceManager.hpp"
+#include "graphics/drawing-tools/IDrawingTool.hpp"
 
-#include <QString>
+namespace capy::ui {
+ResourceManager::ToolIcon getIconForTool(const DrawingTool tool) {
+  switch (tool) {
+    case DrawingTool::Hand:
+      return ResourceManager::ToolIcon::Hand;
 
-namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+    case DrawingTool::Pen:
+      return ResourceManager::ToolIcon::Pen;
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+    case DrawingTool::Count:
+    default:
+      throw std::logic_error("Invalid tool");
+  }
+}
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
+ToolButton::ToolButton(const DrawingTool tool, QWidget* parent) :
+  QPushButton(parent) {
+  setFlat(true);
 
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
+  const QString iconPath = ResourceManager::getToolIconPath(getIconForTool(tool));
+  setIcon(QIcon(iconPath));
+  setIconSize(QSize(25, 25));
 
-  static QString getPrefixPath(Prefix prefix);
-};
-}  // namespace capy
+  paintAsUnclicked();
+}
 
-#endif  // RESOURCEMANAGER_HPP
+void ToolButton::paintAsClicked() {
+  // TODO
+}
+
+void ToolButton::paintAsUnclicked() {
+  // TODO
+}
+}

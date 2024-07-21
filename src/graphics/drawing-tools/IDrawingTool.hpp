@@ -15,37 +15,41 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef IDRAWINGTOOL_HPP
+#define IDRAWINGTOOL_HPP
 
-#include <QString>
+#include <QMouseEvent>
+#include <QPoint>
+#include <optional>
+#include <string>
 
 namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+namespace ui {
+class DrawingWidget;
+}
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
-
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
-
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
-
-  static QString getPrefixPath(Prefix prefix);
+enum class DrawingTool {
+  Hand,
+  Pen,
+  Count
 };
-}  // namespace capy
 
-#endif  // RESOURCEMANAGER_HPP
+std::string getDrawingToolName(DrawingTool drawingTool);
+
+class IDrawingTool {
+public:
+  explicit IDrawingTool(ui::DrawingWidget* drawingWidget);
+  virtual ~IDrawingTool() = default;
+
+  virtual void onSwitchTo() = 0;
+  virtual void onSwitchOutOf() = 0;
+  virtual bool mousePressEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) = 0;
+  virtual bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) = 0;
+  virtual bool mouseMoveEvent(QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) = 0;
+
+protected:
+  ui::DrawingWidget* _drawingWidget;
+};
+} // capy
+
+#endif //IDRAWINGTOOL_HPP

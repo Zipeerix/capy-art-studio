@@ -27,6 +27,14 @@ set(APPLICATION_SOURCE_FILES
         src/graphics/Layer.cpp
         src/graphics/GraphicalBackend.hpp
         src/graphics/GraphicalBackend.cpp
+        src/graphics/drawing-tools/IDrawingTool.hpp
+        src/graphics/drawing-tools/IDrawingTool.cpp
+        src/graphics/drawing-tools/PenTool.cpp
+        src/graphics/drawing-tools/PenTool.hpp
+        src/graphics/drawing-tools/HandTool.hpp
+        src/graphics/drawing-tools/HandTool.cpp
+        src/graphics/drawing-tools/Toolbox.hpp
+        src/graphics/drawing-tools/Toolbox.cpp
         src/managers/ProjectsManager.hpp
         src/managers/ProjectsManager.cpp
         src/managers/PalettesManager.hpp
@@ -58,6 +66,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/delegates/ColorRectangleDelegate.cpp
         src/ui/widgets/delegates/ProjectDelegate.hpp
         src/ui/widgets/delegates/ProjectDelegate.cpp
+        src/ui/widgets/delegates/ToolButton.hpp
+        src/ui/widgets/delegates/ToolButton.cpp
         src/ui/utils/CheckerboardPixmap.hpp
         src/ui/utils/CheckerboardPixmap.cpp
         src/ui/utils/MessageBoxUtils.cpp

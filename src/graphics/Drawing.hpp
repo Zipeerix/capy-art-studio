@@ -25,8 +25,6 @@
 #include "utils/Dimensions.hpp"
 
 namespace capy {
-enum class DrawingTool { Pen, Eraser, Hand, Rectangle, Circle };
-
 class Drawing {
  public:
   Drawing(int width, int height);

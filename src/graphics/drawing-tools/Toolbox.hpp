@@ -15,37 +15,34 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#ifndef RESOURCEMANAGER_HPP
-#define RESOURCEMANAGER_HPP
+#ifndef TOOLBOX_HPP
+#define TOOLBOX_HPP
 
-#include <QString>
+#include <memory>
+#include "HandTool.hpp"
+#include "PenTool.hpp"
 
 namespace capy {
-// TODO: Change to namespace just like ConsoleLogger?
-class ResourceManager {
- public:
-  enum class Icon {
-    ApplicationIcon,
-    CorruptedProjectMiniatureIcon,
-  };
+namespace ui {
+class DrawingWidget;
+}
 
-  enum class ToolIcon {
-    Pen,
-    Hand
-  };
+class Toolbox {
+public:
+  explicit Toolbox(ui::DrawingWidget* drawingWidget);
 
-  static QString getIconPath(Icon icon);
-  static QString getToolIconPath(ToolIcon toolIcon);
+  IDrawingTool* getCurrentToolInterface() const;
+  void switchTool(DrawingTool newTool);
 
- private:
-  enum class Prefix {
-    Root,
-    Icons,
-    ToolsIcons,
-  };
+  PenTool* getPenTool() const;
+  HandTool* getHandTool() const;
 
-  static QString getPrefixPath(Prefix prefix);
+private:
+  ui::DrawingWidget* _drawingWidget;
+  std::unique_ptr<PenTool> _penTool;
+  std::unique_ptr<HandTool> _handTool;
+  DrawingTool _currentTool = DrawingTool::Pen;
 };
-}  // namespace capy
+} // capy
 
-#endif  // RESOURCEMANAGER_HPP
+#endif //TOOLBOX_HPP

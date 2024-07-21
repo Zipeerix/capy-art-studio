@@ -5,4 +5,10 @@
     <qresource prefix="/icons">
         <file>no-image.png</file>
     </qresource>
+    <qresource prefix="/icons/tools">
+        <file>pencil.png</file>
+    </qresource>
+    <qresource prefix="/icons/tools">
+        <file>hand.png</file>
+    </qresource>
 </RCC>
