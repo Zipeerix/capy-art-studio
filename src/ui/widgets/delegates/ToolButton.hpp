@@ -15,32 +15,22 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ToolsArea.hpp"
-#include "ui_ToolsArea.h"
-#include "ui/widgets/delegates/ToolButton.hpp"
+#ifndef TOOLBUTTON_HPP
+#define TOOLBUTTON_HPP
 
+#include <QPushButton>
+
+#include "graphics/drawing-tools/IDrawingTool.hpp"
+
+// TODO: Make remove and set stylesheet in each button
 namespace capy::ui {
-ToolsArea::ToolsArea(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ToolsArea) {
-  ui->setupUi(this);
+class ToolButton final : public QPushButton {
+public:
+  explicit ToolButton(DrawingTool tool, QWidget* parent);
 
-  _layout = new FlowLayout(ui->scrollArea);
-  // TODO: Set spacing in cosntructor
-
-  ui->scrollArea->setLayout(_layout);
-}
-
-ToolsArea::~ToolsArea() {
-    delete ui;
-}
-
-ToolButton* ToolsArea::addToolButton(const DrawingTool tool) {
-  auto* toolButton = new ToolButton(tool, this);
-  _layout->addWidget(toolButton);
-
-  // TODO: Button on click hight light it, unhigh light all the others
-
-  return toolButton;
-}
+  void paintAsClicked();
+  void paintAsUnclicked();
+};
 } // namespace capy::ui
+
+#endif //TOOLBUTTON_HPP

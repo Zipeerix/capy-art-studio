@@ -28,6 +28,9 @@ QString ResourceManager::getPrefixPath(const Prefix prefix) {
     case Prefix::Icons:
       return ":/icons/";
 
+    case Prefix::ToolsIcons:
+      return ":/icons/tools/";
+
     default:
       throw std::logic_error("Invalid prefix path requested");
   }
@@ -41,6 +44,20 @@ QString ResourceManager::getIconPath(const Icon icon) {
 
     case Icon::CorruptedProjectMiniatureIcon:
       return rootPath + "no-image.png";
+
+    default:
+      throw std::logic_error("Invalid resource requested");
+  }
+}
+
+QString ResourceManager::getToolIconPath(const ToolIcon toolIcon) {
+  const auto rootPath = getPrefixPath(Prefix::ToolsIcons);
+  switch (toolIcon) {
+    case ToolIcon::Pen:
+      return rootPath + "pencil.png";
+
+    case ToolIcon::Hand:
+      return rootPath + "hand.png";
 
     default:
       throw std::logic_error("Invalid resource requested");

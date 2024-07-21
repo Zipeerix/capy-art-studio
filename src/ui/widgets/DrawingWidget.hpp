@@ -45,6 +45,8 @@ public:
   void setCurrentLayer(int newLayer);
   void handleColorPickerColorChange(QColor color) const;
 
+  void switchTool(DrawingTool drawingTool);
+
   const std::vector<Layer>& getLayers() const;
 
   void resetZoom();

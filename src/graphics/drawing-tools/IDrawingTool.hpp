@@ -21,6 +21,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <optional>
+#include <string>
 
 namespace capy {
 namespace ui {
@@ -29,8 +30,11 @@ class DrawingWidget;
 
 enum class DrawingTool {
   Hand,
-  Pen
+  Pen,
+  Count
 };
+
+std::string getDrawingToolName(DrawingTool drawingTool);
 
 class IDrawingTool {
 public:

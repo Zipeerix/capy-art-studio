@@ -15,32 +15,42 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include "ToolsArea.hpp"
-#include "ui_ToolsArea.h"
-#include "ui/widgets/delegates/ToolButton.hpp"
+#include <stdexcept>
+#include "ToolButton.hpp"
+#include "io/ResourceManager.hpp"
+#include "graphics/drawing-tools/IDrawingTool.hpp"
 
 namespace capy::ui {
-ToolsArea::ToolsArea(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ToolsArea) {
-  ui->setupUi(this);
+ResourceManager::ToolIcon getIconForTool(const DrawingTool tool) {
+  switch (tool) {
+    case DrawingTool::Hand:
+      return ResourceManager::ToolIcon::Hand;
 
-  _layout = new FlowLayout(ui->scrollArea);
-  // TODO: Set spacing in cosntructor
+    case DrawingTool::Pen:
+      return ResourceManager::ToolIcon::Pen;
 
-  ui->scrollArea->setLayout(_layout);
+    case DrawingTool::Count:
+    default:
+      throw std::logic_error("Invalid tool");
+  }
 }
 
-ToolsArea::~ToolsArea() {
-    delete ui;
+ToolButton::ToolButton(const DrawingTool tool, QWidget* parent) :
+  QPushButton(parent) {
+  setFlat(true);
+
+  const QString iconPath = ResourceManager::getToolIconPath(getIconForTool(tool));
+  setIcon(QIcon(iconPath));
+  setIconSize(QSize(25, 25));
+
+  paintAsUnclicked();
 }
 
-ToolButton* ToolsArea::addToolButton(const DrawingTool tool) {
-  auto* toolButton = new ToolButton(tool, this);
-  _layout->addWidget(toolButton);
-
-  // TODO: Button on click hight light it, unhigh light all the others
-
-  return toolButton;
+void ToolButton::paintAsClicked() {
+  // TODO
 }
-} // namespace capy::ui
+
+void ToolButton::paintAsUnclicked() {
+  // TODO
+}
+}

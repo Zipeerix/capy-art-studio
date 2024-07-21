@@ -29,12 +29,19 @@ class ResourceManager {
     CorruptedProjectMiniatureIcon,
   };
 
+  enum class ToolIcon {
+    Pen,
+    Hand
+  };
+
   static QString getIconPath(Icon icon);
+  static QString getToolIconPath(ToolIcon toolIcon);
 
  private:
   enum class Prefix {
     Root,
     Icons,
+    ToolsIcons,
   };
 
   static QString getPrefixPath(Prefix prefix);

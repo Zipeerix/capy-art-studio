@@ -16,6 +16,7 @@
 *******************************************************************************/
 
 #include "Toolbox.hpp"
+#include <stdexcept>
 #include "ui/widgets/DrawingWidget.hpp"
 
 namespace capy {
@@ -41,12 +42,17 @@ IDrawingTool* Toolbox::getCurrentToolInterface() const {
     case DrawingTool::Pen:
       return reinterpret_cast<IDrawingTool*>(_penTool.get());
 
+    case DrawingTool::Count:
     default:
       throw std::logic_error("Invalid current tool");
   }
 }
 
 void Toolbox::switchTool(const DrawingTool newTool) {
+  if (newTool == DrawingTool::Count) {
+    throw std::logic_error("Invalid tool");
+  }
+
   getCurrentToolInterface()->onSwitchOutOf();
   _currentTool = newTool;
   getCurrentToolInterface()->onSwitchTo();

@@ -66,6 +66,8 @@ set(APPLICATION_SOURCE_FILES
         src/ui/widgets/delegates/ColorRectangleDelegate.cpp
         src/ui/widgets/delegates/ProjectDelegate.hpp
         src/ui/widgets/delegates/ProjectDelegate.cpp
+        src/ui/widgets/delegates/ToolButton.hpp
+        src/ui/widgets/delegates/ToolButton.cpp
         src/ui/utils/CheckerboardPixmap.hpp
         src/ui/utils/CheckerboardPixmap.cpp
         src/ui/utils/MessageBoxUtils.cpp

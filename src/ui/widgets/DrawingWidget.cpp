@@ -61,6 +61,10 @@ const std::vector<Layer>& DrawingWidget::getLayers() const {
   return _drawing.getLayers();
 }
 
+void DrawingWidget::switchTool(const DrawingTool drawingTool) {
+  _toolbox.switchTool(drawingTool);
+}
+
 void DrawingWidget::startNewDrawing(const int width, const int height) {
   logger::info(fmt::format(
       "Creating new image with dimensions {}x{} with per layer size of {} bytes",
@@ -217,7 +221,7 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
     updateZoomLevel(factor);
 
     // TODO: Implement zoom on mouse, this doesnt work
-    /*const QPointF targetViewportPos = event->position();
+    const QPointF targetViewportPos = event->position();
     const QPointF targetScenePos = mapToScene(event->position().toPoint());
 
     centerOn(targetScenePos);
@@ -226,7 +230,7 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
                                          viewport()->height() / 2.0);
     const QPointF viewportCenter =
         mapFromScene(targetScenePos) - deltaViewportPos;
-    centerOn(mapToScene(viewportCenter.toPoint())); */
+    centerOn(mapToScene(viewportCenter.toPoint()));
   } else {
     QGraphicsView::wheelEvent(event);
   }

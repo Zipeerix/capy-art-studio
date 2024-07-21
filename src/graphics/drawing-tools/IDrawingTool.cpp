@@ -16,8 +16,23 @@
 *******************************************************************************/
 
 #include "IDrawingTool.hpp"
+#include <stdexcept>
 
 namespace capy {
+std::string getDrawingToolName(const DrawingTool drawingTool) {
+  switch (drawingTool) {
+  case DrawingTool::Hand:
+    return "Hand";
+
+    case DrawingTool::Pen:
+      return "Pen";
+
+    case DrawingTool::Count:
+    default:
+      throw std::logic_error("Invalid tool");
+  }
+}
+
 IDrawingTool::IDrawingTool(ui::DrawingWidget* drawingWidget) :
   _drawingWidget(drawingWidget) {
 }
