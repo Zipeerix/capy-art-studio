@@ -21,12 +21,17 @@
 #include <QMetaType>
 #include <string>
 
-namespace capy {
-enum class GraphicalBackend { QtSoftware, Count };
+namespace capy
+{
+enum class GraphicalBackend
+{
+  QtSoftware,
+  Count
+};
 
 std::string getNameOfGraphicalBackend(GraphicalBackend backend);
-}  // namespace capy
+} // namespace capy
 
 Q_DECLARE_METATYPE(capy::GraphicalBackend);
 
-#endif  // GRAPHICALBACKEND_HPP
+#endif // GRAPHICALBACKEND_HPP

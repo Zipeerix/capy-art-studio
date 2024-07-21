@@ -22,22 +22,31 @@
 
 #include "ApplicationFilesystem.hpp"
 
-namespace capy {
-class ConfigurationManager {
- public:
-  enum class InternalValues : int { ProjectPaths, WindowGeometry };
+namespace capy
+{
+class ConfigurationManager
+{
+public:
+  enum class InternalValues : int
+  {
+    ProjectPaths,
+    WindowGeometry
+  };
 
-  enum class ApplicationSettings : int {
+  enum class ApplicationSettings : int
+  {
     ShowWelcomeScreen,
     ShowStatusBar,
     StatusBarUpdateInterval
   };
 
-  enum class DebugSetting : int {
+  enum class DebugSetting : int
+  {
     ShowConsole,
   };
 
-  enum class GraphicsSetting : int {
+  enum class GraphicsSetting : int
+  {
     GraphicalBackend,
     DrawGrid,
     GridWidth,
@@ -51,25 +60,25 @@ class ConfigurationManager {
 
   // TODO: Maybe don't seperate into categories, a lot of syf especialyl for ui linking
 
-  template <typename SettingValueType>
+  template<typename SettingValueType>
   SettingValueType getApplicationSetting(ApplicationSettings setting) const;
 
-  template <typename SettingValueType>
+  template<typename SettingValueType>
   void setApplicationSetting(ApplicationSettings setting, SettingValueType value);
 
-  template <typename SettingValueType>
+  template<typename SettingValueType>
   SettingValueType getDebugSetting(DebugSetting setting) const;
 
-  template <typename SettingValueType>
+  template<typename SettingValueType>
   void setDebugSetting(DebugSetting setting, SettingValueType value);
 
-  template <typename SettingValueType>
+  template<typename SettingValueType>
   SettingValueType getGraphicsSetting(GraphicsSetting setting) const;
 
-  template <typename SettingValueType>
+  template<typename SettingValueType>
   void setGraphicsSetting(GraphicsSetting setting, SettingValueType value);
 
-  std::optional<QByteArray> getWindowGeometry(const std::string& name);
+  std::optional<QByteArray> getWindowGeometry(const std::string& name) const;
   void setWindowGeometry(const std::string& name, const QByteArray& geometry);
 
   void addAdditionalProjectPath(const std::string& path);
@@ -77,10 +86,10 @@ class ConfigurationManager {
   bool doesAdditionalProjectExist(const std::string& path) const;
   std::vector<std::string> getAdditionalProjectsPaths() const;
 
- protected:
+protected:
   ConfigurationManager() = default;
 
- private:
+private:
   QSettings _settings{QString::fromStdString(getConfigFilePath()), QSettings::IniFormat};
 
   static QString getInternalValuePath(InternalValues value);
@@ -88,8 +97,8 @@ class ConfigurationManager {
   static QString getDebugSettingPath(DebugSetting setting);
   static QString getGraphicsSettingPath(GraphicsSetting setting);
 };
-}  // namespace capy
+} // namespace capy
 
 #include "ConfigurationManager.tpp"
 
-#endif  // CONFIGURATIONMANAGER_HPP
+#endif // CONFIGURATIONMANAGER_HPP

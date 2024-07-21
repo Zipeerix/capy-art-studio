@@ -24,39 +24,55 @@
 #include "ui/utils/ClickableLabel.hpp"
 #include "ui_ProjectDelegate.h"
 
-namespace capy::ui {
-ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidget *parent)
-    : QWidget(parent), ui(new Ui::ProjectDelegate), _project(std::move(project)) {
+namespace capy::ui
+{
+ProjectDelegate::ProjectDelegate(Project project, bool isProjectInternal, QWidget* parent) :
+    QWidget(parent),
+    ui(new Ui::ProjectDelegate),
+    _project(std::move(project))
+{
   ui->setupUi(this);
 
-  if (isProjectInternal) {
+  if (isProjectInternal)
+  {
     ui->removeButton->hide();
   }
 
   connect(ui->nameLabel, &ClickableLabel::clicked, this, &ProjectDelegate::imageOrNameClicked);
   connect(ui->imageLabel, &ClickableLabel::clicked, this, &ProjectDelegate::imageOrNameClicked);
 
-  connect(ui->deleteButton, &QPushButton::clicked, this, [&]() { emit deleteClicked(_project); });
+  connect(ui->deleteButton, &QPushButton::clicked, this, [&]() {
+    emit deleteClicked(_project);
+  });
 
-  connect(ui->removeButton, &QPushButton::clicked, this, [&]() { emit removeClicked(_project); });
+  connect(ui->removeButton, &QPushButton::clicked, this, [&]() {
+    emit removeClicked(_project);
+  });
 
   const auto projectName = QString::fromStdString(_project.getName());
   ui->nameLabel->setText(elideText(projectName, ui->nameLabel->font(), ui->nameLabel->width()));
   ui->nameLabel->setToolTip(QString::fromStdString(_project.getPath()));
 
   QPixmap miniature = _project.getMiniature();
-  if (miniature.isNull()) {
-    miniature =
-        QPixmap{ResourceManager::getIconPath(ResourceManager::Icon::CorruptedProjectMiniatureIcon)};
+  if (miniature.isNull())
+  {
+    miniature = QPixmap{
+            ResourceManager::getIconPath(ResourceManager::Icon::CorruptedProjectMiniatureIcon)};
   }
 
   const auto actualMiniature =
-      miniature.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+          miniature.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
   ui->imageLabel->setPixmap(actualMiniature);
 }
 
-ProjectDelegate::~ProjectDelegate() { delete ui; }
+ProjectDelegate::~ProjectDelegate()
+{
+  delete ui;
+}
 
-void ProjectDelegate::imageOrNameClicked() { emit itemClicked(_project); }
-}  // namespace capy::ui
+void ProjectDelegate::imageOrNameClicked()
+{
+  emit itemClicked(_project);
+}
+} // namespace capy::ui

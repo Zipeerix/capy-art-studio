@@ -68,7 +68,8 @@ def main():
         print("This script can only be used on Windows system")
         exit()
 
-    script_path = create_inno_setup_script(APP_NAME, VERSION, SOURCE_APP, OUTPUT_DIR, INSTALLER_NAME)
+    script_path = create_inno_setup_script(
+        APP_NAME, VERSION, SOURCE_APP, OUTPUT_DIR, INSTALLER_NAME)
     compile_inno_setup_script(script_path)
     print(f"Installer created: {os.path.join(OUTPUT_DIR, INSTALLER_NAME)}.exe")
 

@@ -22,10 +22,13 @@
 
 #include "DynamicLibrary.hpp"
 
-namespace capy {
-template <typename SymbolType>
-Result<SymbolType, std::string> DynamicLibrary::getSymbol(const std::string& name) {
-  if (_libHandle == nullptr || _libPath.empty()) {
+namespace capy
+{
+template<typename SymbolType>
+Result<SymbolType, std::string> DynamicLibrary::getSymbol(const std::string& name)
+{
+  if (_libHandle == nullptr || _libPath.empty())
+  {
     throw std::logic_error("Attempting to find symbol '" + name +
                            "' from dynamic library that was not loaded");
   }
@@ -33,17 +36,18 @@ Result<SymbolType, std::string> DynamicLibrary::getSymbol(const std::string& nam
 #if defined(__linux__) || defined(__APPLE__)
   void* symbol = dlsym(_libHandle, name.c_str());
 #elif defined(_WIN32)
-  void* symbol = (void*)GetProcAddress(_libHandle, name.c_str());
+  void* symbol = (void*) GetProcAddress(_libHandle, name.c_str());
 #endif
-  if (symbol == nullptr) {
+  if (symbol == nullptr)
+  {
     const std::string errorMessage = "Unable to find symbol '" + name +
                                      "' in dynamic library at: " + _libPath +
                                      ". Error: " + getErrorMessage();
     return std::unexpected(errorMessage);
   }
 
-  return (SymbolType)symbol;
+  return (SymbolType) symbol;
 }
-}  // namespace capy
+} // namespace capy
 
-#endif  // DYNAMICLIBRARY_TPP
+#endif // DYNAMICLIBRARY_TPP

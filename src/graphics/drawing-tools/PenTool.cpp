@@ -16,32 +16,40 @@
 *******************************************************************************/
 
 #include "PenTool.hpp"
-#include "ui/widgets/DrawingWidget.hpp"
-#include "algorithms/Bresenham.hpp"
 
-namespace capy {
+#include "algorithms/Bresenham.hpp"
+#include "ui/widgets/DrawingWidget.hpp"
+
+namespace capy
+{
 PenTool::PenTool(ui::DrawingWidget* drawingWidget) :
-  IDrawingTool(drawingWidget) {
+    IDrawingTool(drawingWidget)
+{
 }
 
-void PenTool::setColor(const QColor newColor) {
+void PenTool::setColor(const QColor newColor)
+{
   _color = newColor;
 }
 
-QColor PenTool::getColor() const {
+QColor PenTool::getColor() const
+{
   return _color;
 }
 
-void PenTool::onSwitchTo() {
-
+void PenTool::onSwitchTo()
+{
 }
 
-void PenTool::onSwitchOutOf() {
-
+void PenTool::onSwitchOutOf()
+{
 }
 
-bool PenTool::mousePressEvent([[maybe_unused]] QMouseEvent* event, const std::optional<QPoint>& clickedPixel) {
-  if (clickedPixel.has_value()) {
+bool PenTool::mousePressEvent([[maybe_unused]] QMouseEvent* event,
+                              const std::optional<QPoint>& clickedPixel)
+{
+  if (clickedPixel.has_value())
+  {
     const auto clickedPixelX = clickedPixel->x();
     const auto clickedPixelY = clickedPixel->y();
 
@@ -52,35 +60,40 @@ bool PenTool::mousePressEvent([[maybe_unused]] QMouseEvent* event, const std::op
   return false;
 }
 
-bool PenTool::mouseMoveEvent([[maybe_unused]] QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) {
-  if (movingThroughPixel.has_value()) {
+bool PenTool::mouseMoveEvent([[maybe_unused]] QMouseEvent* event,
+                             const std::optional<QPoint>& movingThroughPixel)
+{
+  if (movingThroughPixel.has_value())
+  {
     const auto clickedPixelX = movingThroughPixel->x();
     const auto clickedPixelY = movingThroughPixel->y();
 
-    if (_lastContinousDrawingPoint.has_value()) {
+    if (_lastContinousDrawingPoint.has_value())
+    {
       // TODO: Move this to a method or cleanup/tool_to_class seperation
       static const auto pixelDrawingAction = [&](int x, int y) {
         _drawingWidget->drawPixelOnBothRepresentations(x, y, _color);
       };
 
-      algorithms::applyBresenham(_lastContinousDrawingPoint->x(),
-                                 _lastContinousDrawingPoint->y(),
-                                 clickedPixelX,
-                                 clickedPixelY,
-                                 pixelDrawingAction);
+      algorithms::applyBresenham(_lastContinousDrawingPoint->x(), _lastContinousDrawingPoint->y(),
+                                 clickedPixelX, clickedPixelY, pixelDrawingAction);
     }
 
     _lastContinousDrawingPoint = movingThroughPixel.value();
     // pixelDrawingAction(clickedPixelX, clickedPixelY...)
-  } else {
+  }
+  else
+  {
     _lastContinousDrawingPoint = std::nullopt;
   }
 
   return true;
 }
 
-bool PenTool::mouseReleaseEvent([[maybe_unused]] QMouseEvent* event, [[maybe_unused]] const std::optional<QPoint>& clickedPixel) {
+bool PenTool::mouseReleaseEvent([[maybe_unused]] QMouseEvent* event,
+                                [[maybe_unused]] const std::optional<QPoint>& clickedPixel)
+{
   _lastContinousDrawingPoint = std::nullopt;
   return true;
 }
-} // capy
+} // namespace capy

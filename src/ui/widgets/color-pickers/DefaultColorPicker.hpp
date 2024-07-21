@@ -23,10 +23,12 @@
 #include "DefaultColorPickerSlider.hpp"
 #include "IBaseColorPicker.hpp"
 
-namespace capy::ui {
-class DefaultColorPicker final : public QWidget {
+namespace capy::ui
+{
+class DefaultColorPicker final : public QWidget
+{
   Q_OBJECT
- public:
+public:
   explicit DefaultColorPicker(QWidget* parent = nullptr);
   ~DefaultColorPicker() override;
 
@@ -36,10 +38,10 @@ class DefaultColorPicker final : public QWidget {
 
   void updateShownColor() const;
 
- signals:
+signals:
   void colorChanged(QColor newColor);
 
- private:
+private:
   DefaultColorPickerSlider* _hueSlider;
   DefaultColorPickerSlider* _saturationSlider;
   DefaultColorPickerSlider* _brightnessSlider;
@@ -50,6 +52,6 @@ class DefaultColorPicker final : public QWidget {
 
   QColor _selectedColor;
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // DEFAULT_COLORPICKER_HPP
+#endif // DEFAULT_COLORPICKER_HPP

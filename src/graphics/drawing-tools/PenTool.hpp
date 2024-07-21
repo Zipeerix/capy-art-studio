@@ -19,10 +19,13 @@
 #define PENTOOL_HPP
 
 #include <QColor>
+
 #include "IDrawingTool.hpp"
 
-namespace capy {
-class PenTool final : public IDrawingTool {
+namespace capy
+{
+class PenTool final : public IDrawingTool
+{
 public:
   explicit PenTool(ui::DrawingWidget* drawingWidget);
   ~PenTool() override = default;
@@ -41,6 +44,6 @@ private:
   QColor _color{0, 0, 0, 255};
   std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
 };
-} // capy
+} // namespace capy
 
 #endif //PENTOOL_HPP

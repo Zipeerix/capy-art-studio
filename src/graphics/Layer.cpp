@@ -19,42 +19,73 @@
 
 #include "utils/General.hpp"
 
-namespace capy {
-Layer::Layer(const int width, const int height, std::string name)
-    : _name(std::move(name)), _dimensions(width, height) {
+namespace capy
+{
+Layer::Layer(const int width, const int height, std::string name) :
+    _name(std::move(name)),
+    _dimensions(width, height)
+{
   _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
 }
 
-bool Layer::isVisible() const { return _visible; }
+bool Layer::isVisible() const
+{
+  return _visible;
+}
 
-void Layer::show() { _visible = true; }
+void Layer::show()
+{
+  _visible = true;
+}
 
-void Layer::hide() { _visible = false; }
+void Layer::hide()
+{
+  _visible = false;
+}
 
-void Layer::setPixels(std::vector<Pixel> pixels) { _pixels = std::move(pixels); }
+void Layer::setPixels(std::vector<Pixel> pixels)
+{
+  _pixels = std::move(pixels);
+}
 
-void Layer::setName(std::string name) { _name = std::move(name); }
+void Layer::setName(std::string name)
+{
+  _name = std::move(name);
+}
 
-std::string Layer::getName() const { return _name; }
+std::string Layer::getName() const
+{
+  return _name;
+}
 
-utils::Dimensions Layer::getDimensions() const { return _dimensions; }
+utils::Dimensions Layer::getDimensions() const
+{
+  return _dimensions;
+}
 
-uint64_t Layer::calculateInMemorySize() const {
+uint64_t Layer::calculateInMemorySize() const
+{
   return _pixels.size() * sizeof(Pixel) + sizeof(Layer);
 }
 
-void Layer::drawPixel(const int x, const int y, const QColor& color) {
+void Layer::drawPixel(const int x, const int y, const QColor& color)
+{
   auto& targetPixel = getMutablePixel(x, y);
   targetPixel.updateFromQColor(color);
 }
 
-const Pixel& Layer::getPixel(const int x, const int y) const {
+const Pixel& Layer::getPixel(const int x, const int y) const
+{
   return _pixels.at(utils::convert2DIndexto1DIndex(x, y, _dimensions.getWidth()));
 }
 
-const std::vector<Pixel>& Layer::getPixels() const { return _pixels; }
+const std::vector<Pixel>& Layer::getPixels() const
+{
+  return _pixels;
+}
 
-Pixel& Layer::getMutablePixel(const int x, const int y) {
+Pixel& Layer::getMutablePixel(const int x, const int y)
+{
   return _pixels.at(utils::convert2DIndexto1DIndex(x, y, _dimensions.getWidth()));
 }
-}  // namespace capy
+} // namespace capy

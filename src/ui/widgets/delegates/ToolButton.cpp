@@ -15,14 +15,19 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <stdexcept>
 #include "ToolButton.hpp"
-#include "io/ResourceManager.hpp"
-#include "graphics/drawing-tools/IDrawingTool.hpp"
 
-namespace capy::ui {
-ResourceManager::ToolIcon getIconForTool(const DrawingTool tool) {
-  switch (tool) {
+#include <stdexcept>
+
+#include "graphics/drawing-tools/IDrawingTool.hpp"
+#include "io/ResourceManager.hpp"
+
+namespace capy::ui
+{
+ResourceManager::ToolIcon getIconForTool(const DrawingTool tool)
+{
+  switch (tool)
+  {
     case DrawingTool::Hand:
       return ResourceManager::ToolIcon::Hand;
 
@@ -36,7 +41,8 @@ ResourceManager::ToolIcon getIconForTool(const DrawingTool tool) {
 }
 
 ToolButton::ToolButton(const DrawingTool tool, QWidget* parent) :
-  QPushButton(parent) {
+    QPushButton(parent)
+{
   setFlat(true);
 
   const QString iconPath = ResourceManager::getToolIconPath(getIconForTool(tool));
@@ -46,11 +52,13 @@ ToolButton::ToolButton(const DrawingTool tool, QWidget* parent) :
   paintAsUnclicked();
 }
 
-void ToolButton::paintAsClicked() {
+void ToolButton::paintAsClicked()
+{
   // TODO
 }
 
-void ToolButton::paintAsUnclicked() {
+void ToolButton::paintAsUnclicked()
+{
   // TODO
 }
-}
+} // namespace capy::ui

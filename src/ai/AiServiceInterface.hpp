@@ -24,7 +24,8 @@
 
 #include "graphics/Layer.hpp"
 
-namespace capy {
+namespace capy
+{
 struct AiPromptData {
   std::string topic;
   std::vector<std::string> features;
@@ -34,8 +35,9 @@ struct AiPromptData {
 
 // TODO: Maybe make default behavioiur of sending rest request
 // TODO: If so then i need requestURL parameter in constructor
-class AiServiceInterface {
- public:
+class AiServiceInterface
+{
+public:
   explicit AiServiceInterface(std::optional<std::string> apiKey);
   virtual ~AiServiceInterface() = default;
 
@@ -43,9 +45,9 @@ class AiServiceInterface {
 
   // TODO: Export settings list etc
 
- protected:
+protected:
   std::optional<std::string> _apiKey;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // AISERVICEINTERFACE_HPP
+#endif // AISERVICEINTERFACE_HPP

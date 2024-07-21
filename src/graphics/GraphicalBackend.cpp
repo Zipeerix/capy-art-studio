@@ -19,9 +19,12 @@
 
 #include <stdexcept>
 
-namespace capy {
-std::string getNameOfGraphicalBackend(const GraphicalBackend backend) {
-  switch (backend) {
+namespace capy
+{
+std::string getNameOfGraphicalBackend(const GraphicalBackend backend)
+{
+  switch (backend)
+  {
     case GraphicalBackend::QtSoftware:
       return "Qt (Software)";
 
@@ -30,4 +33,4 @@ std::string getNameOfGraphicalBackend(const GraphicalBackend backend) {
       throw std::logic_error("Invalid backend");
   }
 }
-}  // namespace capy
+} // namespace capy

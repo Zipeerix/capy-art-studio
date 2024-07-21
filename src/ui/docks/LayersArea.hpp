@@ -20,19 +20,22 @@
 
 #include <QWidget>
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class LayersArea;
 }
 
-class LayersArea final : public QWidget {
-    Q_OBJECT
+class LayersArea final : public QWidget
+{
+  Q_OBJECT
 public:
-    explicit LayersArea(QWidget *parent = nullptr);
-    ~LayersArea() override;
+  explicit LayersArea(QWidget* parent = nullptr);
+  ~LayersArea() override;
 
 private:
-    Ui::LayersArea* ui;
+  Ui::LayersArea* ui;
 };
 
 } // namespace capy::ui

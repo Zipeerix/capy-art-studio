@@ -24,23 +24,26 @@
 
 #include "managers/ProjectsManager.hpp"
 #include "models/ProjectsModel.hpp"
-#include "ui/MainWindow.hpp"
 #include "ui/layouts/FlowLayout.hpp"
+#include "ui/MainWindow.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class WelcomeScreen;
 }
 
-class WelcomeScreen final : public QMainWindow, AutoSizeSavingItem {
+class WelcomeScreen final : public QMainWindow, AutoSizeSavingItem
+{
   Q_OBJECT
- public:
+public:
   explicit WelcomeScreen(MainWindow* mainWindow, QWidget* parent = nullptr);
   ~WelcomeScreen() override;
 
   void resizeEvent(QResizeEvent* event) override;
 
- public slots:
+public slots:
   void createNewProjectClicked();
   void openProjectClicked();
   void importProjectClicked();
@@ -52,7 +55,7 @@ class WelcomeScreen final : public QMainWindow, AutoSizeSavingItem {
   void projectRemoveClicked(const Project& project);
   void projectDeleteClicked(const Project& project);
 
- private:
+private:
   Ui::WelcomeScreen* ui;
   std::shared_ptr<ConfigurationManager> _configurationManager;
   ProjectsManager _projectsManager;
@@ -64,6 +67,6 @@ class WelcomeScreen final : public QMainWindow, AutoSizeSavingItem {
   void closeEvent(QCloseEvent* event) override;
   void updateUiProjectList();
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // CAPY_UI_WELCOMESCREEN_HPP
+#endif // CAPY_UI_WELCOMESCREEN_HPP

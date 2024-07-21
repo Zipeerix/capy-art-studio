@@ -20,14 +20,17 @@
 
 #include <cstdint>
 
-namespace capy::utils::converters {
-enum class StorageSize {
+namespace capy::utils::converters
+{
+enum class StorageSize
+{
   Bytes,
   Kilobytes,
   Megabytes,
 };
 
-enum class TimeType {
+enum class TimeType
+{
   Hours,
   Minutes,
   Seconds,
@@ -39,6 +42,6 @@ enum class TimeType {
 double convertBytesTo(uint64_t bytes, StorageSize targetType);
 // TODO: std::chrono? time_cast
 uint64_t convertSecondsTo(uint64_t seconds, TimeType targetType);
-}  // namespace capy::utils::converters
+} // namespace capy::utils::converters
 
-#endif  // CONVERTERS_HPP
+#endif // CONVERTERS_HPP

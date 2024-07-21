@@ -18,11 +18,12 @@
 #ifndef COMPILETIMECHECKS_HPP
 #define COMPILETIMECHECKS_HPP
 
-namespace capy {
-template <typename T, typename U>
+namespace capy
+{
+template<typename T, typename U>
 static void compileTimeTypeCheck();
 }
 
 #include "CompileTimeChecks.tpp"
 
-#endif  // COMPILETIMECHECKS_HPP
+#endif // COMPILETIMECHECKS_HPP

@@ -24,17 +24,19 @@
 #define UNIMPLEMENTED throw capy::UnimplementedException();
 #define TODO throw capy::UnimplementedException();
 
-namespace capy {
-class UnimplementedException final : std::exception {
- public:
+namespace capy
+{
+class UnimplementedException final : std::exception
+{
+public:
   UnimplementedException() = default;
   explicit UnimplementedException(std::string extraInfo);
 
   const char* what() const noexcept override;
 
- private:
+private:
   std::string _extraInfo = "This code path is unimplemented";
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // UNIMPLEMENTEDEXCEPTION_HPP
+#endif // UNIMPLEMENTEDEXCEPTION_HPP

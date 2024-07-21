@@ -20,12 +20,14 @@
 
 #include <QDockWidget>
 
-namespace capy::ui {
-class DockableWidget final : public QDockWidget {
+namespace capy::ui
+{
+class DockableWidget final : public QDockWidget
+{
   Q_OBJECT
 public:
   explicit DockableWidget(QWidget* parent = nullptr);
 };
-} // capy::ui
+} // namespace capy::ui
 
 #endif //DOCKABLEWIDGET_HPP

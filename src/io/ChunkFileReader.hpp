@@ -18,16 +18,18 @@
 #ifndef CHUNKFILELOADER_HPP
 #define CHUNKFILELOADER_HPP
 
-#include <QByteArray>
 #include <cstdint>
 #include <fstream>
+#include <QByteArray>
 #include <vector>
 
 #include "meta/ErrorHandling.hpp"
 
-namespace capy {
-class ChunkFileReader {
- public:
+namespace capy
+{
+class ChunkFileReader
+{
+public:
   explicit ChunkFileReader(const std::string& path);
   ~ChunkFileReader();
 
@@ -48,11 +50,11 @@ class ChunkFileReader {
 
   // TODO: Templated read
 
- private:
+private:
   std::ifstream _fileStream;
 
   void moveIteratorBackBy(int offset);
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // CHUNKFILELOADER_HPP
+#endif // CHUNKFILELOADER_HPP

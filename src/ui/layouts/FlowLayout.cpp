@@ -15,88 +15,110 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QWidget>
 #include "FlowLayout.hpp"
 
-namespace capy::ui {
+#include <QWidget>
+
+namespace capy::ui
+{
 FlowLayout::FlowLayout(QWidget* parent, const int margin, const int hSpacing, const int vSpacing) :
-  QLayout(parent),
-  _hSpace(hSpacing),
-  _vSpace(vSpacing) {
+    QLayout(parent),
+    _hSpace(hSpacing),
+    _vSpace(vSpacing)
+{
   setContentsMargins(margin, margin, margin, margin);
 }
 
 FlowLayout::FlowLayout(const int margin, const int hSpacing, const int vSpacing) :
-  _hSpace(hSpacing),
-  _vSpace(vSpacing) {
+    _hSpace(hSpacing),
+    _vSpace(vSpacing)
+{
   setContentsMargins(margin, margin, margin, margin);
 }
 
-FlowLayout::~FlowLayout() {
-  while (const QLayoutItem* item = FlowLayout::takeAt(0)) {
+FlowLayout::~FlowLayout()
+{
+  while (const QLayoutItem* item = FlowLayout::takeAt(0))
+  {
     delete item;
   }
 }
 
-void FlowLayout::addItem(QLayoutItem *item) {
+void FlowLayout::addItem(QLayoutItem* item)
+{
   _itemList.append(item);
 }
 
-int FlowLayout::horizontalSpacing() const {
-  if (_hSpace >= 0) {
+int FlowLayout::horizontalSpacing() const
+{
+  if (_hSpace >= 0)
+  {
     return _hSpace;
   }
 
   return smartSpacing(QStyle::PM_LayoutHorizontalSpacing);
 }
 
-int FlowLayout::verticalSpacing() const {
-  if (_vSpace >= 0) {
+int FlowLayout::verticalSpacing() const
+{
+  if (_vSpace >= 0)
+  {
     return _vSpace;
-  } else {
+  }
+  else
+  {
     return smartSpacing(QStyle::PM_LayoutVerticalSpacing);
   }
 }
 
-int FlowLayout::count() const {
+int FlowLayout::count() const
+{
   return _itemList.size();
 }
 
-QLayoutItem* FlowLayout::itemAt(const int index) const {
+QLayoutItem* FlowLayout::itemAt(const int index) const
+{
   return _itemList.value(index);
 }
 
-QLayoutItem* FlowLayout::takeAt(const int index) {
+QLayoutItem* FlowLayout::takeAt(const int index)
+{
   if (index >= 0 && index < _itemList.size())
     return _itemList.takeAt(index);
 
   return nullptr;
 }
 
-Qt::Orientations FlowLayout::expandingDirections() const {
+Qt::Orientations FlowLayout::expandingDirections() const
+{
   return {};
 }
 
-bool FlowLayout::hasHeightForWidth() const {
+bool FlowLayout::hasHeightForWidth() const
+{
   return true;
 }
 
-int FlowLayout::heightForWidth(const int width) const {
+int FlowLayout::heightForWidth(const int width) const
+{
   return doLayout(QRect(0, 0, width, 0), true);
 }
 
-void FlowLayout::setGeometry(const QRect &rect) {
+void FlowLayout::setGeometry(const QRect& rect)
+{
   QLayout::setGeometry(rect);
   doLayout(rect, false);
 }
 
-QSize FlowLayout::sizeHint() const {
+QSize FlowLayout::sizeHint() const
+{
   return minimumSize();
 }
 
-QSize FlowLayout::minimumSize() const {
+QSize FlowLayout::minimumSize() const
+{
   QSize size;
-  for (const QLayoutItem *item : std::as_const(_itemList))
+  for (const QLayoutItem* item: std::as_const(_itemList))
     size = size.expandedTo(item->minimumSize());
 
   const QMargins margins = contentsMargins();
@@ -105,7 +127,8 @@ QSize FlowLayout::minimumSize() const {
   return size;
 }
 
-int FlowLayout::doLayout(const QRect &rect, const bool testOnly) const {
+int FlowLayout::doLayout(const QRect& rect, const bool testOnly) const
+{
   // TODO: Refactor
   int left, top, right, bottom;
   getContentsMargins(&left, &top, &right, &bottom);
@@ -114,19 +137,21 @@ int FlowLayout::doLayout(const QRect &rect, const bool testOnly) const {
   int y = effectiveRect.y();
   int lineHeight = 0;
 
-  for (QLayoutItem* item : std::as_const(_itemList)) {
+  for (QLayoutItem* item: std::as_const(_itemList))
+  {
     const QWidget* wid = item->widget();
     int spaceX = horizontalSpacing();
     if (spaceX == -1)
-      spaceX = wid->style()->layoutSpacing(
-          QSizePolicy::PushButton, QSizePolicy::PushButton, Qt::Horizontal);
+      spaceX = wid->style()->layoutSpacing(QSizePolicy::PushButton, QSizePolicy::PushButton,
+                                           Qt::Horizontal);
     int spaceY = verticalSpacing();
     if (spaceY == -1)
-      spaceY = wid->style()->layoutSpacing(
-          QSizePolicy::PushButton, QSizePolicy::PushButton, Qt::Vertical);
+      spaceY = wid->style()->layoutSpacing(QSizePolicy::PushButton, QSizePolicy::PushButton,
+                                           Qt::Vertical);
 
     int nextX = x + item->sizeHint().width() + spaceX;
-    if (nextX - spaceX > effectiveRect.right() && lineHeight > 0) {
+    if (nextX - spaceX > effectiveRect.right() && lineHeight > 0)
+    {
       x = effectiveRect.x();
       y = y + lineHeight + spaceY;
       nextX = x + item->sizeHint().width() + spaceX;
@@ -143,15 +168,21 @@ int FlowLayout::doLayout(const QRect &rect, const bool testOnly) const {
   return y + lineHeight - rect.y() + bottom;
 }
 
-int FlowLayout::smartSpacing(const QStyle::PixelMetric pm) const {
+int FlowLayout::smartSpacing(const QStyle::PixelMetric pm) const
+{
   QObject* parent = this->parent();
-  if (!parent) {
+  if (!parent)
+  {
     return -1;
-  } else if (parent->isWidgetType()) {
+  }
+  else if (parent->isWidgetType())
+  {
     const auto pw = dynamic_cast<QWidget*>(parent);
     return pw->style()->pixelMetric(pm, nullptr, pw);
-  } else {
+  }
+  else
+  {
     return dynamic_cast<QLayout*>(parent)->spacing();
   }
 }
-}
+} // namespace capy::ui

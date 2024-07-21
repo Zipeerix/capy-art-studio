@@ -25,19 +25,27 @@
 #include "io/ConsoleLogger.hpp"
 #include "meta/ErrorHandling.hpp"
 
-namespace capy {
-ProjectsManager::ProjectsManager(QObject* parent)
-    : QObject(parent),
-      _configurationManager(ConfigurationManager::createInstance()),
-      _model(this) {}
+namespace capy
+{
+ProjectsManager::ProjectsManager(QObject* parent) :
+    QObject(parent),
+    _configurationManager(ConfigurationManager::createInstance()),
+    _model(this)
+{
+}
 
-bool ProjectsManager::isProjectInternal(const Project& project) const {
+bool ProjectsManager::isProjectInternal(const Project& project) const
+{
   return !_configurationManager->doesAdditionalProjectExist(project.getPath());
 }
 
-const std::vector<Project>& ProjectsManager::getProjects() const { return _model.getProjects(); }
+const std::vector<Project>& ProjectsManager::getProjects() const
+{
+  return _model.getProjects();
+}
 
-void ProjectsManager::loadProjectsFromFilesystem() {
+void ProjectsManager::loadProjectsFromFilesystem()
+{
   std::vector<Project> projects;
 
   auto projectsPaths = listFilesInPath(FilesystemPath::Projects);
@@ -47,10 +55,12 @@ void ProjectsManager::loadProjectsFromFilesystem() {
                        additionalProjectsPathsList.end());
 
   // TODO: std::transform
-  for (const auto& path : projectsPaths) {
+  for (const auto& path: projectsPaths)
+  {
     logger::info(fmt::format("Adding project from path {}", path));
     const auto projectCreationResult = Project::createFromFile(path);
-    if (!projectCreationResult.has_value()) {
+    if (!projectCreationResult.has_value())
+    {
       // TODO: This should probably be a messagebox, also anotyher problem is when "open" is clicked
       // TODO: and this fails then the list will not contain this project
       // TODO: Also it should probably be deleted from projectsPaths if its corrupted
@@ -68,27 +78,34 @@ void ProjectsManager::loadProjectsFromFilesystem() {
   emit projectsUpdated();
 }
 
-void ProjectsManager::addProject(const std::string& path) {
+void ProjectsManager::addProject(const std::string& path)
+{
   _configurationManager->addAdditionalProjectPath(path);
   loadProjectsFromFilesystem();
 }
 
 void ProjectsManager::deleteProject(const std::string& projectPath,
-                                    const ManagerErrorHandler& errorHandler) {
+                                    const ManagerErrorHandler& errorHandler)
+{
   removeProject(projectPath);
 
   PotentialError<std::string> fsError;
-  try {
-    if (!std::filesystem::remove(projectPath)) {
+  try
+  {
+    if (!std::filesystem::remove(projectPath))
+    {
       fsError = "File not found";
     }
-  } catch (const std::filesystem::filesystem_error& err) {
+  }
+  catch (const std::filesystem::filesystem_error& err)
+  {
     fsError = err.what();
   }
 
-  if (fsError.has_value()) {
+  if (fsError.has_value())
+  {
     return errorHandler(
-        fmt::format("Unable to delete profile file due to error: {}", fsError.value()));
+            fmt::format("Unable to delete profile file due to error: {}", fsError.value()));
   }
 
   logger::info(fmt::format("Deleted project file at {}", projectPath));
@@ -96,8 +113,9 @@ void ProjectsManager::deleteProject(const std::string& projectPath,
   loadProjectsFromFilesystem();
 }
 
-void ProjectsManager::removeProject(const std::string& projectPath) {
+void ProjectsManager::removeProject(const std::string& projectPath)
+{
   _configurationManager->removeAdditionalProjectPath(projectPath);
   loadProjectsFromFilesystem();
 }
-}  // namespace capy
+} // namespace capy

@@ -20,15 +20,17 @@
 
 #include <QPixmap>
 
-namespace capy::ui {
-class CheckerboardPixmap final : public QPixmap {
- public:
+namespace capy::ui
+{
+class CheckerboardPixmap final : public QPixmap
+{
+public:
   CheckerboardPixmap();
 
- private:
+private:
   static QColor getCheckerboardFillColor();
   static QColor getCheckerboardRectangleColor();
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // CHECKERBOARDPIXMAP_HPP
+#endif // CHECKERBOARDPIXMAP_HPP

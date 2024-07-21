@@ -29,8 +29,11 @@
 
 // TODO: Rewrite constructor, break it down
 
-namespace capy::ui {
-DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
+namespace capy::ui
+{
+DefaultColorPicker::DefaultColorPicker(QWidget* parent) :
+    QWidget(parent)
+{
   // TODO: Breakup into methods
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -116,15 +119,15 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
   _alphaSlider->setRange(0, 255);
 
   _saturationSlider->setGradientStops(
-      {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 0, 255)},
-       {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255)}});
+          {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 0, 255)},
+           {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255)}});
   _brightnessSlider->setGradientStops(
-      {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 0)},
-       {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255)}});
+          {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 0)},
+           {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255)}});
   _alphaSlider->setRenderCheckerboard(true);
   _alphaSlider->setGradientStops(
-      {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255, 0)},
-       {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255, 255)}});
+          {{0.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255, 0)},
+           {255.0 / 255.0, QColor::fromHsv(_hueSlider->value(), 255, 255, 255)}});
 
   _hueSlider->setValue(180);
   _saturationSlider->setValue(255);
@@ -142,14 +145,15 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) : QWidget(parent) {
 
   subLayout->addLayout(colorSliders);
 
-  setColor(QColor(0, 0, 0, 255));  // TODO: Maybe have a default color somewhere
+  setColor(QColor(0, 0, 0, 255)); // TODO: Maybe have a default color somewhere
 
   updateShownColor();
 }
 
 DefaultColorPicker::~DefaultColorPicker() = default;
 
-void DefaultColorPicker::updateShownColor() const {
+void DefaultColorPicker::updateShownColor() const
+{
   const auto hsvColor = _selectedColor.toHsv();
   _hueSlider->setValue(hsvColor.hue());
   _saturationSlider->setValue(hsvColor.saturation());
@@ -159,18 +163,23 @@ void DefaultColorPicker::updateShownColor() const {
   _colorShowcase->setStyleSheet("background-color: " + _selectedColor.name());
 }
 
-void DefaultColorPicker::setColor(const QColor color) {
+void DefaultColorPicker::setColor(const QColor color)
+{
   _selectedColor = color;
   updateShownColor();
   emit colorChanged(_selectedColor);
 }
 
 void DefaultColorPicker::setColor(const int hue, const int saturation, const int brightness,
-                                  const int alpha) {
+                                  const int alpha)
+{
   _selectedColor.setHsv(hue, saturation, brightness, alpha);
   updateShownColor();
   emit colorChanged(_selectedColor);
 }
 
-QColor DefaultColorPicker::getColor() const { return _selectedColor; }
-}  // namespace capy::ui
+QColor DefaultColorPicker::getColor() const
+{
+  return _selectedColor;
+}
+} // namespace capy::ui

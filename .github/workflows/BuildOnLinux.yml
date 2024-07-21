@@ -1,33 +1,26 @@
 name: Build on Linux (gcc)
-
 on:
   push:
-    branches: [ "master", "release/*" ]
+    branches: ["master", "release/*"]
   pull_request:
-    branches: [ "master", "release/*" ]
-
+    branches: ["master", "release/*"]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
-
       matrix:
-        os: [ ubuntu-24.04 ]
-        build_type: [ Release ]
-        c_compiler: [ gcc ]
+        os: [ubuntu-24.04]
+        build_type: [Release]
+        c_compiler: [gcc]
         include:
           - os: ubuntu-24.04
             c_compiler: gcc
             cpp_compiler: g++
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Install system dependencies
         run: sudo apt-get install -y cmake
-
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.0.0
         with:
@@ -37,36 +30,27 @@ jobs:
           dir: '${{ github.workspace }}/qt/'
           modules: 'qtwebengine'
           cache: 'true'
-
       - name: Install Conan
         uses: turtlebrowser/get-conan@v1.2
-
       - name: Detect Conan profiles
         run: conan profile detect
-
       - name: Restore Conan cache
         uses: actions/cache@v3
         with:
           key: 'conan_cache_linux'
           path: ~/.conan2/p
-
       - name: Set reusable strings
         id: strings
         shell: bash
         run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
       - name: Install conan dependencies
         run: conan install ${{ github.workspace }}/conan --build=missing
-
       - name: Build
         run: conan build ${{ github.workspace }}/conan
-
       - name: Test
         run: ${{ github.workspace }}/conan/build/application_build/CapyArtStudio_Tests
-
       - name: Create installer
         run: python3 ${{ github.workspace }}/tools/create_installer_linux.py
-
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:

@@ -18,16 +18,17 @@
 #ifndef BRESENHAM_HPP
 #define BRESENHAM_HPP
 
-#include <QPoint>
 #include <functional>
+#include <QPoint>
 
-namespace capy::algorithms {
+namespace capy::algorithms
+{
 using CoordinateApplicationFunction = std::function<void(int x, int y)>;
 
 void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
                     const CoordinateApplicationFunction& actionOnTarget);
 void applyBresenham(int x0, int y0, int x1, int y1,
                     const CoordinateApplicationFunction& actionOnTarget);
-}  // namespace capy::algorithms
+} // namespace capy::algorithms
 
-#endif  // BRESENHAM_HPP
+#endif // BRESENHAM_HPP

@@ -24,11 +24,12 @@
 
 // TODO: Move to ui/utils
 
-namespace capy {
+namespace capy
+{
 QString elideText(const QString& string, const QFont& font, int width,
                   Qt::TextElideMode elideMode = Qt::ElideRight);
 
 void clearLayout(QLayout* layout);
-}  // namespace capy
+} // namespace capy
 
-#endif  // UIHELPERS_HPP
+#endif // UIHELPERS_HPP

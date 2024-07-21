@@ -15,38 +15,46 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QBuffer>
 #include "DrawingCanvasItem.hpp"
 
-namespace capy::ui {
-DrawingCanvasItem::DrawingCanvasItem(const int width, const int height) {
+#include <QBuffer>
+
+namespace capy::ui
+{
+DrawingCanvasItem::DrawingCanvasItem(const int width, const int height)
+{
   _canvasRepresentation = QImage(width, height, QImage::Format_RGBA8888);
   fillCanvas();
   update();
 }
 
-QRectF DrawingCanvasItem::boundingRect() const {
-  return QRectF(0, 0, _canvasRepresentation.width(),
-                _canvasRepresentation.height());
+QRectF DrawingCanvasItem::boundingRect() const
+{
+  return QRectF(0, 0, _canvasRepresentation.width(), _canvasRepresentation.height());
 }
 
 void DrawingCanvasItem::paint(QPainter* painter,
                               [[maybe_unused]] const QStyleOptionGraphicsItem* option,
-                              [[maybe_unused]] QWidget* widget) {
+                              [[maybe_unused]] QWidget* widget)
+{
   painter->drawImage(0, 0, _canvasRepresentation);
 }
 
-void DrawingCanvasItem::updateExternalCanvasPixel(const int x, const int y, const QColor& color) {
+void DrawingCanvasItem::updateExternalCanvasPixel(const int x, const int y, const QColor& color)
+{
   _canvasRepresentation.setPixelColor(x, y, color);
   update();
 }
 
-void DrawingCanvasItem::updateAllPixels(const ColorCalculatingFunction& colorCalculatingFunction) {
+void DrawingCanvasItem::updateAllPixels(const ColorCalculatingFunction& colorCalculatingFunction)
+{
   const auto width = _canvasRepresentation.width();
   const auto height = _canvasRepresentation.height();
 
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
+  for (int x = 0; x < width; x++)
+  {
+    for (int y = 0; y < height; y++)
+    {
       _canvasRepresentation.setPixelColor(x, y, colorCalculatingFunction(x, y));
     }
   }
@@ -54,20 +62,26 @@ void DrawingCanvasItem::updateAllPixels(const ColorCalculatingFunction& colorCal
   update();
 }
 
-QByteArray DrawingCanvasItem::createMiniatureBytes() const {
+QByteArray DrawingCanvasItem::createMiniatureBytes() const
+{
   QByteArray byteArray;
   QBuffer buffer(&byteArray);
   buffer.open(QIODevice::WriteOnly);
 
   // TODO: magic numbers
   int width, height;
-  if (_canvasRepresentation.width() > _canvasRepresentation.height()) {
+  if (_canvasRepresentation.width() > _canvasRepresentation.height())
+  {
     width = 300;
     height = 200;
-  } else if (_canvasRepresentation.width() < _canvasRepresentation.height()) {
+  }
+  else if (_canvasRepresentation.width() < _canvasRepresentation.height())
+  {
     width = 200;
     height = 300;
-  } else {
+  }
+  else
+  {
     width = 300;
     height = 300;
   }
@@ -77,13 +91,16 @@ QByteArray DrawingCanvasItem::createMiniatureBytes() const {
   return byteArray;
 }
 
-void DrawingCanvasItem::fillCanvas() {
+void DrawingCanvasItem::fillCanvas()
+{
   // TODO: maybe take from first layer since now they have to be SYNCED
   // TODO: and alpha = 0?
-  for (int x = 0; x < _canvasRepresentation.width(); x++) {
-    for (int y = 0; y < _canvasRepresentation.height(); y++) {
+  for (int x = 0; x < _canvasRepresentation.width(); x++)
+  {
+    for (int y = 0; y < _canvasRepresentation.height(); y++)
+    {
       _canvasRepresentation.setPixelColor(x, y, QColor(255, 255, 255, 255));
     }
   }
 }
-}
+} // namespace capy::ui

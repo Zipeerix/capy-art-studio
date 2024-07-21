@@ -25,38 +25,51 @@
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy {
-Palette::Palette(std::string name) : JsonSerializable(), _name(std::move(name)) {}
+namespace capy
+{
+Palette::Palette(std::string name) :
+    JsonSerializable(),
+    _name(std::move(name))
+{
+}
 
-PotentialError<std::string> Palette::importValuesFromJson(const rapidjson::Document& root) {
-  if (!root.HasMember("name") || !root["name"].IsString()) {
+PotentialError<std::string> Palette::importValuesFromJson(const rapidjson::Document& root)
+{
+  if (!root.HasMember("name") || !root["name"].IsString())
+  {
     return "No 'name' member";
   }
 
   _name = root["name"].GetString();
 
-  if (!root.HasMember("colors") || !root["colors"].IsArray()) {
+  if (!root.HasMember("colors") || !root["colors"].IsArray())
+  {
     return "No 'colors' member";
   }
 
-  for (const auto& colorObject : root["colors"].GetArray()) {
+  for (const auto& colorObject: root["colors"].GetArray())
+  {
     PaletteColor paletteColorEntry;
-    if (colorObject.HasMember("hint")) {
-      if (!colorObject["hint"].IsString()) {
-        return "Invalid 'hint' value";  // TOOD: add index value for error
+    if (colorObject.HasMember("hint"))
+    {
+      if (!colorObject["hint"].IsString())
+      {
+        return "Invalid 'hint' value"; // TOOD: add index value for error
       }
 
       paletteColorEntry.hint = colorObject["hint"].GetString();
     }
 
-    if (!colorObject.HasMember("color") || !colorObject["color"].IsObject()) {
-      return "No inner color for color object";  // TODO: add index value for error
+    if (!colorObject.HasMember("color") || !colorObject["color"].IsObject())
+    {
+      return "No inner color for color object"; // TODO: add index value for error
     }
 
     const auto innerColor = colorObject["color"].GetObject();
     if (!innerColor.HasMember("r") || !innerColor.HasMember("g") || !innerColor.HasMember("b") ||
-        !innerColor.HasMember("alpha")) {
-      return "Incomplete inner color";  // TODO: add index value for error
+        !innerColor.HasMember("alpha"))
+    {
+      return "Incomplete inner color"; // TODO: add index value for error
     }
 
     paletteColorEntry.color.setRed(innerColor["r"].GetInt());
@@ -70,7 +83,8 @@ PotentialError<std::string> Palette::importValuesFromJson(const rapidjson::Docum
   return std::nullopt;
 }
 
-rapidjson::Document Palette::exportValuesToJson() const {
+rapidjson::Document Palette::exportValuesToJson() const
+{
   rapidjson::Document document;
   document.SetObject();
   auto& allocator = document.GetAllocator();
@@ -78,7 +92,8 @@ rapidjson::Document Palette::exportValuesToJson() const {
   document.AddMember("name", rapidjson::Value(_name.c_str(), allocator), allocator);
 
   rapidjson::Value colorsArray(rapidjson::kArrayType);
-  for (const auto& colorEntry : _colors) {
+  for (const auto& colorEntry: _colors)
+  {
     rapidjson::Value colorObject(rapidjson::kObjectType);
 
     const auto hint = colorEntry.hint.has_value() ? colorEntry.hint->c_str() : "";
@@ -100,12 +115,15 @@ rapidjson::Document Palette::exportValuesToJson() const {
   return document;
 }
 
-void Palette::addColor(const QColor& color, const std::optional<std::string>& hint) {
+void Palette::addColor(const QColor& color, const std::optional<std::string>& hint)
+{
   _colors.push_back(PaletteColor{color, hint});
 }
 
-void Palette::removeColor(int index) {
-  if (isIndexOutsideColors(index)) {
+void Palette::removeColor(int index)
+{
+  if (isIndexOutsideColors(index))
+  {
     logger::error(fmt::format("Attempting to remove non-existent color at "
                               "index {} from palette {}",
                               index, _name),
@@ -117,17 +135,26 @@ void Palette::removeColor(int index) {
   markAsEdited();
 }
 
-std::string Palette::getName() const { return _name; }
+std::string Palette::getName() const
+{
+  return _name;
+}
 
-void Palette::setName(std::string newName) {
+void Palette::setName(std::string newName)
+{
   _name = std::move(newName);
   markAsEdited();
 }
 
-int Palette::colorCount() const { return _colors.size(); }
+int Palette::colorCount() const
+{
+  return _colors.size();
+}
 
-PaletteColor Palette::getColor(const int index) const {
-  if (isIndexOutsideColors(index)) {
+PaletteColor Palette::getColor(const int index) const
+{
+  if (isIndexOutsideColors(index))
+  {
     logger::error(fmt::format("Attempting to get non-existent color at "
                               "index {} from palette {}",
                               index, _name),
@@ -138,9 +165,13 @@ PaletteColor Palette::getColor(const int index) const {
   return _colors.at(index);
 }
 
-std::vector<PaletteColor> Palette::getAllColors() const { return _colors; }
+std::vector<PaletteColor> Palette::getAllColors() const
+{
+  return _colors;
+}
 
-bool Palette::isIndexOutsideColors(const int index) const {
+bool Palette::isIndexOutsideColors(const int index) const
+{
   return index < 0 || static_cast<size_t>(index) >= _colors.size();
 }
-}  // namespace capy
+} // namespace capy

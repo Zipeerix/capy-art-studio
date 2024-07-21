@@ -20,18 +20,20 @@
 
 #include <QLabel>
 
-namespace capy::ui {
-class ClickableLabel final : public QLabel {
+namespace capy::ui
+{
+class ClickableLabel final : public QLabel
+{
   Q_OBJECT
- public:
-  explicit ClickableLabel(QWidget *parent = nullptr);
+public:
+  explicit ClickableLabel(QWidget* parent = nullptr);
 
- signals:
+signals:
   void clicked();
 
- protected:
-  void mousePressEvent(QMouseEvent *event) override;
+protected:
+  void mousePressEvent(QMouseEvent* event) override;
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // CLICKABLELABEL_HPP
+#endif // CLICKABLELABEL_HPP

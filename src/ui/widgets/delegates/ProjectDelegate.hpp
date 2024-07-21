@@ -22,32 +22,35 @@
 
 #include "user/Project.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class ProjectDelegate;
 }
 
 // TODO: pass model and index? or find another way to use model in list or get rid of model or do
 // nothing :D
-class ProjectDelegate final : public QWidget {
+class ProjectDelegate final : public QWidget
+{
   Q_OBJECT
- public:
+public:
   explicit ProjectDelegate(Project project, bool isProjectInternal, QWidget* parent = nullptr);
   ~ProjectDelegate() override;
 
- public slots:
+public slots:
   void imageOrNameClicked();
 
- signals:
+signals:
   void itemClicked(const Project& projectPath);
   void removeClicked(const Project& projectPath);
   void deleteClicked(const Project& projectPath);
 
- private:
+private:
   Ui::ProjectDelegate* ui;
   Project _project;
 };
 
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // CAPY_UI_PROJECTDELEGATE_HPP
+#endif // CAPY_UI_PROJECTDELEGATE_HPP

@@ -22,11 +22,19 @@
 
 #include "user/Palette.hpp"
 
-namespace capy::models {
-class PaletteColorTableModel final : public QAbstractTableModel {
+namespace capy::models
+{
+class PaletteColorTableModel final : public QAbstractTableModel
+{
   Q_OBJECT
- public:
-  enum class ColumnName : int { Color, Hex, Hint, ColumnCount };
+public:
+  enum class ColumnName : int
+  {
+    Color,
+    Hex,
+    Hint,
+    ColumnCount
+  };
 
   explicit PaletteColorTableModel(QObject* parent);
 
@@ -39,12 +47,12 @@ class PaletteColorTableModel final : public QAbstractTableModel {
 
   void setColors(std::vector<PaletteColor> colors);
 
- private:
+private:
   std::vector<PaletteColor> _colors;
 
   bool isRowOutsideModel(const QModelIndex& index) const;
   bool isRowOutsideModel(int index) const;
 };
-}  // namespace capy::models
+} // namespace capy::models
 
-#endif  // PALETTECOLORTABLEMODEL_HPP
+#endif // PALETTECOLORTABLEMODEL_HPP

@@ -27,36 +27,43 @@
 
 #include "JsonSerializable.hpp"
 
-namespace capy {
-template <class Derived>
-void JsonSerializable<Derived>::markAsEdited() {
+namespace capy
+{
+template<class Derived>
+void JsonSerializable<Derived>::markAsEdited()
+{
   _wasEdited = true;
 }
 
-template <class Derived>
-std::optional<std::string> JsonSerializable<Derived>::getPath() const {
+template<class Derived>
+std::optional<std::string> JsonSerializable<Derived>::getPath() const
+{
   return _path;
 }
 
-template <class Derived>
-void JsonSerializable<Derived>::setPath(std::string path) {
+template<class Derived>
+void JsonSerializable<Derived>::setPath(std::string path)
+{
   _path = std::move(path);
 }
 
-template <class Derived>
-bool JsonSerializable<Derived>::wasEditedFromLastSave() const {
+template<class Derived>
+bool JsonSerializable<Derived>::wasEditedFromLastSave() const
+{
   return _wasEdited;
 }
 
-template <class Derived>
-Result<Derived, std::string> JsonSerializable<Derived>::createFromJson(const std::string& path) {
+template<class Derived>
+Result<Derived, std::string> JsonSerializable<Derived>::createFromJson(const std::string& path)
+{
   using namespace rapidjson;
 
   static_assert(std::is_base_of_v<JsonSerializable, Derived>,
                 "Derived must be a subclass of JsonSerializable");
 
   std::ifstream file(path);
-  if (!file.is_open()) {
+  if (!file.is_open())
+  {
     return std::unexpected(fmt::format("Unable to open JSON file at path: {}", path));
   }
 
@@ -67,7 +74,8 @@ Result<Derived, std::string> JsonSerializable<Derived>::createFromJson(const std
   file.close();
 
   Document root;
-  if (root.Parse(jsonContent.c_str()).HasParseError()) {
+  if (root.Parse(jsonContent.c_str()).HasParseError())
+  {
     return std::unexpected(fmt::format("Invalid JSON file at path: {}", path));
   }
 
@@ -76,15 +84,17 @@ Result<Derived, std::string> JsonSerializable<Derived>::createFromJson(const std
 
   JsonSerializable& objectAsBase = object;
   const auto jsonParseError = objectAsBase.importValuesFromJson(root);
-  if (jsonParseError.has_value()) {
+  if (jsonParseError.has_value())
+  {
     return std::unexpected(fmt::format("Error when parsing JSON: {}", jsonParseError.value()));
   }
 
   return object;
 }
 
-template <class Derived>
-PotentialError<std::string> JsonSerializable<Derived>::saveToJson(std::optional<std::string> path) {
+template<class Derived>
+PotentialError<std::string> JsonSerializable<Derived>::saveToJson(std::optional<std::string> path)
+{
   using namespace rapidjson;
 
   static_assert(std::is_base_of_v<JsonSerializable, Derived>,
@@ -97,12 +107,14 @@ PotentialError<std::string> JsonSerializable<Derived>::saveToJson(std::optional<
   root.Accept(writer);
 
   const std::string finalPath = path.has_value() ? path.value() : _path.value_or("");
-  if (finalPath.empty()) {
+  if (finalPath.empty())
+  {
     return fmt::format("Unable to save JSON as no output path is given");
   }
 
   std::ofstream file(finalPath);
-  if (!file.is_open()) {
+  if (!file.is_open())
+  {
     return fmt::format("Unable to open JSON file for writing");
   }
 
@@ -112,6 +124,6 @@ PotentialError<std::string> JsonSerializable<Derived>::saveToJson(std::optional<
   _wasEdited = false;
   return std::nullopt;
 }
-}  // namespace capy
+} // namespace capy
 
-#endif  // JSONSERIALIZABLE_TPP
+#endif // JSONSERIALIZABLE_TPP

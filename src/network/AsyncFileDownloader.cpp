@@ -23,13 +23,17 @@
 
 #include "io/ConsoleLogger.hpp"
 
-namespace capy {
-AsyncFileDownloader::AsyncFileDownloader(QObject* parent) : QObject(parent) {
+namespace capy
+{
+AsyncFileDownloader::AsyncFileDownloader(QObject* parent) :
+    QObject(parent)
+{
   connect(&_networkAccessManager, &QNetworkAccessManager::finished, this,
           &AsyncFileDownloader::fileDownloaded);
 }
 
-void AsyncFileDownloader::startDownloadOfFile(const std::string& url) {
+void AsyncFileDownloader::startDownloadOfFile(const std::string& url)
+{
   _currentUrl = url;
   _downloadedData.clear();
   const auto networkUrl = QUrl(QString::fromStdString(_currentUrl));
@@ -37,12 +41,15 @@ void AsyncFileDownloader::startDownloadOfFile(const std::string& url) {
   _networkAccessManager.get(request);
 }
 
-const std::vector<uint8_t>& AsyncFileDownloader::getDownloadedData() const {
+const std::vector<uint8_t>& AsyncFileDownloader::getDownloadedData() const
+{
   return _downloadedData;
 }
 
-void AsyncFileDownloader::fileDownloaded(QNetworkReply* reply) {
-  if (reply->error() != QNetworkReply::NoError) {
+void AsyncFileDownloader::fileDownloaded(QNetworkReply* reply)
+{
+  if (reply->error() != QNetworkReply::NoError)
+  {
     logger::error(fmt::format("Failed to download file from: {} due to error: {}", _currentUrl,
                               reply->errorString().toStdString()),
                   logger::Severity::Mild);
@@ -57,4 +64,4 @@ void AsyncFileDownloader::fileDownloaded(QNetworkReply* reply) {
 
   emit finished(true);
 }
-}  // namespace capy
+} // namespace capy

@@ -21,14 +21,17 @@
 #include <memory>
 #include <stdexcept>
 
-namespace capy {
-template <typename T, typename U>
-static void compileTimeTypeCheck() {
+namespace capy
+{
+template<typename T, typename U>
+static void compileTimeTypeCheck()
+{
   // TODO: This probably doesn't work, check, maybe don't do any checks
-  if (!std::is_same<T, U>::value) {
+  if (!std::is_same<T, U>::value)
+  {
     throw std::logic_error("Compile type type check failed");
   }
 }
-}  // namespace capy
+} // namespace capy
 
-#endif  // COMPILETIMECHECKS_TPP
+#endif // COMPILETIMECHECKS_TPP

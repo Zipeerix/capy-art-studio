@@ -22,47 +22,58 @@
 
 using namespace testing;
 
-TEST(algorithms, alpha_blending_one_layer) {
+TEST(algorithms, alpha_blending_one_layer)
+{
   std::vector<capy::Pixel> layers = {
-      capy::Pixel{128, 128, 128, 255},
+          capy::Pixel{128, 128, 128, 255},
   };
 
-  const auto blender = capy::algorithms::AlphaBlender(
-      [&](int, int, int layer) -> capy::Pixel { return layers.at(layer); });
+  const auto blender = capy::algorithms::AlphaBlender([&](int, int, int layer) -> capy::Pixel {
+    return layers.at(layer);
+  });
 
   const auto blendResult = blender.blend(0, 0, layers.size());
   ASSERT_EQ(blendResult, QColor(128, 128, 128, 255));
 }
 
-TEST(algorithms, alpha_blending_two_layers) {
+TEST(algorithms, alpha_blending_two_layers)
+{
   std::vector<capy::Pixel> layers = {capy::Pixel{128, 128, 128, 255}, capy::Pixel{0, 0, 0, 128}};
 
-  const auto blender = capy::algorithms::AlphaBlender(
-      [&](const int, const int, const int layer) -> capy::Pixel { return layers.at(layer); });
+  const auto blender =
+          capy::algorithms::AlphaBlender([&](const int, const int, const int layer) -> capy::Pixel {
+            return layers.at(layer);
+          });
 
   const auto blendResult = blender.blend(0, 0, layers.size());
   ASSERT_EQ(blendResult, QColor(64, 64, 64, 255));
 }
 
-TEST(algorithms, alpha_blending_two_layers_transparent_base) {
+TEST(algorithms, alpha_blending_two_layers_transparent_base)
+{
   std::vector<capy::Pixel> layers = {capy::Pixel{128, 128, 128, 0}, capy::Pixel{0, 0, 0, 128}};
 
-  const auto blender = capy::algorithms::AlphaBlender(
-      [&](const int, const int, const int layer) -> capy::Pixel { return layers.at(layer); });
+  const auto blender =
+          capy::algorithms::AlphaBlender([&](const int, const int, const int layer) -> capy::Pixel {
+            return layers.at(layer);
+          });
 
   const auto blendResult = blender.blend(0, 0, layers.size());
   ASSERT_EQ(blendResult, QColor(64, 64, 64, 255));
 }
 
-TEST(algorithms, alpha_blending_n_layers) {
+TEST(algorithms, alpha_blending_n_layers)
+{
   std::vector<capy::Pixel> layers = {
-      capy::Pixel{128, 128, 128, 255}, capy::Pixel{0, 0, 0, 128},
-      capy::Pixel{125, 66, 13, 128},   capy::Pixel{44, 44, 44, 75},
-      capy::Pixel{191, 155, 21, 180},
+          capy::Pixel{128, 128, 128, 255}, capy::Pixel{0, 0, 0, 128},
+          capy::Pixel{125, 66, 13, 128},   capy::Pixel{44, 44, 44, 75},
+          capy::Pixel{191, 155, 21, 180},
   };
 
-  const auto blender = capy::algorithms::AlphaBlender(
-      [&](const int, const int, const int layer) -> capy::Pixel { return layers.at(layer); });
+  const auto blender =
+          capy::algorithms::AlphaBlender([&](const int, const int, const int layer) -> capy::Pixel {
+            return layers.at(layer);
+          });
 
   const auto blendResult = blender.blend(0, 0, layers.size());
   ASSERT_EQ(blendResult, QColor(158, 127, 27, 254));

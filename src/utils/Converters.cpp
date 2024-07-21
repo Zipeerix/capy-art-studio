@@ -19,9 +19,12 @@
 
 #include <stdexcept>
 
-namespace capy::utils::converters {
-double convertBytesTo(const uint64_t bytes, const StorageSize targetType) {
-  switch (targetType) {
+namespace capy::utils::converters
+{
+double convertBytesTo(const uint64_t bytes, const StorageSize targetType)
+{
+  switch (targetType)
+  {
     case StorageSize::Bytes:
       return static_cast<double>(bytes);
 
@@ -29,15 +32,17 @@ double convertBytesTo(const uint64_t bytes, const StorageSize targetType) {
       return static_cast<double>(bytes) / 1024.0;
 
     case StorageSize::Megabytes:
-      return static_cast<double>(bytes) / (1024.0 * 1024.0);  // TODO: pow
+      return static_cast<double>(bytes) / (1024.0 * 1024.0); // TODO: pow
 
     default:
       throw std::logic_error("Invalid storage size");
   }
 }
 
-uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType) {
-  switch (targetType) {
+uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType)
+{
+  switch (targetType)
+  {
     case TimeType::Hours:
       return seconds / 3600;
 
@@ -51,10 +56,10 @@ uint64_t convertSecondsTo(const uint64_t seconds, const TimeType targetType) {
       return seconds * 1000;
 
     case TimeType::Microseconds:
-      return seconds * 1000 * 1000;  // TOOD: pow, overall refactor both
+      return seconds * 1000 * 1000; // TOOD: pow, overall refactor both
 
     default:
       throw std::logic_error("Invalid time type");
   }
 }
-}  // namespace capy::utils::converters
+} // namespace capy::utils::converters

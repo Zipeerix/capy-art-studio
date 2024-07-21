@@ -16,13 +16,16 @@
 *******************************************************************************/
 
 #include "ToolsArea.hpp"
-#include "ui_ToolsArea.h"
-#include "ui/widgets/delegates/ToolButton.hpp"
 
-namespace capy::ui {
-ToolsArea::ToolsArea(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ToolsArea) {
+#include "ui/widgets/delegates/ToolButton.hpp"
+#include "ui_ToolsArea.h"
+
+namespace capy::ui
+{
+ToolsArea::ToolsArea(QWidget* parent) :
+    QWidget(parent),
+    ui(new Ui::ToolsArea)
+{
   ui->setupUi(this);
 
   _layout = new FlowLayout(ui->scrollArea, 0, 0, 0);
@@ -31,11 +34,13 @@ ToolsArea::ToolsArea(QWidget *parent) :
   ui->scrollArea->setLayout(_layout);
 }
 
-ToolsArea::~ToolsArea() {
-    delete ui;
+ToolsArea::~ToolsArea()
+{
+  delete ui;
 }
 
-ToolButton* ToolsArea::addToolButton(const DrawingTool tool) {
+ToolButton* ToolsArea::addToolButton(const DrawingTool tool)
+{
   auto* toolButton = new ToolButton(tool, this);
   _layout->addWidget(toolButton);
 

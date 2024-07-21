@@ -24,9 +24,11 @@
 #include "graphics/Drawing.hpp"
 #include "meta/ErrorHandling.hpp"
 
-namespace capy {
-class Project {
- public:
+namespace capy
+{
+class Project
+{
+public:
   [[nodiscard]] static Result<Project, std::string> createFromFile(const std::string& path);
   [[nodiscard]] Result<Drawing, std::string> readDrawing() const;
 
@@ -38,13 +40,13 @@ class Project {
   std::string getName() const;
   QPixmap getMiniature() const;
 
- private:
+private:
   Project(std::string path, QPixmap miniature, std::size_t indexOfDataAfterMiniature);
 
   std::string _path;
   QPixmap _miniature;
   std::size_t _indexOfDataAfterMiniature;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // PROJECT_HPP
+#endif // PROJECT_HPP

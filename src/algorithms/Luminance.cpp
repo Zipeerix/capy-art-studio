@@ -17,19 +17,22 @@
 
 #include "Luminance.hpp"
 
-namespace capy::algorithms {
+namespace capy::algorithms
+{
 constexpr double LUMINANCE_RED_CONSTANT = 0.299;
 constexpr double LUMINANCE_GREEN_CONSTANT = 0.587;
 constexpr double LUMINANCE_BLUE_CONSTANT = 0.114;
 constexpr int LUMINANCE_THRESHOLD = 128;
 
-int calculateLuminance(const QColor& color) {
+int calculateLuminance(const QColor& color)
+{
   return static_cast<int>(LUMINANCE_RED_CONSTANT * color.red() +
                           LUMINANCE_GREEN_CONSTANT * color.green() +
                           LUMINANCE_BLUE_CONSTANT * color.blue());
 }
 
-QColor blackOrWhiteBasedOnLuminance(const QColor& color) {
+QColor blackOrWhiteBasedOnLuminance(const QColor& color)
+{
   return calculateLuminance(color) > LUMINANCE_THRESHOLD ? Qt::black : Qt::white;
 }
-}  // namespace capy::algorithms
+} // namespace capy::algorithms

@@ -15,26 +15,33 @@
 ** along with this program.  If not, see <https://www.gnu.org/licenses/>.     **
 *******************************************************************************/
 
-#include <QScrollBar>
-#include "ui/widgets/DrawingWidget.hpp"
 #include "HandTool.hpp"
 
-namespace capy {
+#include <QScrollBar>
+
+#include "ui/widgets/DrawingWidget.hpp"
+
+namespace capy
+{
 HandTool::HandTool(ui::DrawingWidget* drawingWidget) :
-  IDrawingTool(drawingWidget) {
+    IDrawingTool(drawingWidget)
+{
 }
 
-void HandTool::onSwitchTo() {
-
+void HandTool::onSwitchTo()
+{
 }
 
-void HandTool::onSwitchOutOf() {
-
+void HandTool::onSwitchOutOf()
+{
 }
 
-bool HandTool::mousePressEvent(QMouseEvent* event, [[maybe_unused]] const std::optional<QPoint>& clickedPixel) {
+bool HandTool::mousePressEvent(QMouseEvent* event,
+                               [[maybe_unused]] const std::optional<QPoint>& clickedPixel)
+{
   const auto eventPosition = event->position();
-  if (event->button() == Qt::LeftButton) {
+  if (event->button() == Qt::LeftButton)
+  {
     _leftMouseButtonPressed = true;
     _panStartX = static_cast<int>(eventPosition.x());
     _panStartY = static_cast<int>(eventPosition.y());
@@ -45,13 +52,16 @@ bool HandTool::mousePressEvent(QMouseEvent* event, [[maybe_unused]] const std::o
   return false;
 }
 
-bool HandTool::mouseMoveEvent(QMouseEvent* event, [[maybe_unused]] const std::optional<QPoint>& movingThroughPixel) {
+bool HandTool::mouseMoveEvent(QMouseEvent* event,
+                              [[maybe_unused]] const std::optional<QPoint>& movingThroughPixel)
+{
   const auto eventPosition = event->position();
-  if (_leftMouseButtonPressed) {
-    _drawingWidget->horizontalScrollBar()->setValue(
-        static_cast<int>(_drawingWidget->horizontalScrollBar()->value() - (eventPosition.x() - _panStartX)));
-    _drawingWidget->verticalScrollBar()->setValue(
-        static_cast<int>(_drawingWidget->verticalScrollBar()->value() - (eventPosition.y() - _panStartY)));
+  if (_leftMouseButtonPressed)
+  {
+    _drawingWidget->horizontalScrollBar()->setValue(static_cast<int>(
+            _drawingWidget->horizontalScrollBar()->value() - (eventPosition.x() - _panStartX)));
+    _drawingWidget->verticalScrollBar()->setValue(static_cast<int>(
+            _drawingWidget->verticalScrollBar()->value() - (eventPosition.y() - _panStartY)));
     _panStartX = static_cast<int>(eventPosition.x());
     _panStartY = static_cast<int>(eventPosition.y());
     return true;
@@ -60,8 +70,11 @@ bool HandTool::mouseMoveEvent(QMouseEvent* event, [[maybe_unused]] const std::op
   return false;
 }
 
-bool HandTool::mouseReleaseEvent(QMouseEvent* event, [[maybe_unused]] const std::optional<QPoint>& clickedPixel) {
-  if (event->button() == Qt::LeftButton) {
+bool HandTool::mouseReleaseEvent(QMouseEvent* event,
+                                 [[maybe_unused]] const std::optional<QPoint>& clickedPixel)
+{
+  if (event->button() == Qt::LeftButton)
+  {
     _leftMouseButtonPressed = false;
     _drawingWidget->setCursor(Qt::ArrowCursor);
     return true;
@@ -69,4 +82,4 @@ bool HandTool::mouseReleaseEvent(QMouseEvent* event, [[maybe_unused]] const std:
 
   return false;
 }
-} // capy
+} // namespace capy

@@ -17,9 +17,15 @@
 
 #include "UnimplementedException.hpp"
 
-namespace capy {
-UnimplementedException::UnimplementedException(std::string extraInfo)
-    : _extraInfo(std::move(extraInfo)) {}
+namespace capy
+{
+UnimplementedException::UnimplementedException(std::string extraInfo) :
+    _extraInfo(std::move(extraInfo))
+{
+}
 
-const char* UnimplementedException::what() const noexcept { return _extraInfo.c_str(); }
-}  // namespace capy
+const char* UnimplementedException::what() const noexcept
+{
+  return _extraInfo.c_str();
+}
+} // namespace capy

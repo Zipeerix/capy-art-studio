@@ -18,20 +18,24 @@
 #ifndef CAPY_UI_TOOLSAREA_HPP
 #define CAPY_UI_TOOLSAREA_HPP
 
-#include <QWidget>
 #include <QString>
+#include <QWidget>
+
 #include "ui/layouts/FlowLayout.hpp"
 #include "ui/widgets/delegates/ToolButton.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class ToolsArea;
 }
 
-class ToolsArea final : public QWidget {
+class ToolsArea final : public QWidget
+{
   Q_OBJECT
 public:
-  explicit ToolsArea(QWidget *parent = nullptr);
+  explicit ToolsArea(QWidget* parent = nullptr);
   ~ToolsArea() override;
 
   ToolButton* addToolButton(DrawingTool tool);

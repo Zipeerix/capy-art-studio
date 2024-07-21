@@ -20,21 +20,23 @@
 
 #include <rapidjson/document.h>
 
-#include <QColor>
 #include <expected>
+#include <QColor>
 
 #include "io/JsonSerializable.hpp"
 #include "meta/ErrorHandling.hpp"
 
-namespace capy {
+namespace capy
+{
 // TODO: Derive from JsonSerializable and append document to other document?
 struct PaletteColor {
   QColor color;
   std::optional<std::string> hint;
 };
 
-class Palette final : public JsonSerializable<Palette> {
- public:
+class Palette final : public JsonSerializable<Palette>
+{
+public:
   Palette() = default;
   explicit Palette(std::string name);
 
@@ -47,16 +49,16 @@ class Palette final : public JsonSerializable<Palette> {
   void addColor(const QColor& color, const std::optional<std::string>& hint);
   void removeColor(int index);
 
- private:
+private:
   std::string _name;
   std::vector<PaletteColor> _colors;
 
-  [[nodiscard]] PotentialError<std::string> importValuesFromJson(
-      const rapidjson::Document& root) override;
+  [[nodiscard]] PotentialError<std::string>
+  importValuesFromJson(const rapidjson::Document& root) override;
   rapidjson::Document exportValuesToJson() const override;
 
   bool isIndexOutsideColors(int index) const;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // PALETTE_HPP
+#endif // PALETTE_HPP

@@ -1,35 +1,28 @@
 name: Build on Windows (vc++)
-
 on:
   push:
-    branches: [ "release/*" ]
+    branches: ["release/*"]
   pull_request:
-    branches: [ "release/*" ]
-
+    branches: ["release/*"]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
-
       matrix:
-        os: [ windows-latest ]
-        build_type: [ Release ]
-        c_compiler: [ cl ]
+        os: [windows-latest]
+        build_type: [Release]
+        c_compiler: [cl]
         include:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Install cmake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.30.x'
-
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.0.0
         with:
@@ -39,36 +32,27 @@ jobs:
           dir: '${{ github.workspace }}/qt/'
           modules: 'qtwebengine'
           cache: 'true'
-
       - name: Install Conan
         uses: turtlebrowser/get-conan@v1.2
-
       - name: Detect Conan profiles
         run: conan profile detect
-
       - name: Restore Conan cache
         uses: actions/cache@v3
         with:
           key: 'conan_cache_windows'
           path: C:\Users\runneradmin\.conan2\p
-
       - name: Set reusable strings
         id: strings
         shell: bash
         run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
       - name: Install conan dependencies
         run: conan install ${{ github.workspace }}/conan --build=missing
-
       - name: Build
         run: conan build ${{ github.workspace }}/conan
-
       - name: Test
         run: ${{ github.workspace }}\conan\build\application_build\Release\CapyArtStudio_Tests.exe
-
       - name: Create installer
         run: python3 ${{ github.workspace }}/tools/create_installer_windows.py
-
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:

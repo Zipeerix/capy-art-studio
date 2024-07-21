@@ -23,18 +23,20 @@
 
 #include "DynamicLibrary.hpp"
 
-namespace capy {
-class ExternalPlugin {
- public:
+namespace capy
+{
+class ExternalPlugin
+{
+public:
   ExternalPlugin() = delete;
 
   [[nodiscard]] static Result<ExternalPlugin, std::string> fromFile(const std::string& path);
 
- private:
+private:
   explicit ExternalPlugin(const DynamicLibrary& dynLib);
 
   DynamicLibrary _dynLib;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // EXTERNALPLUGIN_HPP
+#endif // EXTERNALPLUGIN_HPP

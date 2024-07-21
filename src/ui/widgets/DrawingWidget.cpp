@@ -18,28 +18,34 @@
 #include "DrawingWidget.hpp"
 
 #include <fmt/format.h>
-#include "algorithms/Bresenham.hpp"
-#include "io/ConsoleLogger.hpp"
-#include "utils/General.hpp"
+
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QScrollBar>
 
-namespace capy::ui {
+#include "algorithms/Bresenham.hpp"
+#include "io/ConsoleLogger.hpp"
+#include "utils/General.hpp"
+
+namespace capy::ui
+{
 DrawingWidget::DrawingWidget(QWidget* parent) :
-  QGraphicsView(parent),
-  _configurationManager(ConfigurationManager::createInstance()),
-  _drawing(0, 0),
-  _toolbox(this) {
+    QGraphicsView(parent),
+    _configurationManager(ConfigurationManager::createInstance()),
+    _drawing(0, 0),
+    _toolbox(this)
+{
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   recreateScene();
 }
 
-QByteArray DrawingWidget::createMiniatureBytes() const {
+QByteArray DrawingWidget::createMiniatureBytes() const
+{
   return _drawingCanvasItem->createMiniatureBytes();
 }
 
-void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect) {
+void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRectF& rect)
+{
   painter->save();
   painter->resetTransform();
   // TODO: Below maybe change to rect?
@@ -47,46 +53,55 @@ void DrawingWidget::drawBackground(QPainter* painter, [[maybe_unused]] const QRe
   painter->restore();
 }
 
-void DrawingWidget::setDrawing(Drawing drawing) {
+void DrawingWidget::setDrawing(Drawing drawing)
+{
   _drawing = std::move(drawing);
   redrawScreen();
 }
 
-void DrawingWidget::handleColorPickerColorChange(const QColor color) const {
+void DrawingWidget::handleColorPickerColorChange(const QColor color) const
+{
   _toolbox.getPenTool()->setColor(color);
 }
 
 
-const std::vector<Layer>& DrawingWidget::getLayers() const {
+const std::vector<Layer>& DrawingWidget::getLayers() const
+{
   return _drawing.getLayers();
 }
 
-void DrawingWidget::switchTool(const DrawingTool drawingTool) {
+void DrawingWidget::switchTool(const DrawingTool drawingTool)
+{
   _toolbox.switchTool(drawingTool);
 }
 
-void DrawingWidget::startNewDrawing(const int width, const int height) {
-  logger::info(fmt::format(
-      "Creating new image with dimensions {}x{} with per layer size of {} bytes",
-      width, height, utils::calculateInMemorySizeOfImage(width, height)));
+void DrawingWidget::startNewDrawing(const int width, const int height)
+{
+  logger::info(
+          fmt::format("Creating new image with dimensions {}x{} with per layer size of {} bytes",
+                      width, height, utils::calculateInMemorySizeOfImage(width, height)));
   _drawing = Drawing(width, height);
   redrawScreen();
 }
 
-void DrawingWidget::redrawScreen() {
+void DrawingWidget::redrawScreen()
+{
   removeGrid();
   recreateScene();
   resetZoom();
 
   const auto drawingDimensions = _drawing.getDimensions();
-  _drawingCanvasItem = new DrawingCanvasItem(drawingDimensions.getWidth(), drawingDimensions.getHeight());
+  _drawingCanvasItem =
+          new DrawingCanvasItem(drawingDimensions.getWidth(), drawingDimensions.getHeight());
   _scene->addItem(_drawingCanvasItem);
 
   syncInternalAndExternalDrawing();
 }
 
-void DrawingWidget::recreateScene() {
-  if (_scene != nullptr) {
+void DrawingWidget::recreateScene()
+{
+  if (_scene != nullptr)
+  {
     _scene->clear();
     delete _scene;
   }
@@ -95,39 +110,49 @@ void DrawingWidget::recreateScene() {
   setScene(_scene);
 }
 
-void DrawingWidget::redrawGrid() {
+void DrawingWidget::redrawGrid()
+{
   removeGrid();
 
-  if (_configurationManager->getGraphicsSetting<bool>(ConfigurationManager::GraphicsSetting::DrawGrid)) {
+  if (_configurationManager->getGraphicsSetting<bool>(
+              ConfigurationManager::GraphicsSetting::DrawGrid))
+  {
     auto pen = QPen(Qt::lightGray);
-    pen.setWidthF(_configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridWidth));
+    pen.setWidthF(_configurationManager->getGraphicsSetting<double>(
+            ConfigurationManager::GraphicsSetting::GridWidth));
     pen.setCosmetic(true);
 
     const auto drawingDimensions = _drawing.getDimensions();
-    for (int y = 0; y <= drawingDimensions.getHeight(); y += 1) {
+    for (int y = 0; y <= drawingDimensions.getHeight(); y += 1)
+    {
       _lines.push_back(_scene->addLine(0, y, drawingDimensions.getWidth(), y, pen));
     }
 
-    for (int x = 0; x <= drawingDimensions.getWidth(); x += 1) {
+    for (int x = 0; x <= drawingDimensions.getWidth(); x += 1)
+    {
       _lines.push_back(_scene->addLine(x, 0, x, drawingDimensions.getHeight(), pen));
     }
   }
 }
 
-void DrawingWidget::removeGrid() {
-  for (const QGraphicsLineItem* line : _lines) {
+void DrawingWidget::removeGrid()
+{
+  for (const QGraphicsLineItem* line: _lines)
+  {
     delete line;
   }
 
   _lines.clear();
 }
 
-void DrawingWidget::resetZoom() {
+void DrawingWidget::resetZoom()
+{
   resetTransform();
   _zoomFactor = 1.0;
 }
 
-void DrawingWidget::updateZoomLevel(const double factor){
+void DrawingWidget::updateZoomLevel(const double factor)
+{
   const auto oldZoomFactor = _zoomFactor;
   _zoomFactor *= factor;
 
@@ -136,85 +161,107 @@ void DrawingWidget::updateZoomLevel(const double factor){
   scale(factor, factor);
 }
 
-void DrawingWidget::drawOrRemoveGridBasedOnZoomLevel(const double oldZoomFactor) {
+void DrawingWidget::drawOrRemoveGridBasedOnZoomLevel(const double oldZoomFactor)
+{
   // TODO Prime example of checking configuration manager too ofter
   // TODO: Save threshold on startup and then have a connect so that if its changed somewhere else
   // TODO: the saved value is changed, so that config manager doesnt have to be checked every
   // TODO: zoom tick
-  const auto zoomThreshold = _configurationManager->getGraphicsSetting<double>(ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold);
-  if (oldZoomFactor <= zoomThreshold && _zoomFactor >= zoomThreshold) {
+  const auto zoomThreshold = _configurationManager->getGraphicsSetting<double>(
+          ConfigurationManager::GraphicsSetting::GridDrawingZoomThreshold);
+  if (oldZoomFactor <= zoomThreshold && _zoomFactor >= zoomThreshold)
+  {
     redrawGrid();
-  } else if (oldZoomFactor >= zoomThreshold && _zoomFactor <= zoomThreshold) {
+  }
+  else if (oldZoomFactor >= zoomThreshold && _zoomFactor <= zoomThreshold)
+  {
     removeGrid();
   }
 }
 
-void DrawingWidget::syncInternalAndExternalDrawing() const {
+void DrawingWidget::syncInternalAndExternalDrawing() const
+{
   _drawingCanvasItem->updateAllPixels([&](const int x, const int y) {
     return _drawing.calculateCombinedPixelColor(x, y);
   });
 }
 
 
-void DrawingWidget::setCurrentLayer(const int newLayer) {
+void DrawingWidget::setCurrentLayer(const int newLayer)
+{
   _drawing.setCurrentLayer(newLayer);
 }
 
-std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(
-    const QMouseEvent* event) const {
+std::optional<QPoint> DrawingWidget::mapPositionOfEventToScene(const QMouseEvent* event) const
+{
   const auto mappedPosition = mapToScene(event->position().toPoint());
   const int mappedPositionX = qFloor(mappedPosition.x());
   const int mappedPositionY = qFloor(mappedPosition.y());
 
   // TODO: Performance optimization?
   const auto drawingDimensions = _drawing.getDimensions();
-  if (mappedPositionX >= 0 &&
-      mappedPositionY >= 0 &&
+  if (mappedPositionX >= 0 && mappedPositionY >= 0 &&
       mappedPositionX < drawingDimensions.getWidth() &&
-      mappedPositionY < drawingDimensions.getHeight()) {
+      mappedPositionY < drawingDimensions.getHeight())
+  {
     return QPoint{mappedPositionX, mappedPositionY};
   }
 
   return std::nullopt;
 }
 
-void DrawingWidget::drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor){
+void DrawingWidget::drawPixelOnBothRepresentations(int x, int y, const QColor& drawingColor)
+{
   _drawing.drawPixelOnCurrentLayerInternalRepresentationOnly(x, y, drawingColor);
   const auto combinedColor = _drawing.calculateCombinedPixelColor(x, y);
   _drawingCanvasItem->updateExternalCanvasPixel(x, y, combinedColor);
 }
 
-void DrawingWidget::mousePressEvent(QMouseEvent* event) {
+void DrawingWidget::mousePressEvent(QMouseEvent* event)
+{
   const auto clickedPixel = mapPositionOfEventToScene(event);
-  if (_toolbox.getCurrentToolInterface()->mousePressEvent(event, clickedPixel)) {
+  if (_toolbox.getCurrentToolInterface()->mousePressEvent(event, clickedPixel))
+  {
     event->accept();
-  } else {
+  }
+  else
+  {
     event->ignore();
   }
 }
 
-void DrawingWidget::mouseReleaseEvent(QMouseEvent* event) {
+void DrawingWidget::mouseReleaseEvent(QMouseEvent* event)
+{
   const auto clickedPixel = mapPositionOfEventToScene(event);
-  if (_toolbox.getCurrentToolInterface()->mouseReleaseEvent(event, clickedPixel)) {
+  if (_toolbox.getCurrentToolInterface()->mouseReleaseEvent(event, clickedPixel))
+  {
     event->accept();
-  } else {
+  }
+  else
+  {
     event->ignore();
   }
 }
 
-void DrawingWidget::mouseMoveEvent(QMouseEvent* event) {
+void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
+{
   const auto movingThroughPixel = mapPositionOfEventToScene(event);
   //const QPointF eventPosition = event->position();
 
-  if (_toolbox.getCurrentToolInterface()->mouseMoveEvent(event, movingThroughPixel)) {
+  if (_toolbox.getCurrentToolInterface()->mouseMoveEvent(event, movingThroughPixel))
+  {
     event->accept();
-  } else {
+  }
+  else
+  {
     event->ignore();
   }
 }
 
-void DrawingWidget::wheelEvent(QWheelEvent* event) {
-  if (event->modifiers() & Qt::ControlModifier) {
+void DrawingWidget::wheelEvent(QWheelEvent* event)
+{
+  if (event->modifiers() & Qt::ControlModifier)
+  {
     const double angle = event->angleDelta().y();
     const double factor = qPow(1.0015, angle);
 
@@ -225,14 +272,14 @@ void DrawingWidget::wheelEvent(QWheelEvent* event) {
     const QPointF targetScenePos = mapToScene(event->position().toPoint());
 
     centerOn(targetScenePos);
-    const QPointF deltaViewportPos = targetViewportPos - QPointF(
-                                         viewport()->width() / 2.0,
-                                         viewport()->height() / 2.0);
-    const QPointF viewportCenter =
-        mapFromScene(targetScenePos) - deltaViewportPos;
+    const QPointF deltaViewportPos =
+            targetViewportPos - QPointF(viewport()->width() / 2.0, viewport()->height() / 2.0);
+    const QPointF viewportCenter = mapFromScene(targetScenePos) - deltaViewportPos;
     centerOn(mapToScene(viewportCenter.toPoint()));
-  } else {
+  }
+  else
+  {
     QGraphicsView::wheelEvent(event);
   }
 }
-}
+} // namespace capy::ui

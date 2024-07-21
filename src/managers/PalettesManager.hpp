@@ -22,10 +22,12 @@
 #include "models/PaletteColorTableModel.hpp"
 #include "models/PaletteModel.hpp"
 
-namespace capy {
-class PalettesManager final : public QObject {
+namespace capy
+{
+class PalettesManager final : public QObject
+{
   Q_OBJECT
- public:
+public:
   explicit PalettesManager(QObject* parent);
 
   models::PaletteModel* getPaletteModel();
@@ -45,15 +47,15 @@ class PalettesManager final : public QObject {
 
   void setTableColorsFromPalette(int paletteIndex);
 
- signals:
+signals:
   void palettesUpdated();
 
- private:
+private:
   models::PaletteModel _paletteModel;
 
   // TODO: Move to its own manager?
   models::PaletteColorTableModel _colorTableModel;
 };
-}  // namespace capy
+} // namespace capy
 
-#endif  // PALETTESMANAGER_HPP
+#endif // PALETTESMANAGER_HPP

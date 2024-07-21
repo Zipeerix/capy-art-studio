@@ -16,30 +16,35 @@
 *******************************************************************************/
 
 #include "NewFileDialog.hpp"
+
 #include "ui_NewFileDialog.h"
 
-namespace capy::ui {
+namespace capy::ui
+{
 NewFileDialog::NewFileDialog(QWidget* parent) :
-  QDialog(parent),
-  ui(new Ui::NewFileDialog) {
+    QDialog(parent),
+    ui(new Ui::NewFileDialog)
+{
   ui->setupUi(this);
 
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this,
-          &NewFileDialog::okClicked);
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &NewFileDialog::okClicked);
 }
 
-NewFileDialog::~NewFileDialog() {
+NewFileDialog::~NewFileDialog()
+{
   delete ui;
 }
 
-std::optional<NewFileDialogResult> NewFileDialog::getResult() const {
+std::optional<NewFileDialogResult> NewFileDialog::getResult() const
+{
   return _result;
 }
 
-void NewFileDialog::okClicked() {
+void NewFileDialog::okClicked()
+{
   // TODO: This is a plceholder
   _result = NewFileDialogResult{ui->widthLineEdit->text().toInt(),
                                 ui->heightLineEdit->text().toInt()};
   accept();
 }
-}
+} // namespace capy::ui

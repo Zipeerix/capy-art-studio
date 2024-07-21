@@ -20,8 +20,9 @@
 
 #include <QWidget>
 
-namespace capy::ui {
+namespace capy::ui
+{
 QWidget* createExpandingSpacer(QWidget* parent);
 }
 
-#endif  // SPACERUTILS_HPP
+#endif // SPACERUTILS_HPP

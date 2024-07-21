@@ -18,8 +18,10 @@
 #include "MainWindow.hpp"
 
 #include <fmt/format.h>
+
 #include <QFileDialog>
 #include <QString>
+
 #include "dialogs/NewFileDialog.hpp"
 #include "io/ConsoleLogger.hpp"
 #include "ui/SettingsDialog.hpp"
@@ -27,17 +29,19 @@
 #include "utils/Converters.hpp"
 #include "utils/MessageBoxUtils.hpp"
 #include "utils/SpacerUtils.hpp"
-#include "widgets/DrawingWidget.hpp"
 #include "widgets/delegates/ToolButton.hpp"
+#include "widgets/DrawingWidget.hpp"
 
-namespace capy::ui {
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent),
-      AutoSizeSavingItem(this, "MainWindow"),
-      _configurationManager(ConfigurationManager::createInstance()),
-      ui(new Ui::MainWindow),
-      _drawingWidget(new DrawingWidget(this)),
-      _statusBarWidget(new StatusBarWidget(this)) {
+namespace capy::ui
+{
+MainWindow::MainWindow(QWidget* parent) :
+    QMainWindow(parent),
+    AutoSizeSavingItem(this, "MainWindow"),
+    _configurationManager(ConfigurationManager::createInstance()),
+    ui(new Ui::MainWindow),
+    _drawingWidget(new DrawingWidget(this)),
+    _statusBarWidget(new StatusBarWidget(this))
+{
   ui->setupUi(this);
 
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
@@ -49,8 +53,9 @@ MainWindow::MainWindow(QWidget* parent)
   // get created TOOD: Probably change it when connections are made to settings managet to update in
   // real time
   const bool showStatusBar = _configurationManager->getApplicationSetting<bool>(
-      ConfigurationManager::ApplicationSettings::ShowStatusBar);
-  if (showStatusBar) {
+          ConfigurationManager::ApplicationSettings::ShowStatusBar);
+  if (showStatusBar)
+  {
     setupStatusBarTimer();
   }
 
@@ -61,7 +66,9 @@ MainWindow::MainWindow(QWidget* parent)
   connect(ui->actionExit, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionCloseWindow, &QAction::triggered, this, &QApplication::exit);
   connect(ui->actionSettingsOpen, &QAction::triggered, this, &MainWindow::settingsOpenClicked);
-  connect(ui->actionResetZoom, &QAction::triggered, this, [&]() { _drawingWidget->resetZoom(); });
+  connect(ui->actionResetZoom, &QAction::triggered, this, [&]() {
+    _drawingWidget->resetZoom();
+  });
 
   // TODO: on file->close go back to welcome screen? only if show welcome screen enabled
   // TODO: Project history list using ConfigurationManager getProjectsList addProjectsList etc
@@ -71,31 +78,39 @@ MainWindow::MainWindow(QWidget* parent)
   setupToolsDock();
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow()
+{
+  delete ui;
+}
 
-void MainWindow::closeEvent(QCloseEvent* event) {
-  logger::hideConsoleWindow();  // cleanup happens in Application::start
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+  logger::hideConsoleWindow(); // cleanup happens in Application::start
   QMainWindow::closeEvent(event);
 }
 
-void MainWindow::menuBarFileNewClicked() {
+void MainWindow::menuBarFileNewClicked()
+{
   NewFileDialog dialog(this);
   dialog.exec();
   // TODO: if exec() == accepted or something? Maybe no need for optional
   const auto newFileDialogResult = dialog.getResult();
-  if (newFileDialogResult.has_value()) {
+  if (newFileDialogResult.has_value())
+  {
     _drawingWidget->startNewDrawing(newFileDialogResult->width, newFileDialogResult->height);
   }
 }
 
-void MainWindow::menuBarFileSaveAsClicked() {
+void MainWindow::menuBarFileSaveAsClicked()
+{
   // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on
   // exit/nth minute
 
   const QString filter = "Capy Project Files (*.capy)";
   const std::string filePath =
-      QFileDialog::getSaveFileName(this, "Save Capy File", QString(), filter).toStdString();
-  if (filePath.empty()) {
+          QFileDialog::getSaveFileName(this, "Save Capy File", QString(), filter).toStdString();
+  if (filePath.empty())
+  {
     return;
   }
 
@@ -103,18 +118,21 @@ void MainWindow::menuBarFileSaveAsClicked() {
   const std::vector<Layer>& layers = _drawingWidget->getLayers();
 
   const auto savingError = _project->save(miniatureBytes, layers, filePath);
-  if (savingError.has_value()) {
+  if (savingError.has_value())
+  {
     return execMessageBox(this, QMessageBox::Icon::Critical,
                           QString::fromStdString(savingError.value()));
   }
 }
 
-void MainWindow::settingsOpenClicked() {
+void MainWindow::settingsOpenClicked()
+{
   SettingsDialog settingsDialog{this};
   settingsDialog.exec();
 }
 
-void MainWindow::setupColorDock() {
+void MainWindow::setupColorDock()
+{
   _colorDockArea = new ColorArea(this);
   connect(_colorDockArea, &ColorArea::colorPickerColorChanged, this,
           &MainWindow::colorPickerColorChanged);
@@ -122,16 +140,19 @@ void MainWindow::setupColorDock() {
   ui->colorDock->setWidget(_colorDockArea);
 }
 
-void MainWindow::setupLayersDock() {
+void MainWindow::setupLayersDock()
+{
   _layersDockArea = new LayersArea(this);
   ui->layersDock->setWidget(_layersDockArea);
 }
 
-void MainWindow::setupToolsDock() {
+void MainWindow::setupToolsDock()
+{
   _toolsDockArea = new ToolsArea(this);
   ui->toolsDock->setWidget(_toolsDockArea);
 
-  for (int i = 0; i < static_cast<int>(DrawingTool::Count); i++) {
+  for (int i = 0; i < static_cast<int>(DrawingTool::Count); i++)
+  {
     const auto drawingTool = static_cast<DrawingTool>(i);
     const QString buttonName = QString::fromStdString(getDrawingToolName(drawingTool));
 
@@ -142,30 +163,38 @@ void MainWindow::setupToolsDock() {
   }
 }
 
-void MainWindow::setupStatusBarTimer() {
+void MainWindow::setupStatusBarTimer()
+{
   const auto statusBarUpdateInterval = _configurationManager->getApplicationSetting<int>(
-      ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval);
+          ConfigurationManager::ApplicationSettings::StatusBarUpdateInterval);
   const auto updateInternalInSeconds = static_cast<int>(convertSecondsTo(
-      std::max(statusBarUpdateInterval, 1), utils::converters::TimeType::Miliseconds));
+          std::max(statusBarUpdateInterval, 1), utils::converters::TimeType::Miliseconds));
   _statusBarTimer.start(updateInternalInSeconds);
   connect(&_statusBarTimer, &QTimer::timeout, this, &MainWindow::updateStatusBar);
 }
 
-void MainWindow::updateStatusBar() const { _statusBarWidget->update(_drawingWidget->getLayers()); }
+void MainWindow::updateStatusBar() const
+{
+  _statusBarWidget->update(_drawingWidget->getLayers());
+}
 
-void MainWindow::changeWindowTitle(const std::string& projectPath) {
+void MainWindow::changeWindowTitle(const std::string& projectPath)
+{
   setWindowTitle("CapyArtStudio : " + QString::fromStdString(projectPath));
 }
 
-void MainWindow::colorPickerColorChanged(const QColor newColor) const {
+void MainWindow::colorPickerColorChanged(const QColor newColor) const
+{
   logger::info(fmt::format("Changing color to: ({}, {}, {} {})", newColor.red(), newColor.green(),
                            newColor.blue(), newColor.alpha()));
   _drawingWidget->handleColorPickerColorChange(newColor);
 }
 
-void MainWindow::setProject(const Project& project) {
+void MainWindow::setProject(const Project& project)
+{
   const auto drawingCreationRes = project.readDrawing();
-  if (!drawingCreationRes.has_value()) {
+  if (!drawingCreationRes.has_value())
+  {
     return execMessageBox(this, QMessageBox::Icon::Critical,
                           QString::fromStdString(drawingCreationRes.error()));
   }
@@ -175,4 +204,4 @@ void MainWindow::setProject(const Project& project) {
 
   _drawingWidget->setDrawing(drawingCreationRes.value());
 }
-}  // namespace capy::ui
+} // namespace capy::ui

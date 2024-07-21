@@ -19,14 +19,16 @@
 #define COLORS_HPP
 
 // TODO: move colorchannelvalue somewhere else and create constants.hpp for values
-namespace capy {
+namespace capy
+{
 using ColorChannelValue = uint8_t;
 
-namespace constants::alpha {
+namespace constants::alpha
+{
 constexpr ColorChannelValue solidColor = 255;
 constexpr ColorChannelValue semiTransparent = 127;
 constexpr ColorChannelValue transparent = 0;
-}  // namespace constants::alpha
-}  // namespace capy
+} // namespace constants::alpha
+} // namespace capy
 
-#endif  // COLORS_HPP
+#endif // COLORS_HPP

@@ -16,13 +16,17 @@
 *******************************************************************************/
 
 #include "IDrawingTool.hpp"
+
 #include <stdexcept>
 
-namespace capy {
-std::string getDrawingToolName(const DrawingTool drawingTool) {
-  switch (drawingTool) {
-  case DrawingTool::Hand:
-    return "Hand";
+namespace capy
+{
+std::string getDrawingToolName(const DrawingTool drawingTool)
+{
+  switch (drawingTool)
+  {
+    case DrawingTool::Hand:
+      return "Hand";
 
     case DrawingTool::Pen:
       return "Pen";
@@ -34,6 +38,7 @@ std::string getDrawingToolName(const DrawingTool drawingTool) {
 }
 
 IDrawingTool::IDrawingTool(ui::DrawingWidget* drawingWidget) :
-  _drawingWidget(drawingWidget) {
+    _drawingWidget(drawingWidget)
+{
 }
-} // capy
+} // namespace capy

@@ -18,17 +18,20 @@
 #ifndef IDRAWINGTOOL_HPP
 #define IDRAWINGTOOL_HPP
 
+#include <optional>
 #include <QMouseEvent>
 #include <QPoint>
-#include <optional>
 #include <string>
 
-namespace capy {
-namespace ui {
+namespace capy
+{
+namespace ui
+{
 class DrawingWidget;
 }
 
-enum class DrawingTool {
+enum class DrawingTool
+{
   Hand,
   Pen,
   Count
@@ -36,7 +39,8 @@ enum class DrawingTool {
 
 std::string getDrawingToolName(DrawingTool drawingTool);
 
-class IDrawingTool {
+class IDrawingTool
+{
 public:
   explicit IDrawingTool(ui::DrawingWidget* drawingWidget);
   virtual ~IDrawingTool() = default;
@@ -45,11 +49,12 @@ public:
   virtual void onSwitchOutOf() = 0;
   virtual bool mousePressEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) = 0;
   virtual bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) = 0;
-  virtual bool mouseMoveEvent(QMouseEvent* event, const std::optional<QPoint>& movingThroughPixel) = 0;
+  virtual bool mouseMoveEvent(QMouseEvent* event,
+                              const std::optional<QPoint>& movingThroughPixel) = 0;
 
 protected:
   ui::DrawingWidget* _drawingWidget;
 };
-} // capy
+} // namespace capy
 
 #endif //IDRAWINGTOOL_HPP

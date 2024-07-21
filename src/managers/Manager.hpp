@@ -21,8 +21,9 @@
 #include <functional>
 #include <string>
 
-namespace capy {
+namespace capy
+{
 using ManagerErrorHandler = std::function<void(const std::string&)>;
 }
 
-#endif  // MANAGER_HPP
+#endif // MANAGER_HPP

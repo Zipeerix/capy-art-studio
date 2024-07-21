@@ -17,37 +17,77 @@
 
 #include "Pixel.hpp"
 
-namespace capy {
+namespace capy
+{
 Pixel::Pixel(const ColorChannelValue r, const ColorChannelValue g, const ColorChannelValue b,
-             const uint8_t alpha)
-    : _r(r), _g(g), _b(b), _alpha(alpha) {}
+             const uint8_t alpha) :
+    _r(r),
+    _g(g),
+    _b(b),
+    _alpha(alpha)
+{
+}
 
-Pixel Pixel::white(const uint8_t alpha) { return {255, 255, 255, alpha}; }
+Pixel Pixel::white(const uint8_t alpha)
+{
+  return {255, 255, 255, alpha};
+}
 
-Pixel Pixel::black(const uint8_t alpha) { return {0, 0, 0, alpha}; }
+Pixel Pixel::black(const uint8_t alpha)
+{
+  return {0, 0, 0, alpha};
+}
 
-void Pixel::updateFromQColor(const QColor& color) {
+void Pixel::updateFromQColor(const QColor& color)
+{
   _r = color.red();
   _g = color.green();
   _b = color.blue();
   _alpha = color.alpha();
 }
 
-QColor Pixel::convertToQColor() const { return QColor(_r, _g, _b, _alpha); }
+QColor Pixel::convertToQColor() const
+{
+  return QColor(_r, _g, _b, _alpha);
+}
 
-QBrush Pixel::convertToQBrush() const { return QBrush(convertToQColor()); }
+QBrush Pixel::convertToQBrush() const
+{
+  return QBrush(convertToQColor());
+}
 
-ColorChannelValue Pixel::getRed() const { return _r; }
+ColorChannelValue Pixel::getRed() const
+{
+  return _r;
+}
 
-ColorChannelValue Pixel::getBlue() const { return _b; }
+ColorChannelValue Pixel::getBlue() const
+{
+  return _b;
+}
 
-ColorChannelValue Pixel::getGreen() const { return _g; }
+ColorChannelValue Pixel::getGreen() const
+{
+  return _g;
+}
 
-ColorChannelValue Pixel::getAlpha() const { return _alpha; }
+ColorChannelValue Pixel::getAlpha() const
+{
+  return _alpha;
+}
 
-bool Pixel::hasSomeTransparency() const { return _alpha < constants::alpha::solidColor; }
+bool Pixel::hasSomeTransparency() const
+{
+  return _alpha < constants::alpha::solidColor;
+}
 
-bool Pixel::isSolid() const { return _alpha == constants::alpha::solidColor; }
+bool Pixel::isSolid() const
+{
+  return _alpha == constants::alpha::solidColor;
+}
 
-bool Pixel::isTransparent() const { return _alpha == constants::alpha::transparent; }
-}  // namespace capy
+bool Pixel::isTransparent() const
+{
+  return _alpha == constants::alpha::transparent;
+}
+} // namespace capy

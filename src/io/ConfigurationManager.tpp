@@ -22,10 +22,13 @@
 #include "graphics/GraphicalBackend.hpp"
 #include "meta/CompileTimeChecks.hpp"
 
-namespace capy {
-template <typename SettingValueType>
-SettingValueType ConfigurationManager::getDebugSetting(const DebugSetting setting) const {
-  switch (setting) {
+namespace capy
+{
+template<typename SettingValueType>
+SettingValueType ConfigurationManager::getDebugSetting(const DebugSetting setting) const
+{
+  switch (setting)
+  {
     case DebugSetting::ShowConsole:
       compileTimeTypeCheck<SettingValueType, bool>();
       return _settings.value(getDebugSettingPath(setting), true).toBool();
@@ -35,10 +38,11 @@ SettingValueType ConfigurationManager::getDebugSetting(const DebugSetting settin
   }
 }
 
-template <typename SettingValueType>
-void ConfigurationManager::setDebugSetting(const DebugSetting setting,
-                                           const SettingValueType value) {
-  switch (setting) {
+template<typename SettingValueType>
+void ConfigurationManager::setDebugSetting(const DebugSetting setting, const SettingValueType value)
+{
+  switch (setting)
+  {
     case DebugSetting::ShowConsole:
       compileTimeTypeCheck<SettingValueType, bool>();
       _settings.setValue(getDebugSettingPath(setting), value);
@@ -51,17 +55,20 @@ void ConfigurationManager::setDebugSetting(const DebugSetting setting,
   _settings.sync();
 }
 
-template <typename SettingValueType>
-SettingValueType ConfigurationManager::getGraphicsSetting(const GraphicsSetting setting) const {
-  switch (setting) {
+template<typename SettingValueType>
+SettingValueType ConfigurationManager::getGraphicsSetting(const GraphicsSetting setting) const
+{
+  switch (setting)
+  {
     case GraphicsSetting::GraphicalBackend:
       // TODO: When CAS-169 gets done this should not be converted to int, this method should return
       // GraphicsBackend
       // TODO: and for default value use QVariant::fromValue(GraphicalBackend::QtSoftware)
       compileTimeTypeCheck<SettingValueType, int>();
       return _settings
-          .value(getGraphicsSettingPath(setting), static_cast<int>(GraphicalBackend::QtSoftware))
-          .toInt();
+              .value(getGraphicsSettingPath(setting),
+                     static_cast<int>(GraphicalBackend::QtSoftware))
+              .toInt();
 
     case GraphicsSetting::DrawGrid:
       compileTimeTypeCheck<SettingValueType, bool>();
@@ -80,10 +87,12 @@ SettingValueType ConfigurationManager::getGraphicsSetting(const GraphicsSetting 
   }
 }
 
-template <typename SettingValueType>
+template<typename SettingValueType>
 void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
-                                              const SettingValueType value) {
-  switch (setting) {
+                                              const SettingValueType value)
+{
+  switch (setting)
+  {
     case GraphicsSetting::GraphicalBackend:
       compileTimeTypeCheck<SettingValueType, GraphicalBackend>();
       break;
@@ -106,9 +115,11 @@ void ConfigurationManager::setGraphicsSetting(const GraphicsSetting setting,
   _settings.sync();
 }
 
-template <typename SettingValueType>
-SettingValueType ConfigurationManager::getApplicationSetting(ApplicationSettings setting) const {
-  switch (setting) {
+template<typename SettingValueType>
+SettingValueType ConfigurationManager::getApplicationSetting(ApplicationSettings setting) const
+{
+  switch (setting)
+  {
     case ApplicationSettings::ShowStatusBar:
     case ApplicationSettings::ShowWelcomeScreen:
       compileTimeTypeCheck<SettingValueType, bool>();
@@ -124,10 +135,12 @@ SettingValueType ConfigurationManager::getApplicationSetting(ApplicationSettings
   }
 }
 
-template <typename SettingValueType>
+template<typename SettingValueType>
 void ConfigurationManager::setApplicationSetting(ApplicationSettings setting,
-                                                 SettingValueType value) {
-  switch (setting) {
+                                                 SettingValueType value)
+{
+  switch (setting)
+  {
     case ApplicationSettings::ShowStatusBar:
     case ApplicationSettings::ShowWelcomeScreen:
       compileTimeTypeCheck<SettingValueType, bool>();
@@ -145,6 +158,6 @@ void ConfigurationManager::setApplicationSetting(ApplicationSettings setting,
 
   _settings.sync();
 }
-}  // namespace capy
+} // namespace capy
 
-#endif  // CONFIGURATIONMANAGER_TPP
+#endif // CONFIGURATIONMANAGER_TPP

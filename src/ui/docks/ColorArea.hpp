@@ -21,19 +21,22 @@
 #include <QWidget>
 
 #include "managers/PalettesManager.hpp"
-#include "models/PaletteModel.hpp"
 #include "models/PaletteColorTableModel.hpp"
+#include "models/PaletteModel.hpp"
 #include "ui/widgets/color-pickers/DefaultColorPicker.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class ColorArea;
 }
 
-class ColorArea final : public QWidget {
+class ColorArea final : public QWidget
+{
   Q_OBJECT
 public:
-  explicit ColorArea(QWidget *parent = nullptr);
+  explicit ColorArea(QWidget* parent = nullptr);
   ~ColorArea() override;
 
 public slots:
@@ -47,7 +50,7 @@ public slots:
   void removeColorClicked();
 
 signals:
-    void colorPickerColorChanged(QColor color);
+  void colorPickerColorChanged(QColor color);
 
 private:
   Ui::ColorArea* ui;
@@ -58,6 +61,6 @@ private:
   void updatePalettesUi() const;
   bool isPaletteComboBoxIndexRestorable() const;
 };
-}
+} // namespace capy::ui
 
 #endif // COLORAREA_HPP

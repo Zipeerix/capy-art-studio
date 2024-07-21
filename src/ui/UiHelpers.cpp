@@ -20,21 +20,26 @@
 #include <QFontMetrics>
 #include <QWidget>
 
-namespace capy {
+namespace capy
+{
 QString elideText(const QString& string, const QFont& font, int width,
-                  const Qt::TextElideMode elideMode) {
+                  const Qt::TextElideMode elideMode)
+{
   const QFontMetrics metrics{font};
   QString elidedText = metrics.elidedText(string, elideMode, width);
 
   return elidedText;
 }
 
-void clearLayout(QLayout* layout) {
-  while (const QLayoutItem* item = layout->takeAt(0)) {
-    if (QWidget* widget = item->widget()) {
+void clearLayout(QLayout* layout)
+{
+  while (const QLayoutItem* item = layout->takeAt(0))
+  {
+    if (QWidget* widget = item->widget())
+    {
       widget->deleteLater();
     }
     delete item;
   }
 }
-}  // namespace capy
+} // namespace capy

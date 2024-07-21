@@ -23,8 +23,10 @@
 #include "graphics/drawing-tools/IDrawingTool.hpp"
 
 // TODO: Make remove and set stylesheet in each button
-namespace capy::ui {
-class ToolButton final : public QPushButton {
+namespace capy::ui
+{
+class ToolButton final : public QPushButton
+{
 public:
   explicit ToolButton(DrawingTool tool, QWidget* parent);
 

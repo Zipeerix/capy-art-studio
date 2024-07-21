@@ -29,26 +29,29 @@
 #include "widgets/DrawingWidget.hpp"
 #include "widgets/StatusBarWidget.hpp"
 
-namespace capy::ui {
-namespace Ui {
+namespace capy::ui
+{
+namespace Ui
+{
 class MainWindow;
 }
 
-class MainWindow final : public QMainWindow, AutoSizeSavingItem {
+class MainWindow final : public QMainWindow, AutoSizeSavingItem
+{
   Q_OBJECT
- public:
+public:
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
   void setProject(const Project& project);
 
- public slots:
+public slots:
   void menuBarFileNewClicked();
   void menuBarFileSaveAsClicked();
   void settingsOpenClicked();
   void colorPickerColorChanged(QColor newColor) const;
 
- private:
+private:
   std::shared_ptr<ConfigurationManager> _configurationManager;
   Ui::MainWindow* ui;
   DrawingWidget* _drawingWidget;
@@ -73,6 +76,6 @@ class MainWindow final : public QMainWindow, AutoSizeSavingItem {
 
   void changeWindowTitle(const std::string& projectPath);
 };
-}  // namespace capy::ui
+} // namespace capy::ui
 
-#endif  // MAINWINDOW_H
+#endif // MAINWINDOW_H

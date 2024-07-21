@@ -20,18 +20,21 @@
 
 #include <QDialog>
 
-namespace capy::ui {
+namespace capy::ui
+{
 // TODO: This is a placeholder, use capy manager later
 struct NewFileDialogResult {
   int width;
   int height;
 };
 
-namespace Ui {
+namespace Ui
+{
 class NewFileDialog;
 }
 
-class NewFileDialog final : public QDialog {
+class NewFileDialog final : public QDialog
+{
   Q_OBJECT
 
 public:
@@ -48,6 +51,6 @@ private:
   Ui::NewFileDialog* ui;
   std::optional<NewFileDialogResult> _result;
 };
-}
+} // namespace capy::ui
 
 #endif // NEWFILEDIALOG_HPP

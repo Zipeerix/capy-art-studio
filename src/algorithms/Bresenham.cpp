@@ -19,32 +19,42 @@
 
 #include <cmath>
 
-namespace capy::algorithms {
-static std::pair<int, int> calculateAbosluteDifference(const int n0, const int n1) {
+namespace capy::algorithms
+{
+static std::pair<int, int> calculateAbosluteDifference(const int n0, const int n1)
+{
   const int diffN = n1 - n0;
   const int multiplicator = diffN > 0 ? 1 : -1;
   return {multiplicator, std::abs(diffN)};
 }
 
 void applyBresenham(const int x0, const int y0, const int x1, const int y1,
-                    const CoordinateApplicationFunction& actionOnTarget) {
+                    const CoordinateApplicationFunction& actionOnTarget)
+{
   const auto [sx, dx] = calculateAbosluteDifference(x0, x1);
   const auto [sy, dy] = calculateAbosluteDifference(y0, y1);
   int epsilon = 0;
-  if (dx > dy) {
-    for (auto x = x0, y = y0; sx < 0 ? x >= x1 : x <= x1; x += sx) {
+  if (dx > dy)
+  {
+    for (auto x = x0, y = y0; sx < 0 ? x >= x1 : x <= x1; x += sx)
+    {
       actionOnTarget(x, y);
       epsilon += dy;
-      if (epsilon << 1 >= dx) {
+      if (epsilon << 1 >= dx)
+      {
         y += sy;
         epsilon -= dx;
       }
     }
-  } else {
-    for (auto x = x0, y = y0; sy < 0 ? y >= y1 : y <= y1; y += sy) {
+  }
+  else
+  {
+    for (auto x = x0, y = y0; sy < 0 ? y >= y1 : y <= y1; y += sy)
+    {
       actionOnTarget(x, y);
       epsilon += dx;
-      if (epsilon << 1 >= dy) {
+      if (epsilon << 1 >= dy)
+      {
         x += sx;
         epsilon -= dy;
       }
@@ -53,7 +63,8 @@ void applyBresenham(const int x0, const int y0, const int x1, const int y1,
 }
 
 void applyBresenham(const QPoint& firstPoint, const QPoint& secondPoint,
-                    const CoordinateApplicationFunction& actionOnTarget) {
+                    const CoordinateApplicationFunction& actionOnTarget)
+{
   applyBresenham(firstPoint.x(), firstPoint.y(), secondPoint.x(), secondPoint.y(), actionOnTarget);
 }
-}  // namespace capy::algorithms
+} // namespace capy::algorithms

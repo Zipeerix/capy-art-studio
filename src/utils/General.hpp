@@ -21,13 +21,15 @@
 #include <cstdint>
 
 // TODO: Change this and 'Memory.hpp' namespace to capy::utils?
-namespace capy::utils {
-namespace constants {
+namespace capy::utils
+{
+namespace constants
+{
 constexpr char nullTerminator = 0;
 }
 
 uint64_t calculateInMemorySizeOfImage(int width, int height, int layers = 1);
 int convert2DIndexto1DIndex(int x, int y, int width);
-}  // namespace capy::utils
+} // namespace capy::utils
 
-#endif  // GENERAL_HPP
+#endif // GENERAL_HPP

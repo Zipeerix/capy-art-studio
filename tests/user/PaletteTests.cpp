@@ -24,7 +24,8 @@ using namespace testing;
 
 // TODO: Negative tests
 
-TEST(user, palette_json_loading) {
+TEST(user, palette_json_loading)
+{
   const auto testJsonPath = "tests/user/resources/TestPalette.json";
 
   const auto paletteOpt = capy::Palette::createFromJson(testJsonPath);
@@ -47,7 +48,8 @@ TEST(user, palette_json_loading) {
   ASSERT_EQ(secondColor.alpha(), 255);
 }
 
-TEST(user, palette_json_exporting) {
+TEST(user, palette_json_exporting)
+{
   const auto testJsonPathIn = "tests/user/resources/TestPalette.json";
   const auto testJsonPathOut = "tests/user/resources/TestPalette_export.json";
 

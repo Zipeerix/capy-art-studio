@@ -16,22 +16,28 @@
 *******************************************************************************/
 
 #include "StatusBarWidget.hpp"
+
 #include "ui_StatusBarWidget.h"
 #include "utils/Converters.hpp"
 
-namespace capy::ui {
-StatusBarWidget::StatusBarWidget(QWidget* parent)
-    : QWidget(parent),
-      ui(new Ui::StatusBarWidget) {
-    ui->setupUi(this);
+namespace capy::ui
+{
+StatusBarWidget::StatusBarWidget(QWidget* parent) :
+    QWidget(parent),
+    ui(new Ui::StatusBarWidget)
+{
+  ui->setupUi(this);
 }
 
-StatusBarWidget::~StatusBarWidget() {
-    delete ui;
+StatusBarWidget::~StatusBarWidget()
+{
+  delete ui;
 }
 
-static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers) {
-  if (layers.empty()) {
+static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers)
+{
+  if (layers.empty())
+  {
     return 0;
   }
 
@@ -39,8 +45,10 @@ static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers) {
   return layers.size() * exampleLayer.calculateInMemorySize();
 }
 
-void StatusBarWidget::update(const std::vector<Layer>& layers) {
-  const auto ramSize = convertBytesTo(calculateRamSizeOfLayers(layers), utils::converters::StorageSize::Megabytes);
+void StatusBarWidget::update(const std::vector<Layer>& layers)
+{
+  const auto ramSize = convertBytesTo(calculateRamSizeOfLayers(layers),
+                                      utils::converters::StorageSize::Megabytes);
   ui->ramLabel->setText(QString::number(ramSize, 'f', 2) + " MB");
   ui->layersLabel->setText(QString::number(layers.size()));
 }
