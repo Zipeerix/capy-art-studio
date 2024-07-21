@@ -18,6 +18,7 @@
 #ifndef CONFIGURATIONMANAGER_TPP
 #define CONFIGURATIONMANAGER_TPP
 
+#include "ConfigurationManager.hpp"
 #include "graphics/GraphicalBackend.hpp"
 #include "meta/CompileTimeChecks.hpp"
 

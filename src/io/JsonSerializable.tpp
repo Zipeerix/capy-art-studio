@@ -25,6 +25,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "JsonSerializable.hpp"
+
 namespace capy
 {
 template<class Derived>

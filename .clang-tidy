@@ -15,6 +15,7 @@ Checks: "-*,
         -modernize-use-nodiscard,
         -readability-suspicious-call-argument,
         -performance-enum-size,
+        -misc-header-include-cycle,
         -cppcoreguidelines-owning-memory,
         -cppcoreguidelines-avoid-magic-numbers,
         -readability-magic-numbers,
@@ -22,12 +23,13 @@ Checks: "-*,
         -cppcoreguidelines-pro-type-reinterpret-cast
 "
 
-# Rationale for each disabled check, if not provided it should be reenabled ASAP
+# Rationale for each disabled check, if not provided it should be reenabled
 # cppcoreguidelines-prefer-member-initializer - Disabled due to many Ui classes requiring ui->setupUi before constructing some members
 # cppcoreguidelines-pro-type-reinterpret-cast - Disabled as reinterpret_cast is often useful for example casting uint8_t* to char*
 # performance-enum-size - Disabled due to providing little to no benefit
 # modernize-use-nodiscard - Disabled due to policy of using [[nodiscard]] only for error types
 # modernize-use-trailing-return-type - Disabled due to policy of not using trailing return type
+# misc-header-include-cycle - Disabled due to policy of including hpp file in tpp files
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: '^(?!.*(moc_|ui_|qrc_|autogen)).*'

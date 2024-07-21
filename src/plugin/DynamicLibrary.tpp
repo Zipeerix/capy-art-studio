@@ -20,6 +20,8 @@
 
 #include <stdexcept>
 
+#include "DynamicLibrary.hpp"
+
 namespace capy
 {
 template<typename SymbolType>

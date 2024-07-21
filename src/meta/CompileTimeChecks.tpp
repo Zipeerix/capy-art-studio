@@ -21,6 +21,8 @@
 #include <memory>
 #include <stdexcept>
 
+#include "CompileTimeChecks.hpp"
+
 namespace capy
 {
 template<typename T, typename U>
