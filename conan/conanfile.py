@@ -26,13 +26,15 @@ class CapyArtStudio(ConanFile):
         self.folders.source = "../.."
         self.folders.build = "application_build"
 
+    def generate(self):
+        tc = CMakeToolchain(self)
+        if self.options.skip_static_analysis:
+            tc.variables["SKIP_STATIC_ANALYSIS"] = "ON"
+        tc.generate()
+
     def build(self):
         path = os.path.join(self.source_folder, "CMakeLists.txt")
         cmake_file = load(self, path)
         cmake = CMake(self)
-        
-        if self.options["skip_static_analysis"]:
-            cmake.definitions["SKIP_STATIC_ANALYSIS"] = "true"
-
         cmake.configure()
         cmake.build()
