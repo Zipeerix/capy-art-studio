@@ -260,7 +260,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 
 void DrawingWidget::wheelEvent(QWheelEvent* event)
 {
-  if (event->modifiers() & Qt::ControlModifier)
+  if ((event->modifiers() & Qt::ControlModifier) != 0)
   {
     const double angle = event->angleDelta().y();
     const double factor = qPow(1.0015, angle);

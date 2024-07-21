@@ -50,14 +50,14 @@ const std::vector<Project>& ProjectsModel::getProjects() const
 
 int ProjectsModel::rowCount([[maybe_unused]] const QModelIndex& parent) const
 {
-  return _projects.size();
+  return static_cast<int>(_projects.size());
 }
 
 QVariant ProjectsModel::data(const QModelIndex& index, int role) const
 {
   if (!index.isValid() || isRowOutsideModel(index))
   {
-    return QVariant();
+    return {};
   }
 
   const auto& project = _projects.at(index.row());
@@ -67,7 +67,7 @@ QVariant ProjectsModel::data(const QModelIndex& index, int role) const
       return QString::fromStdString(project.getName());
 
     default:
-      return QVariant();
+      return {};
   }
 }
 

@@ -45,7 +45,7 @@ bool HandTool::mousePressEvent(QMouseEvent* event,
     _leftMouseButtonPressed = true;
     _panStartX = static_cast<int>(eventPosition.x());
     _panStartY = static_cast<int>(eventPosition.y());
-    _drawingWidget->setCursor(Qt::ClosedHandCursor);
+    getDrawingWidget()->setCursor(Qt::ClosedHandCursor);
     return true;
   }
 
@@ -58,10 +58,11 @@ bool HandTool::mouseMoveEvent(QMouseEvent* event,
   const auto eventPosition = event->position();
   if (_leftMouseButtonPressed)
   {
-    _drawingWidget->horizontalScrollBar()->setValue(static_cast<int>(
-            _drawingWidget->horizontalScrollBar()->value() - (eventPosition.x() - _panStartX)));
-    _drawingWidget->verticalScrollBar()->setValue(static_cast<int>(
-            _drawingWidget->verticalScrollBar()->value() - (eventPosition.y() - _panStartY)));
+    ui::DrawingWidget* drawingWidget = getDrawingWidget();
+    drawingWidget->horizontalScrollBar()->setValue(static_cast<int>(
+            drawingWidget->horizontalScrollBar()->value() - (eventPosition.x() - _panStartX)));
+    drawingWidget->verticalScrollBar()->setValue(static_cast<int>(
+            drawingWidget->verticalScrollBar()->value() - (eventPosition.y() - _panStartY)));
     _panStartX = static_cast<int>(eventPosition.x());
     _panStartY = static_cast<int>(eventPosition.y());
     return true;
@@ -76,7 +77,7 @@ bool HandTool::mouseReleaseEvent(QMouseEvent* event,
   if (event->button() == Qt::LeftButton)
   {
     _leftMouseButtonPressed = false;
-    _drawingWidget->setCursor(Qt::ArrowCursor);
+    getDrawingWidget()->setCursor(Qt::ArrowCursor);
     return true;
   }
 

@@ -34,7 +34,7 @@ DynamicLibrary::~DynamicLibrary()
   if (_libHandle != nullptr)
   {
 #if defined(__linux__) || defined(__APPLE__)
-    int close_successful = dlclose(_libHandle) == 0;
+    const bool close_successful = dlclose(_libHandle) == 0;
 #elif defined(_WIN32)
     int close_successful = FreeLibrary(_libHandle) != 0;
 #endif
@@ -56,7 +56,7 @@ bool DynamicLibrary::isValid() const
 Result<DynamicLibrary, std::string> DynamicLibrary::fromFile(const std::string& path)
 {
 #if defined(__linux__) || defined(__APPLE__)
-  const auto libHandle = dlopen(path.c_str(), RTLD_NOW);
+  auto* const libHandle = dlopen(path.c_str(), RTLD_NOW);
 #elif defined(_WIN32)
   const auto libHandle = LoadLibraryA(path.c_str());
 #endif

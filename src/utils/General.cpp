@@ -26,6 +26,6 @@ int convert2DIndexto1DIndex(const int x, const int y, const int width)
 
 uint64_t calculateInMemorySizeOfImage(const int width, const int height, const int layers)
 {
-  return width * height * layers;
+  return static_cast<uint64_t>(width) * height * layers;
 }
 } // namespace capy::utils

@@ -30,7 +30,8 @@ DrawingCanvasItem::DrawingCanvasItem(const int width, const int height)
 
 QRectF DrawingCanvasItem::boundingRect() const
 {
-  return QRectF(0, 0, _canvasRepresentation.width(), _canvasRepresentation.height());
+  return {0, 0, static_cast<qreal>(_canvasRepresentation.width()),
+          static_cast<qreal>(_canvasRepresentation.height())};
 }
 
 void DrawingCanvasItem::paint(QPainter* painter,
@@ -69,7 +70,8 @@ QByteArray DrawingCanvasItem::createMiniatureBytes() const
   buffer.open(QIODevice::WriteOnly);
 
   // TODO: magic numbers
-  int width, height;
+  int width = 0;
+  int height = 0;
   if (_canvasRepresentation.width() > _canvasRepresentation.height())
   {
     width = 300;

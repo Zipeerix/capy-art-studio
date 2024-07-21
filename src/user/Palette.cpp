@@ -22,6 +22,7 @@
 #include <rapidjson/filereadstream.h>
 
 #include <fstream>
+#include <graphics/Colors.hpp>
 
 #include "io/ConsoleLogger.hpp"
 
@@ -96,7 +97,7 @@ rapidjson::Document Palette::exportValuesToJson() const
   {
     rapidjson::Value colorObject(rapidjson::kObjectType);
 
-    const auto hint = colorEntry.hint.has_value() ? colorEntry.hint->c_str() : "";
+    const char* hint = colorEntry.hint.has_value() ? colorEntry.hint->c_str() : "";
     colorObject.AddMember("hint", rapidjson::Value(hint, allocator), allocator);
 
     rapidjson::Value colorValues(rapidjson::kObjectType);
@@ -148,7 +149,7 @@ void Palette::setName(std::string newName)
 
 int Palette::colorCount() const
 {
-  return _colors.size();
+  return static_cast<int>(_colors.size());
 }
 
 PaletteColor Palette::getColor(const int index) const
@@ -159,7 +160,8 @@ PaletteColor Palette::getColor(const int index) const
                               "index {} from palette {}",
                               index, _name),
                   logger::Severity::Mild);
-    return PaletteColor{QColor(0, 0, 0, 255), "Error"};
+    // TODO: change return type to optional and return error
+    return PaletteColor{QColor(0, 0, 0, constants::alpha::solidColor), "Error"};
   }
 
   return _colors.at(index);

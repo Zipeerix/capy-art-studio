@@ -46,7 +46,8 @@ void PalettesManager::createPalette(const std::string& name,
 {
   if (_paletteModel.doesPaletteExist(name))
   {
-    return errorHandler("Palette with this name already exists");
+    errorHandler("Palette with this name already exists");
+    return;
   }
 
   auto newPalette = Palette(name);
@@ -57,7 +58,8 @@ void PalettesManager::createPalette(const std::string& name,
   const auto saveError = newPalette.saveToJson(newPaletteFilePath.string());
   if (saveError.has_value())
   {
-    return errorHandler("Unable to save new palette, check filesystem permissions");
+    errorHandler("Unable to save new palette, check filesystem permissions");
+    return;
   }
 
   logger::info(fmt::format("Created new palette: {}", newPalette.getName()));
@@ -75,13 +77,15 @@ void PalettesManager::removePalette(int index, const ManagerErrorHandler& errorH
     logger::error(fmt::format("Internal error: unable to remove palette: {} due to missing path",
                               paletteToDelete.getName()),
                   logger::Severity::Severe);
-    return errorHandler("Unable to remove palette due to internal error");
+    errorHandler("Unable to remove palette due to internal error");
+    return;
   }
 
   const std::string pathToDelete = pathToDeleteOpt.value();
   if (!std::filesystem::remove(pathToDelete))
   {
-    return errorHandler("Unable to remove the palette, check filesystem permissions");
+    errorHandler("Unable to remove the palette, check filesystem permissions");
+    return;
   }
 
   logger::info(fmt::format("Deleted palette: {}", paletteToDelete.getName()));
@@ -97,7 +101,9 @@ void PalettesManager::removeColorFromPalette(const int paletteIndex, const int c
   _colorTableModel.notifyThatColorWasRemovedFromThePalette(colorIndex);
   if (removeError.has_value())
   {
-    return errorHandler("Error when updating palette after removing color: " + removeError.value());
+    errorHandler("Error when updating palette after removing color: " + removeError.value());
+    return;
+    ;
     // TODO: Re add colors? So there is no discrepancy between ui and file
   }
 
@@ -111,7 +117,8 @@ void PalettesManager::addColorToPalette(int paletteIndex, QColor color,
   const auto colorAddingError = _paletteModel.addColorToPalette(paletteIndex, color, hint);
   if (colorAddingError.has_value())
   {
-    return errorHandler("Error when adding color to palette: " + colorAddingError.value());
+    errorHandler("Error when adding color to palette: " + colorAddingError.value());
+    return;
   }
 
   // TODO: Why no notifyThatColorWasRemovedFromThePalette but for adding?

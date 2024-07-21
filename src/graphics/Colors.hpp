@@ -23,12 +23,22 @@ namespace capy
 {
 using ColorChannelValue = uint8_t;
 
-namespace constants::alpha
+namespace constants
+{
+namespace alpha
 {
 constexpr ColorChannelValue solidColor = 255;
 constexpr ColorChannelValue semiTransparent = 127;
 constexpr ColorChannelValue transparent = 0;
-} // namespace constants::alpha
+} // namespace alpha
+
+namespace color
+{
+constexpr ColorChannelValue fullChannelValue = 255;
+constexpr ColorChannelValue minimumChannelValue = 0;
+} // namespace color
+
+} // namespace constants
 } // namespace capy
 
 #endif // COLORS_HPP

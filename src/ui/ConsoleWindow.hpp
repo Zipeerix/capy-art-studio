@@ -36,7 +36,7 @@ public:
   explicit ConsoleWindow(QWidget* parent = nullptr);
   ~ConsoleWindow() override;
 
-  void log(const QString&) const;
+  void log(const QString& message) const;
 
 private:
   Ui::ConsoleWindow* ui;

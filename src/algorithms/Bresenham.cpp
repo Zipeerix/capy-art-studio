@@ -18,25 +18,31 @@
 #include "Bresenham.hpp"
 
 #include <cmath>
+#include <QPointF>
+#include <utility>
 
 namespace capy::algorithms
 {
-static std::pair<int, int> calculateAbosluteDifference(const int n0, const int n1)
+namespace
 {
-  const int diffN = n1 - n0;
+std::pair<int, int> calculateAbosluteDifference(const int firstPointX, const int secondPointX)
+{
+  const int diffN = secondPointX - firstPointX;
   const int multiplicator = diffN > 0 ? 1 : -1;
   return {multiplicator, std::abs(diffN)};
 }
+} // namespace
 
-void applyBresenham(const int x0, const int y0, const int x1, const int y1,
-                    const CoordinateApplicationFunction& actionOnTarget)
+void applyBresenham(const int firstPointX, const int firstPointY, const int secondPointX,
+                    const int secondPointY, const CoordinateApplicationFunction& actionOnTarget)
 {
-  const auto [sx, dx] = calculateAbosluteDifference(x0, x1);
-  const auto [sy, dy] = calculateAbosluteDifference(y0, y1);
+  const auto [sx, dx] = calculateAbosluteDifference(firstPointX, secondPointX);
+  const auto [sy, dy] = calculateAbosluteDifference(firstPointY, secondPointY);
   int epsilon = 0;
   if (dx > dy)
   {
-    for (auto x = x0, y = y0; sx < 0 ? x >= x1 : x <= x1; x += sx)
+    for (auto x = firstPointX, y = firstPointY; sx < 0 ? x >= secondPointX : x <= secondPointX;
+         x += sx)
     {
       actionOnTarget(x, y);
       epsilon += dy;
@@ -49,7 +55,8 @@ void applyBresenham(const int x0, const int y0, const int x1, const int y1,
   }
   else
   {
-    for (auto x = x0, y = y0; sy < 0 ? y >= y1 : y <= y1; y += sy)
+    for (auto x = firstPointX, y = firstPointY; sy < 0 ? y >= secondPointY : y <= secondPointY;
+         y += sy)
     {
       actionOnTarget(x, y);
       epsilon += dx;

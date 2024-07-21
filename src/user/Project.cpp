@@ -29,6 +29,11 @@
 
 namespace capy
 {
+namespace constants
+{
+constexpr uint8_t endOfMagicStringByte = 0xFF;
+}
+
 Result<Project, std::string> Project::createFromFile(const std::string& path)
 {
   if (path.empty())
@@ -66,7 +71,7 @@ Result<Project, std::string> Project::createFromFile(const std::string& path)
     return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  std::uint32_t miniatureSize = miniatureSizeReadRes.value();
+  const std::uint32_t miniatureSize = miniatureSizeReadRes.value();
   if (miniatureSize >= INT32_MAX)
   {
     logger::error("Miniature size > INT32_MAX", logger::Severity::Severe);
@@ -92,7 +97,8 @@ Result<Project, std::string> Project::createFromFile(const std::string& path)
   return Project(path, miniature, file.currentReadingIndex());
 }
 
-Project::Project(std::string path, QPixmap miniature, const std::size_t indexOfDataAfterMiniature) :
+Project::Project(std::string path, QPixmap miniature,
+                 const std::streamoff indexOfDataAfterMiniature) :
     _path(std::move(path)),
     _miniature(std::move(miniature)),
     _indexOfDataAfterMiniature(indexOfDataAfterMiniature)
@@ -151,9 +157,9 @@ Result<Drawing, std::string> Project::readDrawing() const
     return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  std::uint32_t projectWidth = projectWidthRes.value();
-  std::uint32_t projectHeight = projectHeightRes.value();
-  std::uint32_t layerCount = layersCountRes.value();
+  const std::uint32_t projectWidth = projectWidthRes.value();
+  const std::uint32_t projectHeight = projectHeightRes.value();
+  const std::uint32_t layerCount = layersCountRes.value();
 
   /* Layer names */
   std::vector<std::string> layerNames;
@@ -184,7 +190,7 @@ Result<Drawing, std::string> Project::readDrawing() const
     return std::unexpected("Project file is corrupted or incompatible with this version");
   }
 
-  if (endOfLayerNamesByte.value() != 0xFF)
+  if (endOfLayerNamesByte.value() != constants::endOfMagicStringByte)
   {
     logger::error("Invalid end of layers name byte read from project file", logger::Severity::Mild);
     return std::unexpected("Project file is corrupted or incompatible with this version");
@@ -208,7 +214,7 @@ Result<Drawing, std::string> Project::readDrawing() const
     const auto& layerRawPixels = layersRawPixelsReadRes.value();
 
     std::vector<Pixel> layerPixels;
-    layerPixels.reserve(projectHeight * projectWidth);
+    layerPixels.reserve(static_cast<unsigned>(projectHeight * projectWidth));
 
     for (std::uint32_t j = 0; j < layerRawPixels.size(); j += 4)
     {

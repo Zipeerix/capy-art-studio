@@ -30,12 +30,14 @@ Pixel::Pixel(const ColorChannelValue r, const ColorChannelValue g, const ColorCh
 
 Pixel Pixel::white(const uint8_t alpha)
 {
-  return {255, 255, 255, alpha};
+  return {constants::color::fullChannelValue, constants::color::fullChannelValue,
+          constants::color::fullChannelValue, alpha};
 }
 
 Pixel Pixel::black(const uint8_t alpha)
 {
-  return {0, 0, 0, alpha};
+  return {constants::color::minimumChannelValue, constants::color::minimumChannelValue,
+          constants::color::minimumChannelValue, alpha};
 }
 
 void Pixel::updateFromQColor(const QColor& color)
@@ -48,12 +50,12 @@ void Pixel::updateFromQColor(const QColor& color)
 
 QColor Pixel::convertToQColor() const
 {
-  return QColor(_r, _g, _b, _alpha);
+  return {_r, _g, _b, _alpha};
 }
 
 QBrush Pixel::convertToQBrush() const
 {
-  return QBrush(convertToQColor());
+  return {convertToQColor()};
 }
 
 ColorChannelValue Pixel::getRed() const

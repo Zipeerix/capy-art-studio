@@ -25,14 +25,11 @@
 
 namespace capy::algorithms
 {
-AlphaBlender::AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction) :
-    _pixelColorGettingFunction(std::move(pixelColorGettingFunction))
+namespace
 {
-}
-
-static ColorChannelValue getBlendChannelValue(const ColorChannelValue currentColor,
-                                              const ColorChannelValue addedColor,
-                                              const double alphaPercentage)
+ColorChannelValue getBlendChannelValue(const ColorChannelValue currentColor,
+                                       const ColorChannelValue addedColor,
+                                       const double alphaPercentage)
 {
   const double fromAdded = addedColor * alphaPercentage;
   const double fromCurrent = currentColor * (1.0 - alphaPercentage);
@@ -40,7 +37,7 @@ static ColorChannelValue getBlendChannelValue(const ColorChannelValue currentCol
   return static_cast<ColorChannelValue>(std::round(fromAdded + fromCurrent));
 }
 
-static QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor, const QColor& addedColor)
+QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor, const QColor& addedColor)
 {
   const double alphaPercentage = addedColor.alpha() / 255.0;
   const ColorChannelValue red =
@@ -53,6 +50,12 @@ static QColor applyAlphaBlendBetweenTwoPixels(const QColor& currentColor, const 
                                           (currentColor.alpha() * (1.0 - alphaPercentage)));
 
   return {red, green, blue, alpha};
+}
+} // namespace
+
+AlphaBlender::AlphaBlender(PixelColorGettingFunction pixelColorGettingFunction) :
+    _pixelColorGettingFunction(std::move(pixelColorGettingFunction))
+{
 }
 
 QColor AlphaBlender::blend(const int x, const int y, const int layerCount) const

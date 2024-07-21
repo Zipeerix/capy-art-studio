@@ -37,7 +37,8 @@ WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent) :
     ui(new Ui::WelcomeScreen),
     _configurationManager(ConfigurationManager::createInstance()),
     _projectsManager(this),
-    _mainWindow(mainWindow)
+    _mainWindow(mainWindow),
+    _projectAreaLayout(new FlowLayout(ui->scrollAreaWidgetContents))
 {
   ui->setupUi(this);
 
@@ -50,7 +51,6 @@ WelcomeScreen::WelcomeScreen(MainWindow* mainWindow, QWidget* parent) :
   connect(ui->exitButton, &QPushButton::clicked, this, &QApplication::exit);
   connect(ui->continueButton, &QPushButton::clicked, this, &WelcomeScreen::continueButtonClicked);
 
-  _projectAreaLayout = new FlowLayout(ui->scrollAreaWidgetContents);
   ui->scrollAreaWidgetContents->setLayout(_projectAreaLayout);
 
   connect(&_projectsManager, &ProjectsManager::projectsUpdated, this,
@@ -110,8 +110,9 @@ void WelcomeScreen::openProjectClicked()
 
   if (_configurationManager->doesAdditionalProjectExist(filePath))
   {
-    return execMessageBox(this, QMessageBox::Icon::Information,
-                          "This file is already in your project list");
+    execMessageBox(this, QMessageBox::Icon::Information,
+                   "This file is already in your project list");
+    return;
   }
 
   _projectsManager.addProject(filePath);
@@ -174,7 +175,7 @@ void WelcomeScreen::projectDeleteClicked(const Project& project)
 
   // TODO: Maybe accept project instead of path
   _projectsManager.deleteProject(projectPath, [&](const std::string& error) {
-    return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+    execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
   });
 }
 } // namespace capy::ui

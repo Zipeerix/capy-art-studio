@@ -25,8 +25,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "JsonSerializable.hpp"
-
 namespace capy
 {
 template<class Derived>
@@ -70,7 +68,7 @@ Result<Derived, std::string> JsonSerializable<Derived>::createFromJson(const std
   std::stringstream buffer;
   buffer << file.rdbuf();
 
-  std::string jsonContent = buffer.str();
+  const std::string jsonContent = buffer.str();
   file.close();
 
   Document root;

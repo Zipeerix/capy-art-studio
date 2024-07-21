@@ -25,7 +25,8 @@ Layer::Layer(const int width, const int height, std::string name) :
     _name(std::move(name)),
     _dimensions(width, height)
 {
-  _pixels.resize(width * height, Pixel::white(constants::alpha::transparent));
+  _pixels.resize(static_cast<unsigned>(width * height),
+                 Pixel::white(constants::alpha::transparent));
 }
 
 bool Layer::isVisible() const

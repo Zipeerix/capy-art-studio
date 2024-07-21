@@ -79,7 +79,7 @@ bool ChunkFileWriter::isFileValid() const
 
 PotentialError<std::string> ChunkFileWriter::writeVector(const std::vector<uint8_t>& bytes) const
 {
-  _fileStream->write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
+  _fileStream->write(reinterpret_cast<const char*>(bytes.data()), static_cast<int>(bytes.size()));
   if (_fileStream->fail())
   {
     return fmt::format("Failure to write to file stream");
@@ -113,7 +113,7 @@ PotentialError<std::string> ChunkFileWriter::writeQByteArray(const QByteArray& b
 PotentialError<std::string> ChunkFileWriter::writeString(const std::string& value,
                                                          const bool addNullTerminator) const
 {
-  _fileStream->write(value.c_str(), value.size());
+  _fileStream->write(value.c_str(), static_cast<int>(value.size()));
   if (_fileStream->fail())
   {
     return fmt::format("Failure to write to file stream");

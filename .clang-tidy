@@ -1,19 +1,42 @@
 ---
-Checks: "*,
-        -bugprone-*,
-        -clang-analyzer-*,
-        -modernize-*,
-        -cppcoreguidelines-*,
-        -zircon-*,
-        -readability-*,
-        -misc-*,
-        -performance-*
+Checks: "-*,
+        bugprone-*,
+        clang-analyzer-*,
+        modernize-*,
+        cppcoreguidelines-*,
+        readability-*,
+        misc-*,
+        performance-*,
+        -modernize-use-trailing-return-type,
+        -bugprone-easily-swappable-parameters,
+        -readability-identifier-length,
+        -misc-include-cleaner,
+        -cppcoreguidelines-special-member-functions,
+        -modernize-use-nodiscard,
+        -readability-suspicious-call-argument,
+        -performance-enum-size,
+        -cppcoreguidelines-owning-memory,
+        -cppcoreguidelines-avoid-magic-numbers,
+        -readability-magic-numbers,
+        -cppcoreguidelines-prefer-member-initializer,
+        -cppcoreguidelines-pro-type-reinterpret-cast
 "
+
+# Rationale for each disabled check, if not provided it should be reenabled ASAP
+# cppcoreguidelines-prefer-member-initializer - Disabled due to many Ui classes requiring ui->setupUi before constructing some members
+# cppcoreguidelines-pro-type-reinterpret-cast - Disabled as reinterpret_cast is often useful for example casting uint8_t* to char*
+# performance-enum-size - Disabled due to providing little to no benefit
+# modernize-use-nodiscard - Disabled due to policy of using [[nodiscard]] only for error types
+# modernize-use-trailing-return-type - Disabled due to policy of not using trailing return type
+
 WarningsAsErrors: '*'
-HeaderFilterRegex: ''
-FormatStyle: none
+HeaderFilterRegex: '^(?!.*(moc_|ui_|qrc_|autogen)).*'
+FormatStyle: file
 
-
-
-
-
+CheckOptions:
+  - key: cppcoreguidelines-special-member-function.AllowMissingMoveFunctions
+    value: 'true'
+  - key: cppcoreguidelines-special-member-function.AllowImplicitlyDeletedCopyOrMove
+    value: 'true'
+  - key: cppcoreguidelines-special-member-function.AllowSoleDefaultDtor
+    value: 'true'

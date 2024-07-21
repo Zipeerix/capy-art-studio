@@ -44,7 +44,7 @@ void PaletteColorTableModel::notifyThatColorWasRemovedFromThePalette(const int c
 
 int PaletteColorTableModel::rowCount([[maybe_unused]] const QModelIndex& parent) const
 {
-  return _colors.size();
+  return static_cast<int>(_colors.size());
 }
 
 int PaletteColorTableModel::columnCount([[maybe_unused]] const QModelIndex& parent) const
@@ -56,7 +56,7 @@ QVariant PaletteColorTableModel::data(const QModelIndex& index, const int role) 
 {
   if (!index.isValid() || isRowOutsideModel(index))
   {
-    return QVariant();
+    return {};
   }
 
   const auto& paletteColor = _colors.at(index.row());
@@ -76,12 +76,12 @@ QVariant PaletteColorTableModel::data(const QModelIndex& index, const int role) 
           return QString::fromStdString(paletteColor.hint.value_or(""));
 
         default:
-          return QVariant();
+          return {};
       }
     }
 
     default:
-      return QVariant();
+      return {};
   }
 }
 
@@ -101,7 +101,7 @@ QVariant PaletteColorTableModel::headerData(const int section,
       return "Hint";
 
     default:
-      return QVariant();
+      return {};
   }
 }
 

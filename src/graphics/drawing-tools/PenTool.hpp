@@ -41,7 +41,7 @@ public:
   bool mouseReleaseEvent(QMouseEvent* event, const std::optional<QPoint>& clickedPixel) override;
 
 private:
-  QColor _color{0, 0, 0, 255};
+  QColor _color;
   std::optional<QPoint> _lastContinousDrawingPoint = std::nullopt;
 };
 } // namespace capy

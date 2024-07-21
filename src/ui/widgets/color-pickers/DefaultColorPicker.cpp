@@ -29,42 +29,55 @@
 
 // TODO: Rewrite constructor, break it down
 
+// TODO: This class is due for big refactor, disable clang-tidy for now
+// NOLINTBEGIN
+
 namespace capy::ui
 {
+namespace constants
+{
+constexpr int colorShowcaseMinimumWidth = 100;
+constexpr int colorShowcaseMinimumHeight = 20;
+
+constexpr int defaultMargin = 10;
+} // namespace constants
+
 DefaultColorPicker::DefaultColorPicker(QWidget* parent) :
-    QWidget(parent)
+    QWidget(parent),
+    _hueSlider(new DefaultColorPickerSlider(Qt::Horizontal)),
+    _saturationSlider(new DefaultColorPickerSlider(Qt::Horizontal)),
+    _brightnessSlider(new DefaultColorPickerSlider(Qt::Horizontal)),
+    _alphaSlider(new DefaultColorPickerSlider(Qt::Horizontal)),
+    _hexLabel(new QLabel),
+    _colorShowcase(new QLabel)
 {
   // TODO: Breakup into methods
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 0, 0);
 
-  _colorShowcase = new QLabel;
-  _colorShowcase->setMinimumSize(100, 20);
+  _colorShowcase->setMinimumSize(constants::colorShowcaseMinimumWidth,
+                                 constants::colorShowcaseMinimumHeight);
   mainLayout->addWidget(_colorShowcase);
 
   auto* subLayout = new QVBoxLayout();
-  subLayout->setContentsMargins(10, 10, 10, 10);
+  subLayout->setContentsMargins(constants::defaultMargin, constants::defaultMargin,
+                                constants::defaultMargin, constants::defaultMargin);
   mainLayout->addLayout(subLayout);
 
   auto* controls = new QHBoxLayout();
   subLayout->addLayout(controls);
 
-  auto* colorSliders = new QGridLayout;
+  auto* colorSliders =
+          new QGridLayout(); // TODO: This argument? here and in other ui elements in constructor
 
-  _hexLabel = new QLabel;
   controls->addWidget(_hexLabel);
-
-  _hueSlider = new DefaultColorPickerSlider(Qt::Horizontal);
-  _saturationSlider = new DefaultColorPickerSlider(Qt::Horizontal);
-  _brightnessSlider = new DefaultColorPickerSlider(Qt::Horizontal);
-  _alphaSlider = new DefaultColorPickerSlider(Qt::Horizontal);
 
   auto* hueLabel = new QLabel;
   auto* saturationLabel = new QLabel;
   auto* brightnessLabel = new QLabel;
   auto* alphaLabel = new QLabel;
 
-  connect(_hueSlider, &QSlider::valueChanged, this, [=, this](int value) {
+  connect(_hueSlider, &QSlider::valueChanged, this, [hueLabel, this](const int value) {
     hueLabel->setText(QString::number(value));
     _saturationSlider->setGradientStops({{0.0 / 255.0, QColor::fromHsv(value, 0, 255)},
                                          {255.0 / 255.0, QColor::fromHsv(value, 255, 255)}});
@@ -75,17 +88,19 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) :
     setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
              _alphaSlider->value());
   });
-  connect(_saturationSlider, &QSlider::valueChanged, this, [=, this](int value) {
-    saturationLabel->setText(QString::number(value));
-    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
-             _alphaSlider->value());
-  });
-  connect(_brightnessSlider, &QSlider::valueChanged, this, [=, this](int value) {
-    brightnessLabel->setText(QString::number(value));
-    setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
-             _alphaSlider->value());
-  });
-  connect(_alphaSlider, &QSlider::valueChanged, this, [=, this](int value) {
+  connect(_saturationSlider, &QSlider::valueChanged, this,
+          [saturationLabel, this](const int value) {
+            saturationLabel->setText(QString::number(value));
+            setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+                     _alphaSlider->value());
+          });
+  connect(_brightnessSlider, &QSlider::valueChanged, this,
+          [brightnessLabel, this](const int value) {
+            brightnessLabel->setText(QString::number(value));
+            setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
+                     _alphaSlider->value());
+          });
+  connect(_alphaSlider, &QSlider::valueChanged, this, [alphaLabel, this](const int value) {
     alphaLabel->setText(QString::number(value));
     setColor(_hueSlider->value(), _saturationSlider->value(), _brightnessSlider->value(),
              _alphaSlider->value());
@@ -150,8 +165,6 @@ DefaultColorPicker::DefaultColorPicker(QWidget* parent) :
   updateShownColor();
 }
 
-DefaultColorPicker::~DefaultColorPicker() = default;
-
 void DefaultColorPicker::updateShownColor() const
 {
   const auto hsvColor = _selectedColor.toHsv();
@@ -183,3 +196,5 @@ QColor DefaultColorPicker::getColor() const
   return _selectedColor;
 }
 } // namespace capy::ui
+
+// NOLINTEND

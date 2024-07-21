@@ -45,7 +45,7 @@ public:
 
   // TODO: Export settings list etc
 
-protected:
+private:
   std::optional<std::string> _apiKey;
 };
 } // namespace capy

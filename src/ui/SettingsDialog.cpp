@@ -118,7 +118,7 @@ void SettingsDialog::setupConnectionsForGraphicsTab()
   ui->backendComboBox->setCurrentIndex(_configurationManager->getGraphicsSetting<int>(
           ConfigurationManager::GraphicsSetting::GraphicalBackend));
   connect(ui->backendComboBox, &QComboBox::currentIndexChanged, this, [&](const int newIndex) {
-    if (newIndex > 0 && newIndex < static_cast<int>(GraphicalBackend::Count))
+    if (newIndex >= 0 && newIndex < static_cast<int>(GraphicalBackend::Count))
     {
       _configurationManager->setGraphicsSetting(
               ConfigurationManager::GraphicsSetting::GraphicalBackend, newIndex);

@@ -41,4 +41,9 @@ IDrawingTool::IDrawingTool(ui::DrawingWidget* drawingWidget) :
     _drawingWidget(drawingWidget)
 {
 }
+
+ui::DrawingWidget* IDrawingTool::getDrawingWidget() const
+{
+  return _drawingWidget;
+}
 } // namespace capy

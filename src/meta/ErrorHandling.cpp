@@ -24,7 +24,7 @@ namespace capy
 {
 std::string getErrnoString()
 {
-  const auto str = std::strerror(errno);
-  return str ? str : "Unknown error";
+  auto* const str = std::strerror(errno);
+  return str != nullptr ? str : "Unknown error";
 }
 } // namespace capy

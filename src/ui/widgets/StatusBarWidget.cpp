@@ -22,6 +22,20 @@
 
 namespace capy::ui
 {
+namespace
+{
+uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers)
+{
+  if (layers.empty())
+  {
+    return 0;
+  }
+
+  const auto& exampleLayer = layers.back();
+  return layers.size() * exampleLayer.calculateInMemorySize();
+}
+} // namespace
+
 StatusBarWidget::StatusBarWidget(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::StatusBarWidget)
@@ -32,17 +46,6 @@ StatusBarWidget::StatusBarWidget(QWidget* parent) :
 StatusBarWidget::~StatusBarWidget()
 {
   delete ui;
-}
-
-static uint64_t calculateRamSizeOfLayers(const std::vector<Layer>& layers)
-{
-  if (layers.empty())
-  {
-    return 0;
-  }
-
-  const auto& exampleLayer = layers.back();
-  return layers.size() * exampleLayer.calculateInMemorySize();
 }
 
 void StatusBarWidget::update(const std::vector<Layer>& layers)

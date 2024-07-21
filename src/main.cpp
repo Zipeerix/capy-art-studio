@@ -19,6 +19,6 @@
 
 int main()
 {
-  capy::Application application{};
+  const capy::Application application{};
   return application.start();
 }

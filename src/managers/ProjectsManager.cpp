@@ -104,8 +104,8 @@ void ProjectsManager::deleteProject(const std::string& projectPath,
 
   if (fsError.has_value())
   {
-    return errorHandler(
-            fmt::format("Unable to delete profile file due to error: {}", fsError.value()));
+    errorHandler(fmt::format("Unable to delete profile file due to error: {}", fsError.value()));
+    return;
   }
 
   logger::info(fmt::format("Deleted project file at {}", projectPath));

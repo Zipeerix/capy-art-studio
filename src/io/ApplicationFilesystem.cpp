@@ -28,11 +28,21 @@
 
 namespace capy
 {
-static std::filesystem::path getApplicationFilesystemBasePath()
+
+namespace
+{
+bool isCorrectExtension(const FilesystemPath applicationPath, const std::string& extension)
+{
+  const auto validExtensions = getCorrectExtensionsForPath(applicationPath);
+  return std::ranges::find(validExtensions, extension) != validExtensions.end();
+}
+
+std::filesystem::path getApplicationFilesystemBasePath()
 {
   const auto path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
   return std::filesystem::path(path.toStdString()) / "capy-art-studio";
 }
+} // namespace
 
 void initApplicationFilesystem()
 {
@@ -81,12 +91,6 @@ std::vector<std::string> getCorrectExtensionsForPath(FilesystemPath applicationP
     default:
       throw std::logic_error("Invalid option for getting filesystem path extensions");
   }
-}
-
-static bool isCorrectExtension(const FilesystemPath applicationPath, const std::string& extension)
-{
-  const auto validExtensions = getCorrectExtensionsForPath(applicationPath);
-  return std::ranges::find(validExtensions, extension) != validExtensions.end();
 }
 
 std::vector<std::string> listFilesInPath(const FilesystemPath applicationPath)

@@ -23,15 +23,9 @@
 
 namespace capy::ui
 {
-bool showConfirmationDialog(QWidget* parent, const std::string& message)
+namespace
 {
-  const QMessageBox::StandardButton reply =
-          QMessageBox::question(parent, "Confirmation", QString::fromStdString(message),
-                                QMessageBox::Yes | QMessageBox::No);
-  return reply == QMessageBox::Yes;
-}
-
-static QString getMessageBoxTitleBasedOnType(const QMessageBox::Icon type)
+QString getMessageBoxTitleBasedOnType(const QMessageBox::Icon type)
 {
   switch (type)
   {
@@ -56,6 +50,15 @@ static QString getMessageBoxTitleBasedOnType(const QMessageBox::Icon type)
     default:
       throw std::logic_error("Invalid QMessageBox type provided to helper");
   }
+}
+} // namespace
+
+bool showConfirmationDialog(QWidget* parent, const std::string& message)
+{
+  const QMessageBox::StandardButton reply =
+          QMessageBox::question(parent, "Confirmation", QString::fromStdString(message),
+                                QMessageBox::Yes | QMessageBox::No);
+  return reply == QMessageBox::Yes;
 }
 
 void execMessageBox(QWidget* parent, const QMessageBox::Icon type, const QString& text)

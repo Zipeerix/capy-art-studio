@@ -21,6 +21,9 @@
 #include <QPainterPath>
 #include <QPaintEvent>
 
+// TODO: This file is due for full refactor, disable clang-tidy for now
+// NOLINTBEGIN
+
 namespace capy::ui
 {
 DefaultColorPickerSlider::DefaultColorPickerSlider(Qt::Orientation orientation, QWidget* parent) :
@@ -100,7 +103,7 @@ void DefaultColorPickerSlider::paintEvent([[maybe_unused]] QPaintEvent* event)
   QColor rightColor = _gradientStops.isEmpty() ? QColor() : _gradientStops.back().second;
   float leftPos = 0;
   float rightPos = 1;
-  float valueFloat =
+  const float valueFloat =
           static_cast<float>(value() - minimum()) / static_cast<float>(maximum() - minimum());
 
   for (int i = 0; i < _gradientStops.size() - 1; ++i)
@@ -116,8 +119,8 @@ void DefaultColorPickerSlider::paintEvent([[maybe_unused]] QPaintEvent* event)
   }
 
   // interpolate between the 2 colors
-  float handlePosInGradient = (valueFloat - leftPos) / (rightPos - leftPos);
-  QColor fill = QColor::fromRgbF(
+  const float handlePosInGradient = (valueFloat - leftPos) / (rightPos - leftPos);
+  const QColor fill = QColor::fromRgbF(
           leftColor.redF() + (rightColor.redF() - leftColor.redF()) * handlePosInGradient,
           leftColor.greenF() + (rightColor.greenF() - leftColor.greenF()) * handlePosInGradient,
           leftColor.blueF() + (rightColor.blueF() - leftColor.blueF()) * handlePosInGradient,
@@ -128,3 +131,5 @@ void DefaultColorPickerSlider::paintEvent([[maybe_unused]] QPaintEvent* event)
   painter.drawEllipse(handlePos, handleRadius - 1, handleRadius - 1);
 }
 } // namespace capy::ui
+
+// NOLINTEND

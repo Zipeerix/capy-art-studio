@@ -78,12 +78,12 @@ bool ChunkFileReader::isFileValid() const
   return _fileStream.good();
 }
 
-std::size_t ChunkFileReader::currentReadingIndex()
+std::streamoff ChunkFileReader::currentReadingIndex()
 {
   return _fileStream.tellg();
 }
 
-void ChunkFileReader::setReadingIndex(std::size_t index)
+void ChunkFileReader::setReadingIndex(const std::streamoff index)
 {
   _fileStream.seekg(index);
 }
@@ -150,7 +150,7 @@ Result<std::uint32_t, std::string> ChunkFileReader::readNext32BitInt(const bool 
   const auto& bytes = bytesRes.value();
 
   // TODO: Refactor below
-  uint32_t value;
+  uint32_t value = 0;
   if (bigEndian)
   {
     value = (static_cast<uint32_t>(static_cast<uint8_t>(bytes[3])) |

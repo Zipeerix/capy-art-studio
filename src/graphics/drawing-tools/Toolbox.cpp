@@ -45,10 +45,10 @@ IDrawingTool* Toolbox::getCurrentToolInterface() const
   switch (_currentTool)
   {
     case DrawingTool::Hand:
-      return reinterpret_cast<IDrawingTool*>(_handTool.get());
+      return _handTool.get();
 
     case DrawingTool::Pen:
-      return reinterpret_cast<IDrawingTool*>(_penTool.get());
+      return _penTool.get();
 
     case DrawingTool::Count:
     default:

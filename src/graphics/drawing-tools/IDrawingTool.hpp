@@ -53,6 +53,9 @@ public:
                               const std::optional<QPoint>& movingThroughPixel) = 0;
 
 protected:
+  ui::DrawingWidget* getDrawingWidget() const;
+
+private:
   ui::DrawingWidget* _drawingWidget;
 };
 } // namespace capy

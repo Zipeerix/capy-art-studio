@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget* parent) :
   ui->scrollAreaWidgetContents->layout()->addWidget(_drawingWidget);
 
   ui->statusBar->addPermanentWidget(_statusBarWidget);
-  ui->statusBar->addPermanentWidget(createExpandingSpacer(this), true);
+  ui->statusBar->addPermanentWidget(createExpandingSpacer(this), 1);
 
   // TODO: For now let it stay that way, the widget gets created even if disabled but timer doesnt
   // get created TOOD: Probably change it when connections are made to settings managet to update in
@@ -105,6 +105,11 @@ void MainWindow::menuBarFileSaveAsClicked()
 {
   // TODO: This is ULTRA expensive, maybe save list of actions to cache and then save to file on
   // exit/nth minute
+  if (!_project.has_value())
+  {
+    logger::error("Attempted to save as when no project loaded", logger::Severity::Mild);
+    return;
+  }
 
   const QString filter = "Capy Project Files (*.capy)";
   const std::string filePath =
@@ -120,8 +125,8 @@ void MainWindow::menuBarFileSaveAsClicked()
   const auto savingError = _project->save(miniatureBytes, layers, filePath);
   if (savingError.has_value())
   {
-    return execMessageBox(this, QMessageBox::Icon::Critical,
-                          QString::fromStdString(savingError.value()));
+    execMessageBox(this, QMessageBox::Icon::Critical, QString::fromStdString(savingError.value()));
+    return;
   }
 }
 
@@ -195,8 +200,9 @@ void MainWindow::setProject(const Project& project)
   const auto drawingCreationRes = project.readDrawing();
   if (!drawingCreationRes.has_value())
   {
-    return execMessageBox(this, QMessageBox::Icon::Critical,
-                          QString::fromStdString(drawingCreationRes.error()));
+    execMessageBox(this, QMessageBox::Icon::Critical,
+                   QString::fromStdString(drawingCreationRes.error()));
+    return;
   }
 
   _project = project;

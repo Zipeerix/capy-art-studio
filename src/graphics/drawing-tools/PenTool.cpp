@@ -53,7 +53,7 @@ bool PenTool::mousePressEvent([[maybe_unused]] QMouseEvent* event,
     const auto clickedPixelX = clickedPixel->x();
     const auto clickedPixelY = clickedPixel->y();
 
-    _drawingWidget->drawPixelOnBothRepresentations(clickedPixelX, clickedPixelY, _color);
+    getDrawingWidget()->drawPixelOnBothRepresentations(clickedPixelX, clickedPixelY, _color);
     return true;
   }
 
@@ -72,7 +72,7 @@ bool PenTool::mouseMoveEvent([[maybe_unused]] QMouseEvent* event,
     {
       // TODO: Move this to a method or cleanup/tool_to_class seperation
       static const auto pixelDrawingAction = [&](int x, int y) {
-        _drawingWidget->drawPixelOnBothRepresentations(x, y, _color);
+        getDrawingWidget()->drawPixelOnBothRepresentations(x, y, _color);
       };
 
       algorithms::applyBresenham(_lastContinousDrawingPoint->x(), _lastContinousDrawingPoint->y(),

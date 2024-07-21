@@ -26,10 +26,21 @@
 
 namespace capy::logger
 {
-static bool isEnabled = false;
-static ui::ConsoleWindow* consoleWindow = nullptr;
+namespace
+{
+// TODO: clang-tidy disabled until changing the way the logger works
+// NOLINTBEGIN
+bool isEnabled = false;
+ui::ConsoleWindow* consoleWindow = nullptr;
+// NOLINTEND
 
-static std::string severityToString(Severity severity)
+std::string getDateTimeString()
+{
+  const auto localTime = std::chrono::system_clock::now();
+  return fmt::format("{:%F %T}", localTime);
+}
+
+std::string severityToString(Severity severity)
 {
   switch (severity)
   {
@@ -52,14 +63,9 @@ static std::string severityToString(Severity severity)
       throw std::runtime_error("Unhandled severity->string conversion");
   }
 }
+} // namespace
 
-static std::string getDateTimeString()
-{
-  const auto localTime = std::chrono::system_clock::now();
-  return fmt::format("{:%F %T}", localTime);
-}
-
-static void log(const std::string& message, const std::string& extraInfo)
+void log(const std::string& message, const std::string& extraInfo)
 {
   if (!isEnabled)
   {

@@ -30,7 +30,7 @@ class DefaultColorPicker final : public QWidget
   Q_OBJECT
 public:
   explicit DefaultColorPicker(QWidget* parent = nullptr);
-  ~DefaultColorPicker() override;
+  ~DefaultColorPicker() override = default;
 
   void setColor(QColor color);
   void setColor(int hue, int saturation, int brightness, int alpha);

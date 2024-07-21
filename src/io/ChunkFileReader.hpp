@@ -35,8 +35,8 @@ public:
 
   bool isFileValid() const;
 
-  std::size_t currentReadingIndex();
-  void setReadingIndex(std::size_t index);
+  std::streamoff currentReadingIndex();
+  void setReadingIndex(std::streamoff index);
 
   // TODO: also to buffer, usefull for large reads (or is move enough)
   [[nodiscard]] Result<std::vector<uint8_t>, std::string> readNextBytesToVector(int nBytes);

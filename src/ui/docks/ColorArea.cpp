@@ -82,8 +82,9 @@ void ColorArea::addColorToPaletteClicked()
   const auto currentPaltteIndex = ui->paletteComboBox->currentIndex();
   if (currentPaltteIndex == -1)
   {
-    return execMessageBox(this, QMessageBox::Warning,
-                          "Please create a palette first before adding colors");
+    execMessageBox(this, QMessageBox::Warning,
+                   "Please create a palette first before adding colors");
+    return;
   }
 
   const QColor colorToAdd = _colorPicker->getColor();
@@ -92,7 +93,7 @@ void ColorArea::addColorToPaletteClicked()
 
   _palettesManager.addColorToPalette(
           currentPaltteIndex, colorToAdd, hintAsOptional, [&](const std::string& error) {
-            return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+            execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
           });
 }
 
@@ -113,7 +114,7 @@ void ColorArea::createPaletteClicked()
   }
 
   _palettesManager.createPalette(paletteName.toStdString(), [&](const std::string& error) {
-    return execMessageBox(this, QMessageBox::Warning, QString::fromStdString(error));
+    execMessageBox(this, QMessageBox::Warning, QString::fromStdString(error));
   });
 
   // TODO: Change index to newly created palette
@@ -133,7 +134,7 @@ void ColorArea::removePaletteClicked()
   }
 
   _palettesManager.removePalette(paletteIndex, [&](const std::string& error) {
-    return execMessageBox(this, QMessageBox::Warning, QString::fromStdString(error));
+    execMessageBox(this, QMessageBox::Warning, QString::fromStdString(error));
   });
 }
 
@@ -164,7 +165,7 @@ void ColorArea::removeColorClicked()
       const auto colorIndex = selectedRow.row();
       _palettesManager.removeColorFromPalette(
               paletteIndex, colorIndex, [&](const std::string& error) {
-                return execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
+                execMessageBox(this, QMessageBox::Critical, QString::fromStdString(error));
               });
     }
   }

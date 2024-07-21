@@ -21,7 +21,7 @@
 namespace capy
 {
 template<typename T, typename U>
-static void compileTimeTypeCheck();
+void compileTimeTypeCheck();
 }
 
 #include "CompileTimeChecks.tpp"
